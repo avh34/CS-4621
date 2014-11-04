@@ -12,6 +12,7 @@ uniform vec3 lightIntensity[16];
 
 varying vec2 fUV;
 
-void main() {
-  gl_FragColor = getDiffuseColor(fUV);
+void main()
+{
+	gl_FragColor = getDiffuseColor(fUV);
 }

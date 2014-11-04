@@ -14,9 +14,10 @@ attribute vec2 vUV; // Sem (TEXCOORD 0)
 
 varying vec2 fUV;
 
-void main() {
-  vec4 worldPos = mWorld * vPosition;
-  gl_Position = mViewProjection * worldPos;
+void main()
+{
+	vec4 worldPos = mWorld * vPosition;
+	gl_Position = mViewProjection * worldPos;
 
-  fUV = vUV;
+	fUV = vUV;
 }
