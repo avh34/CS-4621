@@ -101,7 +101,7 @@ public class RenderMaterial implements IDisposable {
 	public final GLProgram program = new GLProgram(false);
 	public final ShaderInterface shaderInterface = new ShaderInterface(RenderMesh.VERTEX_DECLARATION);
 	
-	private IProvider pDiffuse = null;
+	private IProvider[] pDiffuse = null;
 	private IProvider pNormal = null;
 	private IProvider pSpecular = null;
 
@@ -113,6 +113,7 @@ public class RenderMaterial implements IDisposable {
 
 	public RenderMaterial(Material m) {
 		sceneMaterial = m;
+		pDiffuse = new IProvider[sceneMaterial.inputDiffuse.length];
 	}
 	@Override
 	public void dispose() {
@@ -131,7 +132,10 @@ public class RenderMaterial implements IDisposable {
 		// Cram them into one line so we can get the right line number in case of compile error
 		code = getProvider(sceneMaterial.inputSpecular.type == Type.TEXTURE ? PROVIDER_FORMAT_TEXTURE : PROVIDER_FORMAT_COLOR, "Specular") + code;
 		code = getProvider(sceneMaterial.inputNormal.type == Type.TEXTURE ? PROVIDER_FORMAT_TEXTURE : PROVIDER_FORMAT_COLOR, "Normal") + code;
-		code = getProvider(sceneMaterial.inputDiffuse.type == Type.TEXTURE ? PROVIDER_FORMAT_TEXTURE : PROVIDER_FORMAT_COLOR, "Diffuse") + code;
+		code = getProvider(sceneMaterial.inputDiffuse[0].type == Type.TEXTURE ? PROVIDER_FORMAT_TEXTURE : PROVIDER_FORMAT_COLOR, "Diffuse") + code;
+		for(int i = 1; i < sceneMaterial.inputDiffuse.length; i++){
+			code = getProvider(sceneMaterial.inputDiffuse[i].type == Type.TEXTURE ? PROVIDER_FORMAT_TEXTURE : PROVIDER_FORMAT_COLOR, "Diffuse" + i) + code;
+		}
 		code = (true ? PROVIDER_CUBE_MAP : " ") + code;
 		code = "\r\n#version 120\r\n" + code;
 		
@@ -207,25 +211,35 @@ public class RenderMaterial implements IDisposable {
 	}
 
 	public void createInputProviders(RenderEnvironment env) {
-		if(sceneMaterial.inputDiffuse.type == Type.TEXTURE)
-			pDiffuse = new TextureProvider("Diffuse", program, 0, sceneMaterial.inputDiffuse.texture, env);
-		else
-			pDiffuse = new ColorProvider("Diffuse", sceneMaterial.inputDiffuse.color);
+		int i = 0;
+		while (i < sceneMaterial.inputDiffuse.length) {
+			if (i == 0 && sceneMaterial.inputDiffuse[i].type == Type.TEXTURE)
+				pDiffuse[i] = new TextureProvider("Diffuse", program, i, sceneMaterial.inputDiffuse[i].texture, env);
+			else if(sceneMaterial.inputDiffuse[i].type == Type.TEXTURE)
+				pDiffuse[i] = new TextureProvider("Diffuse" + i, program, i, sceneMaterial.inputDiffuse[i].texture, env);
+			else if (i == 0 && sceneMaterial.inputDiffuse[i].type == Type.COLOR)
+				pDiffuse[i] = new ColorProvider("Diffuse", sceneMaterial.inputDiffuse[i].color);
+			else 
+				pDiffuse[i] = new ColorProvider("Diffuse" + i, sceneMaterial.inputDiffuse[i].color);
+			i++;
+		}
 		
 		if(sceneMaterial.inputNormal.type == Type.TEXTURE)
-			pNormal = new TextureProvider("Normal", program, 1, sceneMaterial.inputNormal.texture, env);
+			pNormal = new TextureProvider("Normal", program, i++, sceneMaterial.inputNormal.texture, env);
 		else
 			pNormal = new ColorProvider("Normal", sceneMaterial.inputNormal.color);
 		
 		if(sceneMaterial.inputSpecular.type == Type.TEXTURE)
-			pSpecular = new TextureProvider("Specular", program, 2, sceneMaterial.inputSpecular.texture, env);
+			pSpecular = new TextureProvider("Specular", program, i++, sceneMaterial.inputSpecular.texture, env);
 		else
 			pSpecular = new ColorProvider("Specular", sceneMaterial.inputSpecular.color);
 		
 	}
 	
 	public void useMaterialProperties() {
-		pDiffuse.set(program);
+		for (int i = 0; i < pDiffuse.length; i++) {
+			pDiffuse[i].set(program);
+		}
 		pNormal.set(program);
 		pSpecular.set(program);
 		

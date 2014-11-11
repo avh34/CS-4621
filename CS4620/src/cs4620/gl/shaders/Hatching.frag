@@ -30,7 +30,7 @@ void main() {
 	vec3 V = normalize(worldCam - worldPos.xyz);
 	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
 	
-	int numTexture = 3;
+	int numTexture = 5;
 	
 	// Shade using hatching
 	for (int i = 0; i < numLights; i++) {
@@ -44,14 +44,22 @@ void main() {
 		float alpha = 1 - beta;
 		
 		if (t == 0) {
-			finalColor += alpha * texture2D(texNormal, fUV) + beta * texture2D(texSpecular, fUV);
+			finalColor += alpha * texture2D(texDiffuse, fUV) + beta * texture2D(texDiffuse1, fUV);
 		}
-		else {
-			finalColor += alpha * texture2D(texSpecular, fUV) + beta * texture2D(texDiffuse, fUV);
+		else if (t == 1) {
+			finalColor += alpha * texture2D(texDiffuse1, fUV) + beta * texture2D(texDiffuse2, fUV);
 		}
+		else if (t == 2) {
+			finalColor += alpha * texture2D(texDiffuse2, fUV) + beta * texture2D(texDiffuse3, fUV);
+		}
+		else if (t == 3) {
+			finalColor += alpha * texture2D(texDiffuse3, fUV) + beta * texture2D(texDiffuse4, fUV);
+		}
+		
+		
 	}
 	
-	// Color edges black
+	// Color edges and creases black
 	if (dot(N, V) < .3) {
 		finalColor = vec4(0.0);
 	}

@@ -48,9 +48,12 @@ void main() {
 	// Add to final color
 	finalColor += k_w * k_warm + (1 - k_w) * k_cool;
 	
+	// Color edges and creases black
 	if (dot(N,V) < 0.4) {
-		finalColor = vec4(0);
+		finalColor = vec4(0.0);
 	}
+	
+	// Add in highlights
 	
 	gl_FragColor = finalColor; 
 }

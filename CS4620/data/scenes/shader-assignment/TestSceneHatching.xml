@@ -2,40 +2,55 @@
 <scene>
 	<background>1.0 1.0 1.0 </background>
 	<texture>
+		<name>HatchingTexture0</name>
+		<data>
+			<file>data/textures/Hatching0.png</file>
+		</data>
+	</texture>
+	<texture>
 		<name>HatchingTexture1</name>
 		<data>
 			<file>data/textures/Hatching1.png</file>
 		</data>
 	</texture>
-
 	<texture>
 		<name>HatchingTexture2</name>
 		<data>
 			<file>data/textures/Hatching2.png</file>
 		</data>
 	</texture>
-
 	<texture>
 		<name>HatchingTexture3</name>
 		<data>
 			<file>data/textures/Hatching3.png</file>
 		</data>
 	</texture>
-
+	<texture>
+		<name>HatchingTexture4</name>
+		<data>
+			<file>data/textures/Hatching4.png</file>
+		</data>
+	</texture>
 
 	<material>
 		<name>HatchingMaterial</name>
 		<data>
 			<type>Hatching</type>
 			<diffuse>
-				<texture>HatchingTexture1</texture>
+				<texture>HatchingTexture0</texture>
 			</diffuse>
-			<specular>
+			<diffuse1>
+				<texture>HatchingTexture1</texture>
+			</diffuse1>			
+			<diffuse2>
 				<texture>HatchingTexture2</texture>
-			</specular>			
-			<normal>
+			</diffuse2>
+			<diffuse3>
 				<texture>HatchingTexture3</texture>
-			</normal>
+			</diffuse3>
+			<diffuse4>
+				<texture>HatchingTexture4</texture>
+			</diffuse4>
 		</data>
 	</material>
 	
