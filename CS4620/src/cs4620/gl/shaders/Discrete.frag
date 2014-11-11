@@ -27,7 +27,39 @@ void main() {
 	
 	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
 	
-	if (dot(N, V) < .5) {
+	if (dot(N, V) < .3) {
+		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
+	}
+	
+	else if (dot(N, V) < .4) {
+		finalColor = vec4(0.0, 0.0, 0.0, 1.0);
+	}
+	
+	else if (dot(N, V) < .5) {
+		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
+	}
+	
+	else if (dot(N, V) < .6) {
+		finalColor = vec4(0.0, 0.0, 0.0, 1.0);
+	}
+	
+	else if (dot(N, V) < .7) {
+		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
+	}
+	
+	else if (dot(N, V) < .8) {
+		finalColor = vec4(0.0, 0.0, 0.0, 1.0);
+	}
+	
+	else if (dot(N, V) < .85) {
+		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
+	}
+	
+	else if (dot(N, V) < .9) {
+		finalColor = vec4(0.0, 0.0, 0.0, 1.0);
+	}
+	
+	else if (dot(N, V) < .95) {
 		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
 	}
 
