@@ -2,9 +2,9 @@
 <scene>
     <background>0.0 0.0 0.0</background>
     <material>
-        <name>DiscreteMaterial</name>
+        <name>DepthMapMaterial</name>
         <data>
-            <type>Discrete</type>
+            <type>DepthMap</type>
         </data>
     </material>
 
@@ -21,16 +21,16 @@
     <mesh>
         <name>bunny.obj</name>
         <data>
-            <file>data/meshes/teapot.obj</file>
+            <file>data/meshes/bunny.obj</file>
         </data>
     </mesh>
 
     <object>
-        <name>Discrete</name>
+        <name>DepthMap</name>
         <data>
             <mesh>bunny.obj</mesh>
             <scale>0.5 0.5 0.5</scale>
-            <material>DiscreteMaterial</material>
+            <material>DepthMapMaterial</material>
         </data>
     </object>
 
