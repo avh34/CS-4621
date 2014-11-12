@@ -13,6 +13,7 @@ import egl.GLBuffer;
 import egl.IDisposable;
 import egl.NativeMem;
 import egl.Semantic;
+import egl.math.Vector3;
 
 public class RenderMesh implements IDisposable {
 	private static final int VERTEX_SIZE = 8 * 4;
@@ -28,6 +29,9 @@ public class RenderMesh implements IDisposable {
 	
 	public final Mesh sceneMesh;
 	
+	public Vector3 minCoords;
+	public Vector3 maxCoords;
+	
 	public RenderMesh(Mesh m) {
 		sceneMesh = m;
 	}
@@ -38,6 +42,9 @@ public class RenderMesh implements IDisposable {
 	}
 	
 	public void build(MeshData data) {
+		minCoords = data.minCoords;
+		maxCoords = data.maxCoords;
+		
 		// Interlace The Data
 		ByteBuffer bb = NativeMem.createByteBuffer(data.vertexCount * VERTEX_SIZE);
 		data.positions.position(0);

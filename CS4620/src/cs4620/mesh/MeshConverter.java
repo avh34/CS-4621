@@ -55,13 +55,26 @@ public class MeshConverter {
 				continue;
 			}
 			
+			Vector3 minCoords = new Vector3(Float.POSITIVE_INFINITY);
+			Vector3 maxCoords = new Vector3(Float.NEGATIVE_INFINITY);
+			
 			// Add A Vertex
 			for(int vi = 0;vi < 3;vi++) {
 				Vector3 v = positions.get(t.get(vi));
+				if (v.x>maxCoords.x) maxCoords.x = v.x;
+				if (v.y>maxCoords.y) maxCoords.y = v.y;
+				if (v.z>maxCoords.z) maxCoords.z = v.z;
+				
+				if (v.x<minCoords.x) minCoords.x = v.x;
+				if (v.y<minCoords.y) minCoords.y = v.y;
+				if (v.z<minCoords.z) minCoords.z = v.z;
+				
 				data.positions.put(v.x); data.positions.put(v.y); data.positions.put(v.z);
 				data.normals.put(n.x); data.normals.put(n.y); data.normals.put(n.z);
 				data.indices.put(vertIndex++);
 			}
+			data.minCoords = new Vector3(minCoords);
+			data.maxCoords = new Vector3(maxCoords);
 		}
 		
 		// #SOLUTION END

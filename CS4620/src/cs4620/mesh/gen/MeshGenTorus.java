@@ -30,6 +30,9 @@ public class MeshGenTorus extends MeshGenerator {
 		outData.normals = NativeMem.createFloatBuffer(outData.vertexCount * 3);
 		outData.indices = NativeMem.createIntBuffer(outData.indexCount);
 		
+		outData.minCoords = new Vector3((float)-1.25, (float)-0.25, (float)-1.25);
+		outData.maxCoords = new Vector3((float) 1.25, (float) 0.25, (float) 1.25);
+		
 		// Calculate A Ring Of Information
 		Vector3[] rPos = new Vector3[opt.divisionsLatitude + 1];
 		Vector3[] rNorm = new Vector3[opt.divisionsLatitude + 1];
@@ -60,6 +63,7 @@ public class MeshGenTorus extends MeshGenerator {
 			for(int pi = 0;pi <= opt.divisionsLatitude;pi++) {
 				v.set(rPos[pi]); mRot.mulPos(v);
 				outData.positions.put(v.x); outData.positions.put(v.y); outData.positions.put(v.z);
+				
 				v.set(rNorm[pi]); mRot.mulDir(v);
 				outData.normals.put(v.x); outData.normals.put(v.y); outData.normals.put(v.z);
 				outData.uvs.put(pTheta); outData.uvs.put((float)pi / (float)opt.divisionsLatitude);

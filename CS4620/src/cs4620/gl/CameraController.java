@@ -1,5 +1,8 @@
 package cs4620.gl;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -122,11 +125,56 @@ public class CameraController {
 	 */
 	protected void translate(Matrix4 parentWorld, Matrix4 transformation, Vector3 motion) {
 		// TODO#A3 SOLUTION START
-
+		float radius = (float)0.5;
+		
 		Matrix4 mTrans = Matrix4.createTranslation(motion);
+		Matrix4 wouldBe = new Matrix4(transformation);
+		wouldBe.mulBefore(mTrans);
+		wouldBe.mulAfter(parentWorld);
 		
-		transformation.mulBefore(mTrans);
+		Vector3 camPos = new Vector3(wouldBe.getTrans());
+		Boolean intersect = false;
 		
+		Iterator<String> itr = rEnv.meshes.keySet().iterator();
+		
+		while (itr.hasNext()){
+			RenderMesh temp = rEnv.meshes.get(itr.next());
+			
+			if (temp!=null){
+				//TODO: make this less messy?
+				Vector3 currMax = new Vector3(temp.maxCoords);
+				Vector3 currMin = new Vector3(temp.minCoords);
+				Boolean in_left   = (currMin.x-camPos.x)<radius;
+				Boolean in_right  = (currMax.x-camPos.x)>radius;
+				Boolean in_front  = (currMax.z-camPos.z)>radius;
+				Boolean in_back   = (currMin.z-camPos.z)<radius;
+				Boolean in_top    = (currMax.y-camPos.y)>radius;
+				Boolean in_bottom = (currMin.y-camPos.y)<radius;
+				
+				//top
+				if (Math.abs(currMax.y-camPos.y)<radius && in_left && in_right && in_front && in_back)
+					intersect = true;
+				//bottom
+				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back)
+					intersect = true;
+				//left
+				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back)
+					intersect = true;
+				//right
+				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back) 
+				    intersect = true;
+				//front
+				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right)
+				    intersect = true;
+				//back
+				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right)
+				    intersect = true;
+				//TODO: intersect with actual object instead of just bounding box
+			}
+		}
+		if (!intersect){
+			transformation.mulBefore(mTrans);
+		}
 		// SOLUTION END
 	}
 }
