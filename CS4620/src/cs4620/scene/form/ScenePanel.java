@@ -33,10 +33,14 @@ package cs4620.scene.form;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.Robot;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -60,6 +64,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import blister.MainGame;
 import cs4620.common.Scene;
 import cs4620.common.Scene.NameBindSceneObject;
 import cs4620.common.SceneCamera;
@@ -89,6 +94,7 @@ public class ScenePanel extends JPanel implements ValueUpdatable {
 	
 	public ScenePanel(SceneApp a) {
 		super(new BorderLayout());
+		
 		app = a;
 
 		rootNode = new DefaultMutableTreeNode(Scene.ROOT_NODE_NAME);

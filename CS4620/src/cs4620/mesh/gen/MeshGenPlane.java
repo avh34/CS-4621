@@ -3,6 +3,7 @@ package cs4620.mesh.gen;
 import cs4620.common.BasicType;
 import cs4620.mesh.MeshData;
 import egl.NativeMem;
+import egl.math.Vector3;
 
 /**
  * Generates A Plane Mesh
@@ -22,6 +23,9 @@ public class MeshGenPlane extends MeshGenerator {
 		outData.uvs = NativeMem.createFloatBuffer(outData.vertexCount * 2);
 		outData.normals = NativeMem.createFloatBuffer(outData.vertexCount * 3);
 		outData.indices = NativeMem.createIntBuffer(outData.indexCount);
+		
+		outData.maxCoords = new Vector3(1,0,1);
+		outData.minCoords = new Vector3(-1,0,-1);
 		
 		// Set vertex positions
 		for (int i = 0; i <= opt.divisionsLongitude; i++) {

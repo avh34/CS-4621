@@ -1,6 +1,9 @@
 package cs4620.scene.form;
 
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,8 +33,6 @@ public class ControlWindow extends JFrame {
 		
 		setSize(400, 600);
 		setResizable(false);
-		
-		
 		ArrayList<String> orderedTabs = new ArrayList<String>();
 		orderedTabs.add("Object"); orderedTabs.add("Mesh"); orderedTabs.add("Material"); orderedTabs.add("Texture");
 		

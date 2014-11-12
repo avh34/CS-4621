@@ -1,12 +1,84 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <scene>
     <background>0.0 0.0 0.0</background>
+    
+    <texture>
+		<name>HatchingTexture0</name>
+		<data>
+			<file>data/textures/Hatching0.png</file>
+		</data>
+	</texture>
+	<texture>
+		<name>HatchingTexture1</name>
+		<data>
+			<file>data/textures/Hatching1.png</file>
+		</data>
+	</texture>
+	<texture>
+		<name>HatchingTexture2</name>
+		<data>
+			<file>data/textures/Hatching2.png</file>
+		</data>
+	</texture>
+	<texture>
+		<name>HatchingTexture3</name>
+		<data>
+			<file>data/textures/Hatching3.png</file>
+		</data>
+	</texture>
+	<texture>
+		<name>HatchingTexture4</name>
+		<data>
+			<file>data/textures/Hatching4.png</file>
+		</data>
+	</texture>
+
+	<material>
+		<name>HatchingMaterial</name>
+		<data>
+			<type>Hatching</type>
+			<diffuse>
+				<texture>HatchingTexture0</texture>
+			</diffuse>
+			<diffuse1>
+				<texture>HatchingTexture1</texture>
+			</diffuse1>			
+			<diffuse2>
+				<texture>HatchingTexture2</texture>
+			</diffuse2>
+			<diffuse3>
+				<texture>HatchingTexture3</texture>
+			</diffuse3>
+			<diffuse4>
+				<texture>HatchingTexture4</texture>
+			</diffuse4>
+		</data>
+	</material>
     <material>
         <name>DiscreteMaterial</name>
         <data>
             <type>Discrete</type>
         </data>
     </material>
+    
+    <material>
+		<name>GoochMaterial</name>
+		<data>
+			<type>Gooch</type>
+			<diffuse>
+				<color>100 200 20 255</color>
+			</diffuse>
+		</data>
+	</material>
+    
+    <material>
+		<name>CookTorranceMaterial</name>
+		<data>
+			<type>CookTorrance</type>
+			
+			<roughness>0.2</roughness>
+		</data>
+	</material>
 
     <material>
         <name>Ambient</name>
@@ -21,7 +93,7 @@
     <mesh>
         <name>bunny.obj</name>
         <data>
-            <file>data/meshes/teapot.obj</file>
+            <file>data/meshes/bunny.obj</file>
         </data>
     </mesh>
 

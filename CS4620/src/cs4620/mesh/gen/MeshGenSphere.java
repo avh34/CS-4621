@@ -3,6 +3,7 @@ package cs4620.mesh.gen;
 import cs4620.common.BasicType;
 import cs4620.mesh.MeshData;
 import egl.NativeMem;
+import egl.math.Vector3;
 
 /**
  * Generates A Sphere Mesh
@@ -13,6 +14,7 @@ public class MeshGenSphere extends MeshGenerator {
 	@Override
 	public void generate(MeshData outData, MeshGenOptions opt) {
 		// TODO#A1 SOLUTION START
+		
 
 		// Calculate Vertex And Index Count
 		int vertsPerSlice = opt.divisionsLatitude + 1;
@@ -25,6 +27,9 @@ public class MeshGenSphere extends MeshGenerator {
 		outData.uvs = NativeMem.createFloatBuffer(outData.vertexCount * 2);
 		outData.normals = NativeMem.createFloatBuffer(outData.vertexCount * 3);
 		outData.indices = NativeMem.createIntBuffer(outData.indexCount);
+		
+		outData.minCoords = new Vector3(1);
+		outData.maxCoords = new Vector3(-1);
 		
 		// Create The Vertices
 		for(int i = 0;i <= opt.divisionsLongitude;i++) {
