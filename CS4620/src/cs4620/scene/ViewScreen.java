@@ -1,11 +1,20 @@
 package cs4620.scene;
 
+import java.awt.AWTException;
+import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.IntBuffer;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -15,7 +24,14 @@ import blister.GameTime;
 import blister.ScreenState;
 import blister.input.KeyboardEventDispatcher;
 import blister.input.KeyboardKeyEventArgs;
+import cs4620.common.Material;
 import cs4620.common.Scene;
+import cs4620.common.Scene.NameBindMaterial;
+import cs4620.common.SceneObject;
+import cs4620.common.UniqueContainer;
+import cs4620.common.event.SceneDataType;
+import cs4620.common.event.SceneEvent;
+import cs4620.common.event.SceneObjectResourceEvent;
 import cs4620.common.event.SceneReloadEvent;
 import cs4620.gl.CameraController;
 import cs4620.gl.GridRenderer;
@@ -32,6 +48,7 @@ import egl.math.Vector2;
 import egl.math.Vector3;
 import ext.csharp.ACEventFunc;
 import ext.java.Parser;
+
 
 public class ViewScreen extends GameScreen {
 	Renderer renderer = new Renderer();
@@ -70,10 +87,11 @@ public class ViewScreen extends GameScreen {
 
 	@Override
 	public void build() {
+						
 		app = (SceneApp)game;
-		
-		renderer = new Renderer();
+		renderer = new Renderer();	
 	}
+	
 	@Override
 	public void destroy(GameTime gameTime) {
 	}
@@ -107,6 +125,7 @@ public class ViewScreen extends GameScreen {
 							Scene old = app.scene;
 							app.scene = (Scene)o;
 							if(old != null) old.sendEvent(new SceneReloadEvent(file));
+							//System.out.println("Now");
 							return;
 						}
 					}
@@ -119,6 +138,23 @@ public class ViewScreen extends GameScreen {
 					e.printStackTrace();
 				}
 				break;
+				
+			case Keyboard.KEY_I:
+				changeShader(0);
+				break;
+				
+			case Keyboard.KEY_U:
+				changeShader(1);
+				break;
+				
+			case Keyboard.KEY_Y:
+				changeShader(2);
+				break;
+				
+			case Keyboard.KEY_T:
+				changeShader(3);
+				break;
+				
 			default:
 				break;
 			}
@@ -127,8 +163,9 @@ public class ViewScreen extends GameScreen {
 	
 	@Override
 	public void onEntry(GameTime gameTime) {
-		cameraIndex = 0;
 		
+		
+		cameraIndex = 0;
 		rController = new RenderController(app.scene, new Vector2(app.getWidth(), app.getHeight()));
 		renderer.buildPasses(rController.env.root);
 		camController = new CameraController(app.scene, rController.env, null);
@@ -162,6 +199,7 @@ public class ViewScreen extends GameScreen {
 		if(rController.env.cameras.size() > 0) {
 			RenderCamera cam = rController.env.cameras.get(cameraIndex);
 			camController.camera = cam;
+			
 		}
 		else {
 			camController.camera = null;
@@ -170,6 +208,7 @@ public class ViewScreen extends GameScreen {
 	
 	@Override
 	public void update(GameTime gameTime) {
+		
 		pick = false;
 		int curCamScroll = 0;
 
@@ -200,8 +239,35 @@ public class ViewScreen extends GameScreen {
 		}
 	}
 	
+	//Take an int value. 0 = CookTorrance, 1 = Discrete, 2 = Gooch, 3 = Hatching
+	public void changeShader(int shader){
+		String shadername = "";
+		switch(shader){
+			case 0:
+				shadername = "CookTorranceMaterial";
+			break;
+			case 1: 
+				shadername = "ShaderMaterial";
+				break;
+			case 2: 
+				shadername = "GoochMaterial";
+				break;
+			case 3: 
+				shadername = "HatchingMaterial";
+				break;
+
+		}
+		for (SceneObject s:app.scene.objects){
+			if ((s.material != null) && (!s.material.equals("Ambient"))) {
+				s.setMaterial(shadername);
+				app.scene.sendEvent(new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material));}
+		}
+		
+	}
+	
 	@Override
 	public void draw(GameTime gameTime) {
+		
 		rController.update(renderer, camController);
 
 		if(pick && camController.camera != null) {

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<scene>
+  <texture>
+    <name>NormalMapped</name>
+    <data>
+      <generator>
+        <size>256 256</size>
+      </generator>
+    </data>
+  </texture>
+  <texture>
+    <name>EarthTexture</name>
+    <data>
+      <file>data/textures/Earth.png</file>
+    </data>
+  </texture>
+  <mesh>
+    <name>Plane</name>
+    <data>
+      <generator type="cs4620.mesh.gen.MeshGenPlane"/>
+      <genOptions>
+        <divLatitude>80</divLatitude>
+        <divLongitude>120</divLongitude>
+        <innerRadius>0.25</innerRadius>
+      </genOptions>
+    </data>
+  </mesh>
+  <material>
+    <name>EarthMaterial</name>
+    <data>
+      <type>Phong</type>
+      <diffuse>
+        <texture>EarthTexture</texture>
+      </diffuse>
+      <normal>
+        <color>128 128 255 255 </color>
+      </normal>
+      <specular>
+        <color>255 255 255 255 </color>
+      </specular>
+      <shininess>50.0</shininess>
+      <roughness>0.3</roughness>
+      <dispMagnitude>0.3</dispMagnitude>
+    </data>
+  </material>
+  <material>
+    <name>Ambient</name>
+    <data>
+      <type>Ambient</type>
+      <diffuse>
+        <color>255 255 255 255 </color>
+      </diffuse>
+      <normal>
+        <color>128 128 255 255 </color>
+      </normal>
+      <specular>
+        <color>255 255 255 255 </color>
+      </specular>
+      <shininess>50.0</shininess>
+      <roughness>0.3</roughness>
+      <dispMagnitude>0.3</dispMagnitude>
+    </data>
+  </material>
+  <object>
+    <name>LightObj1</name>
+    <data>
+      <matrix>0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.0 0.1 0.0 -0.75 -1.5 2.0 1.0</matrix>
+      <parent>World</parent>
+      <mesh>Sphere</mesh>
+      <material>Ambient</material>
+    </data>
+  </object>
+  <object>
+    <name>Light1</name>
+    <data type="cs4620.common.SceneLight">
+      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0</matrix>
+      <parent>LightObj1</parent>
+      <intensity>1.0 1.0 1.0</intensity>
+      <isAmbient>false</isAmbient>
+    </data>
+  </object>
+  <object>
+    <name>Light0</name>
+    <data type="cs4620.common.SceneLight">
+      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0</matrix>
+      <parent>LightObj0</parent>
+      <intensity>1.0 1.0 1.0</intensity>
+      <isAmbient>false</isAmbient>
+    </data>
+  </object>
+  <object>
+    <name>Earth</name>
+    <data>
+      <matrix>0.5 0.0 0.0 0.0 0.0 0.5 0.0 0.0 0.0 0.0 0.5 0.0 0.0 0.0 0.0 1.0</matrix>
+      <parent>World</parent>
+      <mesh>Sphere</mesh>
+      <material>EarthMaterial</material>
+    </data>
+  </object>
+  <object>
+    <name>AmbientLight</name>
+    <data type="cs4620.common.SceneLight">
+      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0</matrix>
+      <parent>World</parent>
+      <intensity>0.05 0.05 0.05</intensity>
+      <isAmbient>true</isAmbient>
+    </data>
+  </object>
+  <object>
+    <name>Camera</name>
+    <data type="cs4620.common.SceneCamera">
+      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 10.0 1.0</matrix>
+      <parent>World</parent>
+      <zPlanes>0.02 1000.0</zPlanes>
+      <perspective>0.01 0.01</perspective>
+      <exposure>2.0</exposure>
+    </data>
+  </object>
+  <object>
+    <name>LightObj0</name>
+    <data>
+      <matrix>0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.75 1.5 0.0 1.0</matrix>
+      <parent>World</parent>
+      <mesh>Sphere</mesh>
+      <material>Ambient</material>
+    </data>
+  </object>
+</scene>

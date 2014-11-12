@@ -96,7 +96,6 @@ public abstract class MainGame implements IDisposable {
 		Display.setVSyncEnabled(true);
 		// Display.setResizable(true);
 		Display.setTitle(title);
-
 		eKP = new KeyPressEventArgs();
 		eKK = new KeyboardKeyEventArgs();
 		ms = new MouseState();
