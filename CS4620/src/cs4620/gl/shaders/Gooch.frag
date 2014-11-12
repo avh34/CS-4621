@@ -32,10 +32,10 @@ void main() {
 	vec3 V = normalize(worldCam - worldPos.xyz);
 	
 	// Gooch Shading
-	float alpha = 0.3;
+	float alpha = 0.25;
 	float beta = 0.5;
 	float b = 0.55;
-	float y = 0.15;
+	float y = 0.3;
 	
 	vec3 k_d = getDiffuseColor(fUV).xyz;
 	vec3 k_cool = vec3(0, 0, b) + alpha * k_d; 
