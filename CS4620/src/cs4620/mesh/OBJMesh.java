@@ -17,6 +17,9 @@ import egl.math.Vector3i;
  *
  */
 public class OBJMesh {
+	public Vector3 maxCoords;
+	public Vector3 minCoords;
+	
 	/**
 	 * List Of "Unique" Positions
 	 */
@@ -49,6 +52,8 @@ public class OBJMesh {
 		normals = new ArrayList<>();
 		vertices = new ArrayList<>();
 		triangles = new ArrayList<>();
+		maxCoords = new Vector3();
+		minCoords = new Vector3();
 	}
 
 	/**

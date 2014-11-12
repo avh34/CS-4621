@@ -1,4 +1,4 @@
-TIME:                         Tue Nov 11 23:15:49 EST 2014
+TIME:                         Wed Nov 12 02:32:30 EST 2014
 
 === Java System Properties ===
 java.version:                 1.7.0_25
@@ -13,4 +13,7 @@ GL_VENDOR:                    NVIDIA Corporation
 GL_VERSION:                   2.1 NVIDIA-8.24.15 310.90.9.05f01
 GL_RENDERER:                  NVIDIA GeForce 9400M OpenGL Engine
 GL_SHADING_LANGUAGE_VERSION:  1.20
+
+Shader Compilation Error for Gooch material:
+ERROR: 0:51: '+' does not operate on 'vec4' and 'vec3'
 

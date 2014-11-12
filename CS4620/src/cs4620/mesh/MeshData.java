@@ -3,7 +3,17 @@ package cs4620.mesh;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import egl.math.Vector3;
+
 public class MeshData {
+	/**
+	 * Holds smallest (x,y,z) coords for bounding box
+	 */
+	public Vector3 minCoords;
+	/**
+	 * Holds largest (x,y,z) coords for bounding box
+	 */
+	public Vector3 maxCoords;
 	/**
 	 * Vector3 Components Representing Vertex Positions (Mandatory)
 	 */
@@ -35,6 +45,8 @@ public class MeshData {
 		normals = null;
 		uvs = null;
 		indexCount = vertexCount = 0;
+		minCoords = new Vector3();
+		maxCoords = new Vector3();
 	}
 
 	/**

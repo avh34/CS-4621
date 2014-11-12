@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+    <background>1.0 1.0 1.0 </background>
+	<material>
+		<name>GoochMaterial</name>
+		<data>
+			<type>Gooch</type>
+		</data>
+	</material>
+	
+	<mesh>
+		<name>Teapot.obj</name>
+		<data>
+			<file>data/meshes/teapot.obj</file>
+		</data>
+	</mesh>
+
+	<object>
+		<name>Teapot</name>
+		<data>
+			<mesh>Teapot.obj</mesh>
+			<material>GoochMaterial</material>
+		</data>
+	</object>
+    
+
+	<object>
+		<name>LightObj0</name>
+		<data>
+			<mesh>Sphere</mesh>
+			<scale>0.1 0.1 0.1</scale>
+			<translation>10 15 0</translation>
+
+			<material>Ambient</material>
+		</data>
+	</object>
+	<object>
+		<name>Light0</name>
+		<data type="SceneLight">
+			<parent>LightObj0</parent>
+			<intensity>1 1 1</intensity>
+		</data>
+	</object>
+
+    <object>
+        <name>Camera</name>
+        <data type="SceneCamera">
+            <zPlanes>0.02 1000.0</zPlanes>
+            <perspective>0.01 0.01</perspective>
+            <exposure>1</exposure>
+            <rotation>-30 0 0</rotation>
+            <translation>0 7 10</translation>
+        </data>
+    </object>
+    
+</scene>

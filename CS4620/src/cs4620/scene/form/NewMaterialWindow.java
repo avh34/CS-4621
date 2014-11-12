@@ -45,7 +45,7 @@ public class NewMaterialWindow extends JDialog {
 		fieldType.setText(Material.T_AMBIENT);
 		add(new JLabel("Diffuse Input:"));
 		Material m = new Material();
-		add(fieldInputs[0] = new InputProviderPanel(m.inputDiffuse.color));
+		add(fieldInputs[0] = new InputProviderPanel(m.inputDiffuse[0].color));
 		add(new JLabel("Normal Input:"));
 		add(fieldInputs[1] = new InputProviderPanel(m.inputNormal.color));
 		add(new JLabel("Specular Input:"));

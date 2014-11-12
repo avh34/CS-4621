@@ -67,7 +67,7 @@ public class Material extends ACUniqueObject implements IXMLDocWriteable {
 	}
 
 	public String materialType = T_AMBIENT;
-	public InputProvider inputDiffuse = new InputProvider();
+	public InputProvider[] inputDiffuse;
 	public InputProvider inputNormal = new InputProvider();
 	public InputProvider inputSpecular = new InputProvider();
 	
@@ -79,7 +79,11 @@ public class Material extends ACUniqueObject implements IXMLDocWriteable {
 	public float dispMagnitude;
 
 	public Material() {
-		inputDiffuse.setColor(Color.LightGray);
+		inputDiffuse = new InputProvider[5];
+		for (int i = 0; i < inputDiffuse.length; i++) {
+			inputDiffuse[i] = new InputProvider();
+			inputDiffuse[i].setColor(Color.LightGray);
+		}
 		inputNormal.setColor(new Color(128, 128, 255, 255));
 		inputSpecular.setColor(Color.White);
 		shininess = 50f;
@@ -91,8 +95,25 @@ public class Material extends ACUniqueObject implements IXMLDocWriteable {
 		materialType = t;
 	}
 	public void setDiffuse(InputProvider p) {
-		inputDiffuse = p;
+		inputDiffuse[0] = p;
 	}
+	
+	public void setDiffuse1(InputProvider p) {
+		inputDiffuse[1] = p;
+	}
+	
+	public void setDiffuse2(InputProvider p) {
+		inputDiffuse[2] = p;
+	}
+	
+	public void setDiffuse3(InputProvider p) {
+		inputDiffuse[3] = p;
+	}
+	
+	public void setDiffuse4(InputProvider p) {
+		inputDiffuse[4] = p;
+	}
+	
 	public void setNormal(InputProvider p) {
 		inputNormal = p;
 	}
@@ -116,7 +137,9 @@ public class Material extends ACUniqueObject implements IXMLDocWriteable {
 		eData.appendChild(e);
 		
 		e = doc.createElement("diffuse");
-		inputDiffuse.saveData(doc, e);
+		for (int i = 0; i < inputDiffuse.length; i++) {
+			inputDiffuse[i].saveData(doc, e);
+		}
 		eData.appendChild(e);
 		
 		e = doc.createElement("normal");

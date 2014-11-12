@@ -3,6 +3,7 @@ package cs4620.mesh.gen;
 import cs4620.common.BasicType;
 import cs4620.mesh.MeshData;
 import egl.NativeMem;
+import egl.math.Vector3;
 
 /**
  * Generates A Cylinder Mesh
@@ -24,6 +25,9 @@ public class MeshGenCylinder extends MeshGenerator {
 		outData.uvs = NativeMem.createFloatBuffer(outData.vertexCount * 2);
 		outData.normals = NativeMem.createFloatBuffer(outData.vertexCount * 3);
 		outData.indices = NativeMem.createIntBuffer(outData.indexCount);
+		
+		outData.minCoords = new Vector3((float)-0.5,(float)-0.5,(float)1.0);
+		outData.maxCoords = new Vector3((float)0.5, (float)0.5, (float)1.0);
 		
 		// Create The Vertices
 		for(int i = 0;i < opt.divisionsLongitude;i++) {

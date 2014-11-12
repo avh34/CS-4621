@@ -247,7 +247,7 @@ public class ViewScreen extends GameScreen {
 				shadername = "CookTorranceMaterial";
 			break;
 			case 1: 
-				shadername = "ShaderMaterial";
+				shadername = "DiscreteMaterial";
 				break;
 			case 2: 
 				shadername = "GoochMaterial";

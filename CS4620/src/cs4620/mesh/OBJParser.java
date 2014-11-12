@@ -80,6 +80,9 @@ public class OBJParser {
 			OBJMesh mesh = new OBJMesh();
 			HashMap<Vector3i, Integer> vertMap = new HashMap<>();
 			
+			Vector3 maxCoords = new Vector3(Float.NEGATIVE_INFINITY);
+			Vector3 minCoords = new Vector3(Float.POSITIVE_INFINITY);
+			
 			// Read File Line By Line
 			String line;
 			while ((line = r.readLine()) != null) {
@@ -96,6 +99,14 @@ public class OBJParser {
 					v3.y = Float.parseFloat(splits[2]);
 					v3.z = Float.parseFloat(splits[3]);
 					posInds.add(indexOfUnique(mesh.positions, v3, cmpPos));
+					//Set coordinates for bounding box if necessary
+					if (v3.x<minCoords.x) minCoords.x = v3.x;
+					if (v3.y<minCoords.y) minCoords.y = v3.y;
+					if (v3.z<minCoords.z) minCoords.z = v3.z;
+					
+					if (v3.x>maxCoords.x) maxCoords.x = v3.x;
+					if (v3.y>maxCoords.y) maxCoords.y = v3.y;
+					if (v3.z>maxCoords.z) maxCoords.z = v3.z;
 				}
 				else if(splits[0].equals("vn")) {
 					if(discardNormals) continue;
@@ -174,6 +185,10 @@ public class OBJParser {
 			}
 			r.close();
 
+			//TODO: add min/max coords to mesh
+			mesh.maxCoords=maxCoords;
+			mesh.minCoords = minCoords;
+			
 			return mesh;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
