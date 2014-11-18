@@ -6,6 +6,13 @@
 			<file>data/textures/Earth.png</file>
 		</data>
 	</texture>
+	
+	    <material>
+        <name>DiscreteMaterial</name>
+        <data>
+            <type>Discrete</type>
+        </data>
+    </material>
 
 	<material>
 		<name>CookTorranceMaterial</name>

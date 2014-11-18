@@ -1,5 +1,13 @@
 package cs4620.gl;
 
+import java.awt.AWTException;
+import java.awt.Dimension;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.nio.IntBuffer;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Cursor;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -8,6 +16,8 @@ import org.lwjgl.input.Mouse;
 
 import cs4620.common.Scene;
 import cs4620.common.event.SceneTransformationEvent;
+import cs4620.scene.form.ScenePanel;
+import cs4620.scene.form.SimpleMeshWindow;
 import egl.math.Matrix4;
 import egl.math.Vector3;
 
@@ -21,6 +31,11 @@ public class CameraController {
 	
 	protected boolean orbitMode = false;
 	
+	//get mouse position in relation to window. 
+	protected float mouse_x = Mouse.getX();  
+	protected float mouse_y = Mouse.getY();
+	protected boolean window = false;
+
 	public CameraController(Scene s, RenderEnvironment re, RenderCamera c) {
 		scene = s;
 		rEnv = re;
@@ -37,8 +52,17 @@ public class CameraController {
 	 * this controller is associated with.
 	 * 
 	 * @param et  time elapsed since previous frame
+	 * @throws AWTException 
 	 */
+
 	public void update(double et) {
+		
+		try {
+			int m= Cursor.getMinCursorSize();
+			Mouse.setNativeCursor(new Cursor(m, m, m/2,m/2, 1, IntBuffer.allocate(m*m), null));
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
 		Vector3 motion = new Vector3();
 		Vector3 rotation = new Vector3();
 		
@@ -48,26 +72,35 @@ public class CameraController {
 		if(Keyboard.isKeyDown(Keyboard.KEY_D)) { motion.add(1, 0, 0); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) { motion.add(0, -1, 0); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { motion.add(0, 1, 0); }
-
-		if(Keyboard.isKeyDown(Keyboard.KEY_E)) { rotation.add(0, 0, -1); }
-		if(Keyboard.isKeyDown(Keyboard.KEY_Q)) { rotation.add(0, 0, 1); }
-		if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) { rotation.add(-1, 0, 0); }
-		if(Keyboard.isKeyDown(Keyboard.KEY_UP)) { rotation.add(1, 0, 0); }
-		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) { rotation.add(0, -1, 0); }
-		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) { rotation.add(0, 1, 0); }
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_O)) { orbitMode = true; } 
-		if(Keyboard.isKeyDown(Keyboard.KEY_F)) { orbitMode = false; } 
-		
-		boolean thisFrameButtonDown = Mouse.isButtonDown(0) && !(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL));
-		int thisMouseX = Mouse.getX(), thisMouseY = Mouse.getY();
-		if (thisFrameButtonDown && prevFrameButtonDown) {
-			rotation.add(0, -0.1f * (thisMouseX - prevMouseX), 0);
-			rotation.add(0.1f * (thisMouseY - prevMouseY), 0, 0);
+		//check if correct window is brought to front- otherwise mouse position is being calculated from 
+		//relation to options window- want center of screen in relation to screen.
+		if(mouse_x != Mouse.getX() && !window){
+			mouse_x = Mouse.getX();
+			mouse_y = Mouse.getY();
+			window = true;
 		}
-		prevFrameButtonDown = thisFrameButtonDown;
-		prevMouseX = thisMouseX;
-		prevMouseY = thisMouseY;
+		
+		Robot mouseMover;
+		try {
+			mouseMover = new Robot();
+			Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
+			//Current Mouse Positions
+			int thisMouseX = Mouse.getX();
+			int thisMouseY = Mouse.getY();
+			//The Center of the screen - might just change this to the center of window later.
+			float centerx = (float) screen_size.getWidth()/ 2;
+			float centery = (float) screen_size.getHeight()/2;
+			//add rotations 
+			rotation.add(0, -0.1f * (thisMouseX - mouse_x), 0);
+			rotation.add(0.1f * (thisMouseY - mouse_y), 0, 0);
+			//return mouse to center of screen
+			mouseMover.mouseMove((int) centerx, (int) centery);
+
+		
+	} catch (AWTException e) {
+		e.printStackTrace();
+	}
 		
 		RenderObject parent = rEnv.findObject(scene.objects.get(camera.sceneObject.parent));
 		Matrix4 pMat = parent == null ? new Matrix4() : parent.mWorldTransform;
