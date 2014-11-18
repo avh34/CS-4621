@@ -99,10 +99,10 @@ public class CameraController {
 		// TODO#A3 SOLUTION START
 		
 		rotation = rotation.clone().mul((float)(Math.PI / 180.0));
-		Matrix4 mRot = Matrix4.createRotationX(rotation.x);
-		mRot.mulAfter(Matrix4.createRotationY(rotation.y));
-		mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
-
+		//Matrix4 mRot = Matrix4.createRotationX(rotation.x);
+		Matrix4 mRot = Matrix4.createRotationY(rotation.y);
+		//mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
+		
 		if (orbitMode) {
 			Vector3 rotCenter = new Vector3(0,0,0);
 			transformation.clone().invert().mulPos(rotCenter);
@@ -131,7 +131,7 @@ public class CameraController {
 		Matrix4 wouldBe = new Matrix4(transformation);
 		wouldBe.mulBefore(mTrans);
 		wouldBe.mulAfter(parentWorld);
-		
+			
 		Vector3 camPos = new Vector3(wouldBe.getTrans());
 		Boolean intersect = false;
 		
@@ -172,8 +172,11 @@ public class CameraController {
 				//TODO: intersect with actual object instead of just bounding box
 			}
 		}
-		if (!intersect){
-			transformation.mulBefore(mTrans);
+
+		if (!intersect && camPos.y >=0){
+			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
+			transformation.mulBefore(mTrans).mulAfter(parentWorld);
+			transformation.m[13] = yNoTrans; // Terrible hack?
 		}
 		// SOLUTION END
 	}
