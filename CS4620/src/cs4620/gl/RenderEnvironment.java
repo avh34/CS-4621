@@ -137,8 +137,6 @@ public class RenderEnvironment implements IDisposable {
 		MeshData md = new MeshData();
 		switch (m.type) {
 		case FILE:
-			Vector3 maxCoords = new Vector3(Float.NEGATIVE_INFINITY);
-			Vector3 minCoords = new Vector3(Float.POSITIVE_INFINITY);
 			// Load From OBJ
 			OBJMesh om = OBJParser.parse(m.file);
 			if(om == null || !om.hasData()) return;
@@ -159,14 +157,6 @@ public class RenderEnvironment implements IDisposable {
 				// Flatten Data
 				for(Vector3i vert : om.vertices) {
 					Vector3 v = om.positions.get(vert.x);
-					//Check for min/max coords
-					if (v.x<minCoords.x) minCoords.x=v.x;
-					if (v.y<minCoords.y) minCoords.y=v.y;
-					if (v.z<minCoords.z) minCoords.z=v.z;
-					
-					if (v.x>maxCoords.x) maxCoords.x=v.x;
-					if (v.y>maxCoords.y) maxCoords.y=v.y;
-					if (v.z>maxCoords.z) maxCoords.z=v.z;
 					
 					md.positions.put(v.x);
 					md.positions.put(v.y);
@@ -179,9 +169,7 @@ public class RenderEnvironment implements IDisposable {
 					md.uvs.put(v2.x);
 					md.uvs.put(v2.y);
 				}
-				md.minCoords = new Vector3(minCoords);
-				md.maxCoords = new Vector3(maxCoords);
-				
+			
 				for(Vector3i t : om.triangles) {
 					md.indices.put(t.x);
 					md.indices.put(t.y);
@@ -214,6 +202,8 @@ public class RenderEnvironment implements IDisposable {
 					md.uvs.put(v++, 1); md.uvs.put(v, 1);
 				}
 			}
+			md.maxCoords = om.maxCoords;
+			md.minCoords = om.minCoords;
 			break;
 		case GENERATOR:
 			// Generate Mesh
