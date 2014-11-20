@@ -132,9 +132,9 @@ public class CameraController {
 		// TODO#A3 SOLUTION START
 		
 		rotation = rotation.clone().mul((float)(Math.PI / 180.0));
-		//Matrix4 mRot = Matrix4.createRotationX(rotation.x);
-		Matrix4 mRot = Matrix4.createRotationY(rotation.y);
-		//mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
+		Matrix4 mRot = Matrix4.createRotationX(rotation.x);
+		mRot.mulAfter(Matrix4.createRotationY(rotation.y));
+		mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
 		
 		if (orbitMode) {
 			Vector3 rotCenter = new Vector3(0,0,0);
