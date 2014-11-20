@@ -25,7 +25,6 @@ varying vec4 worldPos;
 
 
 void main() {
-	
 	int i = 0;	
 	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
 	vec3 N = normalize(fN);
