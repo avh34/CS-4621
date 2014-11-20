@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<scene>   
+<scene> 
+
+    <texture>
+        <name>Wood</name>
+        <data>
+            <file>data/textures/wood.png</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>Concrete</name>
+        <data>
+            <file>data/textures/roomwalls.png</file>
+        </data>
+    </texture>
+
+    <material>
+        <name>WoodMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>Wood</texture>
+            </diffuse>
+            <shininess>20</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>ConcreteMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>Concrete</texture>
+            </diffuse>
+            <shininess>20</shininess>
+        </data>
+    </material>
+
     <material>
         <name>PhongMaterial</name>
         <data>
@@ -10,6 +47,29 @@
             <shininess>50</shininess>
         </data>
     </material>
+
+    <material>
+        <name>PhongMaterialGrey</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <color>173 173 173 255</color>
+            </diffuse>
+            <shininess>0</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>PhongMaterialTable</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <color>255 255 255 255</color>
+            </diffuse>
+            <shininess>10</shininess>
+        </data>
+    </material>
+
 
     <material>
         <name>Ambient</name>
@@ -24,21 +84,14 @@
     <mesh>
         <name>Room.obj</name>
         <data>
-            <file>data/meshes/skybox3.obj</file>
+            <file>data/meshes/mayberoom3.obj</file>
         </data>
     </mesh>
 
     <mesh>
-        <name>TableLeg.obj</name>
+        <name>Table.obj</name>
         <data>
-            <file>data/meshes/leg.obj</file>
-        </data>
-    </mesh>
-
-    <mesh>
-        <name>TableTop.obj</name>
-        <data>
-            <file>data/meshes/top.obj</file>
+            <file>data/meshes/table2.obj</file>
         </data>
     </mesh>
         
@@ -46,57 +99,17 @@
         <name>Room</name>
         <data>
             <mesh>Room.obj</mesh>
-            <material>PhongMaterial</material>
+            <material>ConcreteMaterial</material>
         </data>
     </object>
 
     <object>
-        <name>Leg1</name>
+        <name>Table</name>
         <data>
-            <mesh>TableLeg.obj</mesh>
-            <scale>0.1 0.1 0.1</scale>
-            <translation>4 0 -4</translation>
-            <material>PhongMaterial</material>
-        </data>
-    </object>
-
-    <object>
-        <name>Leg2</name>
-        <data>
-            <mesh>TableLeg.obj</mesh>
-            <scale>0.1 0.1 0.1</scale>
-            <translation>4 0 -3</translation>
-            <material>PhongMaterial</material>
-        </data>
-    </object>
-
-    <object>
-        <name>Leg3</name>
-        <data>
-            <mesh>TableLeg.obj</mesh>
-            <scale>0.1 0.1 0.1</scale>
-            <translation>3 0 -3</translation>
-            <material>PhongMaterial</material>
-        </data>
-    </object>
-
-    <object>
-        <name>Leg4</name>
-        <data>
-            <mesh>TableLeg.obj</mesh>
-            <scale>0.1 0.1 0.1</scale>
-            <translation>3 0 -4</translation>
-            <material>PhongMaterial</material>
-        </data>
-    </object>
-
-    <object>
-        <name>Top</name>
-        <data>
-            <mesh>TableTop.obj</mesh>
-            <scale>0.1 0.1 0.1</scale>
-            <translation>3.5 1 -3.5</translation>
-            <material>PhongMaterial</material>
+            <mesh>Table.obj</mesh>
+            <scale>1 0.5 0.5</scale>
+            <translation>-1 0 -4</translation>
+            <material>WoodMaterial</material>
         </data>
     </object>
     
@@ -106,7 +119,7 @@
             <zPlanes>0.02 500.0</zPlanes>
             <perspective>0.01 0.01</perspective>
             <exposure>1</exposure>
-            <translation>0 2 10</translation>
+            <translation>0 2 3</translation>
         </data>
     </object>
 
@@ -115,7 +128,7 @@
         <data>
             <mesh>Sphere</mesh>
             <scale>0.1 0.1 0.1</scale>
-            <translation>0 9 0</translation>
+            <translation>0 4.5 0</translation>
 
             <material>Ambient</material>
         </data>
@@ -133,7 +146,7 @@
         <data>
             <mesh>Sphere</mesh>
             <scale>0.1 0.1 0.1</scale>
-            <translation>-4.5 5 0</translation>
+            <translation>0 4.5 10</translation>
 
             <material>Ambient</material>
         </data>
@@ -147,39 +160,38 @@
     </object>
 
     <object>
-        <name>LightObj2</name>
+        <name>TableLightObj</name>
         <data>
             <mesh>Sphere</mesh>
             <scale>0.1 0.1 0.1</scale>
-            <translation>4.5 5 0</translation>
+            <translation>-4 2 -4</translation>
 
             <material>Ambient</material>
         </data>
     </object>
     <object>
-        <name>Light2</name>
+        <name>TableLight</name>
         <data type="SceneLight">
-            <parent>LightObj2</parent>
+            <parent>TableLightObj</parent>
+            <intensity>0.2 0.2 0.2</intensity>
+        </data>
+    </object>
+
+    <object>
+        <name>MysteriousLight</name>
+        <data type="SceneLight">
+            <translation>0 3 0</translation>
             <intensity>5 5 5</intensity>
         </data>
     </object>
 
     <object>
-        <name>LightObj3</name>
-        <data>
-            <mesh>Sphere</mesh>
-            <scale>0.1 0.1 0.1</scale>
-            <translation>0 5 -4.5</translation>
-
-            <material>Ambient</material>
-        </data>
-    </object>
-    <object>
-        <name>Light3</name>
+        <name>MysteriousLight2</name>
         <data type="SceneLight">
-            <parent>LightObj3</parent>
-            <intensity>5 5 5</intensity>
+            <translation>0 3 5</translation>
+            <intensity>10 10 10</intensity>
         </data>
     </object>
+
     
 </scene>
