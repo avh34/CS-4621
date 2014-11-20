@@ -107,6 +107,7 @@ public class OBJParser {
 					if (v3.x>maxCoords.x) maxCoords.x = v3.x;
 					if (v3.y>maxCoords.y) maxCoords.y = v3.y;
 					if (v3.z>maxCoords.z) maxCoords.z = v3.z;
+					
 				}
 				else if(splits[0].equals("vn")) {
 					if(discardNormals) continue;
@@ -186,7 +187,7 @@ public class OBJParser {
 			r.close();
 
 			//TODO: add min/max coords to mesh
-			mesh.maxCoords=maxCoords;
+			mesh.maxCoords = maxCoords;
 			mesh.minCoords = minCoords;
 			
 			return mesh;

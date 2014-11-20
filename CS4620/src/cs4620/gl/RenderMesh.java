@@ -2,6 +2,7 @@ package cs4620.gl;
 
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 import cs4620.common.Mesh;
 import cs4620.mesh.MeshData;
@@ -14,6 +15,7 @@ import egl.IDisposable;
 import egl.NativeMem;
 import egl.Semantic;
 import egl.math.Vector3;
+import egl.math.Vector3i;
 
 public class RenderMesh implements IDisposable {
 	private static final int VERTEX_SIZE = 8 * 4;
@@ -32,6 +34,9 @@ public class RenderMesh implements IDisposable {
 	public Vector3 minCoords;
 	public Vector3 maxCoords;
 	
+	public ArrayList<Vector3> vertices;
+	public ArrayList<Vector3i> indices;
+	
 	public RenderMesh(Mesh m) {
 		sceneMesh = m;
 	}
@@ -44,6 +49,8 @@ public class RenderMesh implements IDisposable {
 	public void build(MeshData data) {
 		minCoords = data.minCoords;
 		maxCoords = data.maxCoords;
+		vertices = new ArrayList<Vector3>();
+		indices  = new ArrayList<Vector3i>();
 		
 		// Interlace The Data
 		ByteBuffer bb = NativeMem.createByteBuffer(data.vertexCount * VERTEX_SIZE);
@@ -54,9 +61,17 @@ public class RenderMesh implements IDisposable {
 		data.uvs.position(0);
 		data.uvs.limit(data.vertexCount * 2);
 		for(int i = 0;i < data.vertexCount;i++) {
-			bb.putFloat(data.positions.get());
-			bb.putFloat(data.positions.get());
-			bb.putFloat(data.positions.get());
+			float x = data.positions.get();
+			float y = data.positions.get();
+			float z = data.positions.get();
+			vertices.add(new Vector3(x,y,z));
+			//bb.putFloat(data.positions.get());
+			//bb.putFloat(data.positions.get());
+			//bb.putFloat(data.positions.get());
+			bb.putFloat(x);
+			bb.putFloat(y);
+			bb.putFloat(z);
+			
 			bb.putFloat(data.normals.get());
 			bb.putFloat(data.normals.get());
 			bb.putFloat(data.normals.get());
@@ -75,7 +90,9 @@ public class RenderMesh implements IDisposable {
 		data.indices.position(0);
 		data.indices.limit(data.indexCount);
 		iBuffer.setDataInitial(data.indices);
-		
+		for (int i=0; i<data.indexCount; i=i+3){
+			indices.add(new Vector3i(data.indices.get(i),data.indices.get(i+1),data.indices.get(i+2))); 
+		}
 		indexCount = data.indexCount;
 	}
 }

@@ -8,6 +8,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
+
 import java.util.Iterator;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import cs4620.scene.form.ScenePanel;
 import cs4620.scene.form.SimpleMeshWindow;
 import egl.math.Matrix4;
 import egl.math.Vector3;
+import egl.math.Vector3i;
 
 public class CameraController {
 	protected final Scene scene;
@@ -143,7 +145,16 @@ public class CameraController {
 			mRot.mulBefore(Matrix4.createTranslation(rotCenter.clone().negate()));
 			mRot.mulAfter(Matrix4.createTranslation(rotCenter));
 		}
-		transformation.mulBefore(mRot);
+		
+		Matrix4 wouldBe = new Matrix4(transformation);
+		wouldBe.mulBefore(mRot);
+		wouldBe.mulAfter(parentWorld);
+		Vector3 camPos = new Vector3(wouldBe.getTrans());
+		Boolean intersect = doesIntersect(camPos);
+		
+		if (!intersect){
+			transformation.mulBefore(mRot);
+		}
 		
 		// SOLUTION END
 	}
@@ -166,12 +177,25 @@ public class CameraController {
 		wouldBe.mulAfter(parentWorld);
 			
 		Vector3 camPos = new Vector3(wouldBe.getTrans());
+		Boolean intersect = doesIntersect(camPos);
+		
+		if (!intersect){
+			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
+			transformation.mulBefore(mTrans);
+			transformation.m[13] = yNoTrans;
+		}
+		// SOLUTION END
+	}
+	
+	private boolean doesIntersect(Vector3 camPos){
+		float radius = (float)0.5;
 		Boolean intersect = false;
 		
 		Iterator<String> itr = rEnv.meshes.keySet().iterator();
 		
 		while (itr.hasNext()){
 			RenderMesh temp = rEnv.meshes.get(itr.next());
+			Boolean objIntersect = false;
 			
 			if (temp!=null){
 				//TODO: make this less messy?
@@ -186,31 +210,39 @@ public class CameraController {
 				
 				//top
 				if (Math.abs(currMax.y-camPos.y)<radius && in_left && in_right && in_front && in_back)
-					intersect = true;
+					objIntersect = true;
 				//bottom
 				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back)
-					intersect = true;
+					objIntersect = true;
 				//left
 				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back)
-					intersect = true;
+					objIntersect = true;
 				//right
 				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back) 
-				    intersect = true;
+				    objIntersect = true;
 				//front
 				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right)
-				    intersect = true;
+				    objIntersect = true;
 				//back
 				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right)
-				    intersect = true;
+				    objIntersect = true;
+				
+				
 				//TODO: intersect with actual object instead of just bounding box
+				if (objIntersect){
+//					for (int i=0; i<temp.indices.size(); i++){
+//						Vector3i curInd = temp.indices.get(i);
+//						Vector3 v1 = temp.vertices.get(curInd.x);
+//						Vector3 v2 = temp.vertices.get(curInd.y);
+//						Vector3 v3 = temp.vertices.get(curInd.z);
+//						
+//						
+//					}
+					
+					intersect = true;
+				}
 			}
 		}
-
-		if (!intersect && camPos.y >=0){
-			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
-			transformation.mulBefore(mTrans).mulAfter(parentWorld);
-			transformation.m[13] = yNoTrans; // Terrible hack?
-		}
-		// SOLUTION END
+		return intersect;
 	}
 }
