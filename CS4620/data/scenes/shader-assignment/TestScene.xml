@@ -84,6 +84,16 @@
 		</data>
 	</material>
 
+
+	<material>
+		<name>CookTorranceMaterial</name>
+		<data>
+			<type>CookTorrance</type>
+			
+			<roughness>0.2</roughness>
+		</data>
+	</material>
+	
     <texture>
         <name>HatchingTexture0</name>
         <data>
@@ -266,14 +276,14 @@
     <mesh>
         <name>Room.obj</name>
         <data>
-            <file>data/meshes/room.obj</file>
+            <file>data/meshes/mayberoom3.obj</file>
         </data>
     </mesh>
 
     <mesh>
         <name>Table.obj</name>
         <data>
-            <file>data/meshes/table.obj</file>
+            <file>data/meshes/table2.obj</file>
         </data>
     </mesh>
         

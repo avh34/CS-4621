@@ -2,6 +2,15 @@
 <scene>
     <background>0.0 0.0 0.0</background>
     
+    <material>
+		<name>CookTorranceMaterial</name>
+		<data>
+			<type>CookTorrance</type>
+			
+			<roughness>0.2</roughness>
+		</data>
+	</material>
+    
     <texture>
 		<name>HatchingTexture0</name>
 		<data>
