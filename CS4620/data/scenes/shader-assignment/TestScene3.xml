@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<scene> 
-	
+<scene>
+
 	<texture>
 		<name>HatchingTexture0</name>
 		<data>
@@ -41,7 +41,7 @@
 			</diffuse>
 			<diffuse1>
 				<texture>HatchingTexture1</texture>
-			</diffuse1>			
+			</diffuse1>
 			<diffuse2>
 				<texture>HatchingTexture2</texture>
 			</diffuse2>
@@ -53,33 +53,40 @@
 			</diffuse4>
 		</data>
 	</material>
-	
+
 	<material>
         <name>SilhouetteMaterial</name>
         <data>
             <type>Silhouette</type>
         </data>
     </material>
-	
+
     <material>
         <name>DiscreteMaterial</name>
         <data>
             <type>Discrete</type>
         </data>
     </material>
-    
+
     <material>
 		<name>GoochMaterial</name>
 		<data>
 			<type>Gooch</type>
 		</data>
 	</material>
-    
+
+	<material>
+		<name>TimeMaterial</name>
+		<data>
+			<type>Time</type>
+		</data>
+	</material>
+
     <material>
 		<name>CookTorranceMaterial</name>
 		<data>
 			<type>CookTorrance</type>
-			
+
 			<roughness>0.2</roughness>
 		</data>
 	</material>
@@ -163,7 +170,7 @@
             </diffuse>
         </data>
     </material>
-    
+
 	<mesh>
         <name>Teapot.obj</name>
         <data>
@@ -174,7 +181,7 @@
     <mesh>
         <name>Room.obj</name>
         <data>
-            <file>data/meshes/room.obj</file>
+            <file>data/meshes/mayberoom3.obj</file>
         </data>
     </mesh>
 
@@ -184,12 +191,12 @@
             <file>data/meshes/table.obj</file>
         </data>
     </mesh>
-        
+
     <object>
         <name>Room</name>
         <data>
             <mesh>Room.obj</mesh>
-            <material>HatchingMaterial</material>
+            <material>ConcreteMaterial</material>
         </data>
     </object>
 
@@ -202,7 +209,7 @@
             <material>HatchingMaterial</material>
         </data>
     </object>
-	
+
 	<object>
         <name>Table2</name>
         <data>
@@ -212,18 +219,18 @@
             <material>HatchingMaterial</material>
         </data>
     </object>
-	
+
 	<object>
 		<name>Sphere</name>
 		<data>
 			<mesh>Sphere</mesh>
 			<scale>0.3 0.3 0.3</scale>
 			<translation>-1 1.7 -3.2</translation>
-			
+
 			<material>HatchingMaterial</material>
 		</data>
 	</object>
-	
+
 	<mesh>
         <name>cube.obj</name>
         <data>
@@ -237,10 +244,10 @@
             <mesh>cube.obj</mesh>
             <scale>0.3 0.3 0.3</scale>
 			<translation>-7 1.75 -4</translation>
-            <material>HatchingMaterial</material>
+            <material>WoodMaterial</material>
         </data>
     </object>
-	
+
     <object>
         <name>Teapot</name>
         <data>
@@ -250,9 +257,9 @@
             <material>HatchingMaterial</material>
         </data>
     </object>
-	
-	
-	
+
+
+
     <object>
         <name>Camera</name>
         <data type="SceneCamera">
@@ -324,7 +331,7 @@
             <intensity>10 10 10</intensity>
         </data>
     </object>
-	
+
     <object>
         <name>MysteriousLight</name>
         <data type="SceneLight">
@@ -341,5 +348,5 @@
         </data>
     </object>
 
-    
+
 </scene>
