@@ -91,7 +91,7 @@ void main() {
 	
 	// Color edges and creases black
 	if (dot(N, V) < .3) {
-		finalColor = vec4(0.0);
+		//finalColor = vec4(0.0);
 	}
 
 	gl_FragColor = finalColor;

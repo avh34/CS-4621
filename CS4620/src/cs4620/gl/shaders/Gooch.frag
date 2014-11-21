@@ -49,7 +49,7 @@ void main() {
 	
 	// Color edges and creases black
 	if (dot(N,V) < 0.4) {
-		finalColor = vec4(0.0);
+		//finalColor = vec4(0.0);
 	}
 	
 	// Add in highlights
