@@ -4,31 +4,31 @@
 	<texture>
 		<name>HatchingTexture0</name>
 		<data>
-			<file>data/textures/Hatching0.png</file>
+			<file>data/textures/hatching/Hatching0.png</file>
 		</data>
 	</texture>
 	<texture>
 		<name>HatchingTexture1</name>
 		<data>
-			<file>data/textures/Hatching1.png</file>
+			<file>data/textures/hatching/Hatching1.png</file>
 		</data>
 	</texture>
 	<texture>
 		<name>HatchingTexture2</name>
 		<data>
-			<file>data/textures/Hatching2.png</file>
+			<file>data/textures/hatching/Hatching2.png</file>
 		</data>
 	</texture>
 	<texture>
 		<name>HatchingTexture3</name>
 		<data>
-			<file>data/textures/Hatching3.png</file>
+			<file>data/textures/hatching/Hatching3.png</file>
 		</data>
 	</texture>
 	<texture>
 		<name>HatchingTexture4</name>
 		<data>
-			<file>data/textures/Hatching4.png</file>
+			<file>data/textures/hatching/Hatching4.png</file>
 		</data>
 	</texture>
 

@@ -103,7 +103,7 @@ public abstract class MainGame implements IDisposable {
 		eMW = new MouseWheelEventArgs(ms);
 		eMM = new MouseMoveEventArgs(ms);
 		eWR = new WindowResizeArgs(0, 0, w, h);
-
+		
 		curTime = new GameTime();
 		lastTime = new GameTime();
 	}

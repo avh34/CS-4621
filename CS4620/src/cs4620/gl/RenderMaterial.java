@@ -108,7 +108,7 @@ public class RenderMaterial implements IDisposable {
 	public final Material sceneMaterial;
 	
 	public int unWorld, unWorldIT, unV, unP, unVP, unLPos, unLIntensity, unLCount, unCubeMap, unWorldCam, 
-		unShininess, unRoughness, unDispMagnitude, unAmbientLIntensity, unExposure;
+		unShininess, unRoughness, unDispMagnitude, unAmbientLIntensity, unExposure, unTime;
 	private FloatBuffer fbLight = NativeMem.createFloatBuffer(16 * 3);
 
 	public RenderMaterial(Material m) {
@@ -182,6 +182,7 @@ public class RenderMaterial implements IDisposable {
 		// Shading info
 		unShininess = program.getUniform("shininess");
 		unRoughness = program.getUniform("roughness");
+		unTime = program.getUniform("time");
 		unDispMagnitude = program.getUniform("dispMagnitude");
 		
 		// Lighting info
@@ -332,6 +333,12 @@ public class RenderMaterial implements IDisposable {
 		}
 		if (unAmbientLIntensity != GL.BadUniformLocation) {
 			GL20.glUniform3f(unAmbientLIntensity, (float)ambientLightColor.x, (float)ambientLightColor.y, (float)ambientLightColor.z);
+		}
+	}
+	
+	public void useTime(double time) {
+		if (unTime != GL.BadUniformLocation) {
+			GL20.glUniform1f(unTime, (float) time);
 		}
 	}
 }

@@ -25,17 +25,16 @@ varying vec4 worldPos;
 
 
 void main() {
-	
 	int i = 0;	
 	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
 	vec3 N = normalize(fN);
 	vec3 V = normalize(worldCam - worldPos.xyz);
 	
 	// Gooch Shading
-	float alpha = 0.3;
+	float alpha = 0.25;
 	float beta = 0.5;
 	float b = 0.55;
-	float y = 0.15;
+	float y = 0.3;
 	
 	vec3 k_d = getDiffuseColor(fUV).xyz;
 	vec3 k_cool = vec3(0, 0, b) + alpha * k_d; 
@@ -46,7 +45,11 @@ void main() {
 	float k_w = (1 + dot(N,L)) / 2;
 	
 	// Add to final color
+<<<<<<< HEAD
 	finalColor += vec4(k_w * k_warm + (1 - k_w) * k_cool,0);
+=======
+	finalColor += vec4(k_w * k_warm, 0.0) + vec4((1 - k_w) * k_cool, 0.0);
+>>>>>>> 5beade811f925a80f15205338e9bcd917f1abd7c
 	
 	// Color edges and creases black
 	if (dot(N,V) < 0.4) {

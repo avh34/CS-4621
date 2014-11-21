@@ -22,6 +22,7 @@ import cs4620.scene.form.ScenePanel;
 import cs4620.scene.form.SimpleMeshWindow;
 import egl.math.Matrix4;
 import egl.math.Vector3;
+import egl.math.Vector3i;
 
 public class CameraController {
 	
@@ -73,6 +74,11 @@ public class CameraController {
 		
 		Vector3 motion = new Vector3();
 		Vector3 rotation = new Vector3();
+		
+		if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) { rotation.add(-1, 0, 0); }
+		if(Keyboard.isKeyDown(Keyboard.KEY_UP)) { rotation.add(1, 0, 0); }
+		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) { rotation.add(0, -1, 0); }
+		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) { rotation.add(0, 1, 0); }
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_W)) { motion.add(0, 0, -1); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_S)) { motion.add(0, 0, 1); }
@@ -152,6 +158,8 @@ public class CameraController {
 		Matrix4 mRot = Matrix4.createRotationX(rotation.x);
 				
 		mRot.mulAfter(Matrix4.createRotationY(rotation.y));
+		mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
+		
 		if (orbitMode) {
 			Vector3 rotCenter = new Vector3(0,0,0);
 			transformation.clone().invert().mulPos(rotCenter);
@@ -159,12 +167,21 @@ public class CameraController {
 			mRot.mulBefore(Matrix4.createTranslation(rotCenter.clone().negate()));
 			mRot.mulAfter(Matrix4.createTranslation(rotCenter));
 		}
-		transformation.mulBefore(mRot);
-		float cosAngle = transformation.getRow(1).y;
-		float sinAngle = transformation.getRow(2).y;
-		if(Math.atan2(cosAngle, sinAngle) < 0) 
-			{  transformation.mulBefore(Matrix4.createRotationX(rotation.x).invert());}
-
+		
+		Matrix4 wouldBe = new Matrix4(transformation);
+		wouldBe.mulBefore(mRot);
+		wouldBe.mulAfter(parentWorld);
+		Vector3 camPos = new Vector3(wouldBe.getTrans());
+		Boolean intersect = doesIntersect(camPos);
+		
+		
+		if (!intersect){
+			transformation.mulBefore(mRot);
+			float cosAngle = transformation.getRow(1).y;
+			float sinAngle = transformation.getRow(2).y;
+			if(Math.atan2(cosAngle, sinAngle) < 0) 
+				{  transformation.mulBefore(Matrix4.createRotationX(rotation.x).invert());}
+		}
 		
 		// SOLUTION END
 	}
@@ -185,14 +202,27 @@ public class CameraController {
 		Matrix4 wouldBe = new Matrix4(transformation);
 		wouldBe.mulBefore(mTrans);
 		wouldBe.mulAfter(parentWorld);
-		
+			
 		Vector3 camPos = new Vector3(wouldBe.getTrans());
+		Boolean intersect = doesIntersect(camPos);
+		
+		if (!intersect){
+			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
+			transformation.mulBefore(mTrans);
+			transformation.m[13] = yNoTrans;
+		}
+		// SOLUTION END
+	}
+	
+	private boolean doesIntersect(Vector3 camPos){
+		float radius = (float)0.5;
 		Boolean intersect = false;
 		
 		Iterator<String> itr = rEnv.meshes.keySet().iterator();
 		
 		while (itr.hasNext()){
 			RenderMesh temp = rEnv.meshes.get(itr.next());
+			Boolean objIntersect = false;
 			
 			if (temp!=null){
 				//TODO: make this less messy?
@@ -207,30 +237,43 @@ public class CameraController {
 				
 				//top
 				if (Math.abs(currMax.y-camPos.y)<radius && in_left && in_right && in_front && in_back)
-					intersect = true;
+					objIntersect = true;
 				//bottom
 				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back)
-					intersect = true;
+					objIntersect = true;
 				//left
 				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back)
-					intersect = true;
+					objIntersect = true;
 				//right
 				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back) 
-				    intersect = true;
+				    objIntersect = true;
 				//front
 				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right)
-				    intersect = true;
+				    objIntersect = true;
 				//back
 				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right)
-				    intersect = true;
+				    objIntersect = true;
+				
+				
 				//TODO: intersect with actual object instead of just bounding box
+				if (objIntersect){
+//					for (int i=0; i<temp.indices.size(); i++){
+//						Vector3i curInd = temp.indices.get(i);
+//						Vector3 v1 = temp.vertices.get(curInd.x);
+//						Vector3 v2 = temp.vertices.get(curInd.y);
+//						Vector3 v3 = temp.vertices.get(curInd.z);
+//						
+//						
+//					}
+					
+					intersect = true;
+				}
 			}
 		}
-		if (!intersect){
-			transformation.mulBefore(mTrans);
 			
-		}
+		
 		// SOLUTION END
+		return intersect;
 	}
 	
 }

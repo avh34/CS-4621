@@ -104,6 +104,39 @@ public class Renderer implements IDisposable {
 		}
 	}
 	
+	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, double time) {
+		DepthState.DEFAULT.set();
+		BlendState.OPAQUE.set();
+		RasterizerState.CULL_CLOCKWISE.set();
+		
+		// Draw Up To 16 Lights
+		int cc = lights.size() > 16 ? 16 : lights.size();
+
+		RenderMaterial material = null;
+		RenderMesh mesh = null;
+		for(RenderPass p : passes) {
+			if(material != p.material) {
+				material = p.material;
+				material.program.use();
+				material.useMaterialProperties();
+				material.useCameraAndLights(camera, lights, 0, cc);
+				material.useTime(time);
+			}
+			if(mesh != p.mesh) {
+				if(mesh != null) mesh.iBuffer.unbind();
+				mesh = p.mesh;
+				mesh.iBuffer.bind();
+			}
+
+			mesh.vBuffer.useAsAttrib(material.shaderInterface);
+			for(RenderObject ro : p.objects) {
+				material.useObject(ro);
+				GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
+				GLError.get("Draw");
+			}
+		}
+	}
+	
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, RasterizerState rs) {
 		DepthState.DEFAULT.set();
 		BlendState.OPAQUE.set();
