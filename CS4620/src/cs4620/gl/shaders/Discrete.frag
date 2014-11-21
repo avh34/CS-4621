@@ -24,44 +24,24 @@ void main() {
 	// interpolating normals will change the length of the normal, so renormalize the normal.
 	vec3 N = normalize(fN);
 	vec3 V = normalize(worldCam - worldPos.xyz);
-	
 	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
+	float intensity = 0;
 	
-	if (dot(N, V) < .3) {
-		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
+	for (int i = 0; i < numLights; i++) {
+		intensity = dot(N, lightPosition[i]);
+	
+	if (intensity > 0.95)
+		finalColor += vec4(1.0,0.5,0.5,1.0);
+	else if (intensity > 0.5)
+		finalColor += vec4(0.6,0.3,0.3,1.0);
+	else if (intensity > 0.25)
+		finalColor += vec4(0.4,0.2,0.2,1.0);
+	else
+		finalColor += vec4(0.2,0.1,0.1,1.0);
+	
 	}
 	
-	else if (dot(N, V) < .4) {
-		finalColor = vec4(0.0, 0.0, 0.0, 1.0);
-	}
+	finalColor = finalColor/numLights;
 	
-	else if (dot(N, V) < .5) {
-		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
-	}
-	
-	else if (dot(N, V) < .6) {
-		finalColor = vec4(0.0, 0.0, 0.0, 1.0);
-	}
-	
-	else if (dot(N, V) < .7) {
-		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
-	}
-	
-	else if (dot(N, V) < .8) {
-		finalColor = vec4(0.0, 0.0, 0.0, 1.0);
-	}
-	
-	else if (dot(N, V) < .85) {
-		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
-	}
-	
-	else if (dot(N, V) < .9) {
-		finalColor = vec4(0.0, 0.0, 0.0, 1.0);
-	}
-	
-	else if (dot(N, V) < .95) {
-		finalColor = vec4(1.0, 1.0, 1.0, 1.0);
-	}
-
 	gl_FragColor = (finalColor * exposure);
 }
