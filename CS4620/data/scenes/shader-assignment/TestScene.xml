@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <scene> 
 
+
+	<material>
+		<name>CookTorranceMaterial</name>
+		<data>
+			<type>CookTorrance</type>
+			
+			<roughness>0.2</roughness>
+		</data>
+	</material>
+	
     <texture>
         <name>HatchingTexture0</name>
         <data>
