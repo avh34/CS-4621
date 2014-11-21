@@ -85,6 +85,97 @@
 	</material>
 
     <texture>
+        <name>HatchingTexture0</name>
+        <data>
+            <file>data/textures/hatching/Hatching0.png</file>
+        </data>
+    </texture>
+    <texture>
+        <name>HatchingTexture1</name>
+        <data>
+            <file>data/textures/hatching/Hatching1.png</file>
+        </data>
+    </texture>
+    <texture>
+        <name>HatchingTexture2</name>
+        <data>
+            <file>data/textures/hatching/Hatching2.png</file>
+        </data>
+    </texture>
+    <texture>
+        <name>HatchingTexture3</name>
+        <data>
+            <file>data/textures/hatching/Hatching3.png</file>
+        </data>
+    </texture>
+    <texture>
+        <name>HatchingTexture4</name>
+        <data>
+            <file>data/textures/hatching/Hatching4.png</file>
+        </data>
+    </texture>
+
+    <material>
+        <name>HatchingMaterial</name>
+        <data>
+            <type>Hatching</type>
+            <diffuse>
+                <texture>HatchingTexture0</texture>
+            </diffuse>
+            <diffuse1>
+                <texture>HatchingTexture1</texture>
+            </diffuse1>         
+            <diffuse2>
+                <texture>HatchingTexture2</texture>
+            </diffuse2>
+            <diffuse3>
+                <texture>HatchingTexture3</texture>
+            </diffuse3>
+            <diffuse4>
+                <texture>HatchingTexture4</texture>
+            </diffuse4>
+        </data>
+    </material>
+    <material>
+        <name>TeapotMaterial</name>
+        <data>
+            <type>Hatching</type>
+            <diffuse>
+                <texture>HatchingTexture0</texture>
+            </diffuse>
+            <diffuse1>
+                <texture>HatchingTexture1</texture>
+            </diffuse1>         
+            <diffuse2>
+                <texture>HatchingTexture2</texture>
+            </diffuse2>
+            <diffuse3>
+                <texture>HatchingTexture3</texture>
+            </diffuse3>
+            <diffuse4>
+                <texture>HatchingTexture4</texture>
+            </diffuse4>
+            
+        </data>
+    </material>
+    <material>
+        <name>DiscreteMaterial</name>
+        <data>
+            <type>Discrete</type>
+        </data>
+    </material>
+    
+    <material>
+        <name>GoochMaterial</name>
+        <data>
+            <type>Gooch</type>
+            <diffuse>
+                <color>100 200 20 255</color>
+            </diffuse>
+        </data>
+    </material>
+
+    <texture>
         <name>Wood</name>
         <data>
             <file>data/textures/wood.png</file>
@@ -163,6 +254,14 @@
             </diffuse>
         </data>
     </material>
+
+    <mesh>
+        <name>Teapot.obj</name>
+        <data>
+            <file>data/meshes/teapot.obj</file>
+        </data>
+    </mesh>
+
     
     <mesh>
         <name>Room.obj</name>
@@ -195,24 +294,24 @@
             <material>WoodMaterial</material>
         </data>
     </object>
-	
-	<object>
-        <name>Table2</name>
+
+    <object>
+        <name>TeapotGooch</name>
         <data>
-            <mesh>Table.obj</mesh>
-            <scale>0.6 0.6 0.6</scale>
-            <translation>-5 0 -4</translation>
-            <material>WoodMaterial</material>
+            <mesh>Teapot.obj</mesh>
+            <scale>0.3 0.3 0.3</scale>
+            <translation>-1 1.2 -3.2</translation>
+            <material>GoochMaterial</material>
         </data>
     </object>
-	
-	<object>
-        <name>Table3</name>
+
+    <object>
+        <name>TeapotHatching</name>
         <data>
-            <mesh>Table.obj</mesh>
-            <scale>0.6 0.6 0.6</scale>
-            <translation>4 0 -4</translation>
-            <material>WoodMaterial</material>
+            <mesh>Teapot.obj</mesh>
+            <scale>0.3 0.3 0.3</scale>
+            <translation>1 1.2 -3.2</translation>
+            <material>TeapotMaterial</material>
         </data>
     </object>
     
