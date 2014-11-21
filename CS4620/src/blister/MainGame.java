@@ -284,6 +284,8 @@ public abstract class MainGame implements IDisposable {
 		curTime.total += et;
 		lastTime = curTime;
 	}
+	
+
 	/**
 	 * Frame Update Logic
 	 */

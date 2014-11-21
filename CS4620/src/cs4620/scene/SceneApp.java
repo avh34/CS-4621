@@ -22,6 +22,10 @@ public class SceneApp extends MainGame {
 	 */
 	public Scene scene;
 	
+	public ControlWindow getOther(){
+		return otherWindow;
+	}
+	
 	public SceneApp() {
 		super("CS 4620 Mesh Workspace", 800, 600);
 		

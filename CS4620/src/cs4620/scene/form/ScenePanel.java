@@ -64,6 +64,8 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.lwjgl.opengl.Display;
+
 import blister.MainGame;
 import cs4620.common.Scene;
 import cs4620.common.Scene.NameBindSceneObject;
@@ -139,6 +141,18 @@ public class ScenePanel extends JPanel implements ValueUpdatable {
 						Parser p = new Parser();
 						Object o = p.parse(file, Scene.class);
 						if(o != null) {
+							try{
+								app.getOther().dispose();
+
+								Robot mouseMover = new Robot();
+								Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
+								float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+								float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+								 mouseMover.mouseMove((int) centerx, (int) centery);
+
+								} catch (AWTException a) {
+									a.printStackTrace();
+								}
 							Scene old = app.scene;
 							app.scene = (Scene)o;
 							if(old != null) old.sendEvent(new SceneReloadEvent(file));

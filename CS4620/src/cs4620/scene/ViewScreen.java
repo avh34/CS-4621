@@ -1,6 +1,7 @@
 package cs4620.scene;
 
 import java.awt.AWTException;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Point;
@@ -17,6 +18,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import blister.GameScreen;
@@ -63,6 +65,7 @@ public class ViewScreen extends GameScreen {
 	RPMeshData dataMesh;
 	RPMaterialData dataMaterial;
 	RPTextureData dataTexture;
+
 	
 	RenderController rController;
 	CameraController camController;
@@ -122,10 +125,10 @@ public class ViewScreen extends GameScreen {
 						Parser p = new Parser();
 						Object o = p.parse(file, Scene.class);
 						if(o != null) {
+							app.otherWindow.dispose();
 							Scene old = app.scene;
 							app.scene = (Scene)o;
 							if(old != null) old.sendEvent(new SceneReloadEvent(file));
-							//System.out.println("Now");
 							return;
 						}
 					}
@@ -139,22 +142,47 @@ public class ViewScreen extends GameScreen {
 				}
 				break;
 				
-			case Keyboard.KEY_I:
+			case Keyboard.KEY_1:
 				changeShader(0);
 				break;
 				
-			case Keyboard.KEY_U:
+			case Keyboard.KEY_2:
 				changeShader(1);
 				break;
 				
-			case Keyboard.KEY_Y:
+			case Keyboard.KEY_3:
 				changeShader(2);
 				break;
 				
-			case Keyboard.KEY_T:
+			case Keyboard.KEY_4:
 				changeShader(3);
 				break;
 				
+			case Keyboard.KEY_5:
+				app.otherWindow.dispose();
+				
+			case Keyboard.KEY_ESCAPE:
+				
+				try{
+				Robot mouseMover = new Robot();
+				float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+				float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+				 mouseMover.mouseMove((int) centerx, (int) centery);
+
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+
+			
+
+				try {
+					Mouse.setNativeCursor(null);
+				} catch (LWJGLException e) {
+					e.printStackTrace();
+				}
+				camController.isHighlighted();
+				camController.changeWindow();
+				break;
 			default:
 				break;
 			}
@@ -162,8 +190,7 @@ public class ViewScreen extends GameScreen {
 	};
 	
 	@Override
-	public void onEntry(GameTime gameTime) {
-		
+	public void onEntry(GameTime gameTime) {	
 		
 		cameraIndex = 0;
 		rController = new RenderController(app.scene, new Vector2(app.getWidth(), app.getHeight()));
@@ -172,7 +199,6 @@ public class ViewScreen extends GameScreen {
 		createCamController();
 		manipController = new ManipController(rController.env, app.scene, app.otherWindow);
 		gridRenderer = new GridRenderer();
-		
 		KeyboardEventDispatcher.OnKeyPressed.add(onKeyPress);
 		manipController.hook();
 		
@@ -211,7 +237,7 @@ public class ViewScreen extends GameScreen {
 		
 		pick = false;
 		int curCamScroll = 0;
-
+		
 		if(Keyboard.isKeyDown(Keyboard.KEY_EQUALS)) curCamScroll++;
 		if(Keyboard.isKeyDown(Keyboard.KEY_MINUS)) curCamScroll--;
 		if(rController.env.cameras.size() != 0 && curCamScroll != 0 && prevCamScroll != curCamScroll) {
@@ -221,11 +247,20 @@ public class ViewScreen extends GameScreen {
 			createCamController();
 		}
 		prevCamScroll = curCamScroll;
-		
 		if(camController.camera != null) {
+			if(!camController.ishighlighted){
+				try {
+					Mouse.setNativeCursor(null);
+				} catch (LWJGLException e) {
+					e.printStackTrace();
+				}
+			}
+				else{
 			camController.update(gameTime.elapsed);
 			manipController.checkMouse(Mouse.getX(), Mouse.getY(), camController.camera);
+			}
 		}
+		
 		
 		if(Mouse.isButtonDown(1) || Mouse.isButtonDown(0) && (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))) {
 			if(!wasPickPressedLast) pick = true;
