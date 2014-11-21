@@ -161,7 +161,7 @@
     <object>
         <name>AmbientLight</name>
         <data type="SceneLight">
-            <intensity>0.05 0.05 0.05</intensity>
+            <intensity>0.01 0.01 0.01</intensity>
             <isAmbient>true</isAmbient>
         </data>
     </object>

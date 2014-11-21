@@ -28,8 +28,15 @@ uniform float time;
 #define K_DIST time
 
 void main( void ) {
+	float shininess = 50;
 
-	vec2 uv = 2.*vec2(worldPos.x / 10000, (worldPos.y - 1) / 10000);
+	vec3 N = normalize(fN);
+	vec3 V = normalize(worldCam - worldPos.xyz);
+
+	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
+	vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
+
+	vec2 uv = 2.*vec2(worldPos.x / 5, (worldPos.y - .75) / 5);
 	float dist = length(uv) + 1.;
 	vec2 altuv = uv;
 	
@@ -39,8 +46,29 @@ void main( void ) {
 	float g = cos(atan(altuv.y, altuv.x)*N_BRANCHES+ROTA_SPEED + dist*K_DIST + 0.);
 	float b = cos(atan(altuv.y, altuv.x)*N_BRANCHES+ROTA_SPEED + dist*K_DIST - 1.);
 	
-	vec3 color = vec3(r, g, b);
+	color = vec4(r, g, b, 1.0);
+	
+	for (int i = 0; i < numLights; i++) {
+	  float r = length(lightPosition[i] - worldPos.xyz);
+	  vec3 L = normalize(lightPosition[i] - worldPos.xyz); 
+	  vec3 H = normalize(L + V);
+
+	  // calculate diffuse term
+	  vec4 Idiff = getDiffuseColor(fUV) * max(dot(N, L), 0.0);
+	  Idiff = clamp(Idiff, 0.0, 1.0);
+
+	  // calculate specular term
+	  vec4 Ispec = getSpecularColor(fUV) * pow(max(dot(N, H), 0.0), shininess);
+	  Ispec = clamp(Ispec, 0.0, 1.0);
+
+	  // calculate ambient term
+	  vec4 Iamb = getDiffuseColor(fUV);
+	  Iamb = clamp(Iamb, 0.0, 1.0);
+
+	  
+	  finalColor += color * (vec4(lightIntensity[i], 0.0) * (Idiff + Ispec) / (r*r) + vec4(ambientLightIntensity, 0.0) * Iamb);
+	}
 		
-	gl_FragColor = vec4( color, 1.0 );
+	gl_FragColor = finalColor;
 
 }
