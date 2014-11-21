@@ -34,7 +34,7 @@ void main() {
 	float alpha = 0.25;
 	float beta = 0.5;
 	float b = 0.55;
-	float y = 0.3;
+	float y = 0.4;
 	
 	vec3 k_d = getDiffuseColor(fUV).xyz;
 	vec3 k_cool = vec3(0, 0, b) + alpha * k_d; 
@@ -49,7 +49,7 @@ void main() {
 	
 	// Color edges and creases black
 	if (dot(N,V) < 0.4) {
-		//finalColor = vec4(0.0);
+		finalColor = vec4(0.0);
 	}
 	
 	// Add in highlights
