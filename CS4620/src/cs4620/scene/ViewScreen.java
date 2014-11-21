@@ -274,7 +274,7 @@ public class ViewScreen extends GameScreen {
 		}
 	}
 	
-	//Take an int value. 0 = CookTorrance, 1 = Discrete, 2 = Gooch, 3 = Hatching
+	//Take an int value. 0 = CookTorrancess, 1 = Discrete, 2 = Gooch, 3 = Hatching
 	public void changeShader(int shader){
 		String shadername = "";
 		switch(shader){

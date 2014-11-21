@@ -107,7 +107,7 @@ public class CameraController {
 			mouseMover = new Robot();
 			Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
 			//Current Mouse Positions
-			int thisMouseX = Mouse.getX();
+			int thisMouseX = (int) (int) java.awt.MouseInfo.getPointerInfo().getLocation().getX() - Display.getX();
 			int thisMouseY = (int) java.awt.MouseInfo.getPointerInfo().getLocation().getY() - Display.getY();
 						
 
