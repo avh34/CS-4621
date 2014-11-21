@@ -45,11 +45,8 @@ void main() {
 	float k_w = (1 + dot(N,L)) / 2;
 	
 	// Add to final color
-<<<<<<< HEAD
-	finalColor += vec4(k_w * k_warm + (1 - k_w) * k_cool,0);
-=======
+
 	finalColor += vec4(k_w * k_warm, 0.0) + vec4((1 - k_w) * k_cool, 0.0);
->>>>>>> 5beade811f925a80f15205338e9bcd917f1abd7c
 	
 	// Color edges and creases black
 	if (dot(N,V) < 0.4) {
