@@ -157,8 +157,12 @@ public class ViewScreen extends GameScreen {
 			case Keyboard.KEY_4:
 				changeShader(3);
 				break;
-				
+			
 			case Keyboard.KEY_5:
+				changeShader(4);
+				break;
+					
+			case Keyboard.KEY_6:
 				app.otherWindow.dispose();
 				
 			case Keyboard.KEY_ESCAPE:
@@ -274,7 +278,7 @@ public class ViewScreen extends GameScreen {
 		}
 	}
 	
-	//Take an int value. 0 = CookTorrance, 1 = Discrete, 2 = Gooch, 3 = Hatching
+	//Take an int value. 0 = CookTorrancess, 1 = Discrete, 2 = Gooch, 3 = Hatching
 	public void changeShader(int shader){
 		String shadername = "";
 		switch(shader){
@@ -289,6 +293,9 @@ public class ViewScreen extends GameScreen {
 				break;
 			case 3: 
 				shadername = "HatchingMaterial";
+				break;
+			case 4:
+				shadername = "TimeMaterial";
 				break;
 
 		}

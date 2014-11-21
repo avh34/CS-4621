@@ -1,99 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<scene> 
-	
-	<texture>
-		<name>HatchingTexture0</name>
-		<data>
-			<file>data/textures/hatching/Hatching0.png</file>
-		</data>
-	</texture>
-	<texture>
-		<name>HatchingTexture1</name>
-		<data>
-			<file>data/textures/hatching/Hatching1.png</file>
-		</data>
-	</texture>
-	<texture>
-		<name>HatchingTexture2</name>
-		<data>
-			<file>data/textures/hatching/Hatching2.png</file>
-		</data>
-	</texture>
-	<texture>
-		<name>HatchingTexture3</name>
-		<data>
-			<file>data/textures/hatching/Hatching3.png</file>
-		</data>
-	</texture>
-	<texture>
-		<name>HatchingTexture4</name>
-		<data>
-			<file>data/textures/hatching/Hatching4.png</file>
-		</data>
-	</texture>
+<scene>
 
-	<material>
-		<name>HatchingMaterial</name>
-		<data>
-			<type>Hatching</type>
-			<diffuse>
-				<texture>HatchingTexture0</texture>
-			</diffuse>
-			<diffuse1>
-				<texture>HatchingTexture1</texture>
-			</diffuse1>			
-			<diffuse2>
-				<texture>HatchingTexture2</texture>
-			</diffuse2>
-			<diffuse3>
-				<texture>HatchingTexture3</texture>
-			</diffuse3>
-			<diffuse4>
-				<texture>HatchingTexture4</texture>
-			</diffuse4>
-		</data>
-	</material>
-	
-	<material>
-        <name>SilhouetteMaterial</name>
-        <data>
-            <type>Silhouette</type>
-        </data>
-    </material>
-	
-    <material>
-        <name>DiscreteMaterial</name>
-        <data>
-            <type>Discrete</type>
-        </data>
-    </material>
-    
-    <material>
-		<name>GoochMaterial</name>
-		<data>
-			<type>Gooch</type>
-		</data>
-	</material>
-    
-    <material>
-		<name>CookTorranceMaterial</name>
-		<data>
-			<type>CookTorrance</type>
-			
-			<roughness>0.2</roughness>
-		</data>
-	</material>
 
 
 	<material>
 		<name>CookTorranceMaterial</name>
 		<data>
 			<type>CookTorrance</type>
-			
+
 			<roughness>0.2</roughness>
 		</data>
 	</material>
-	
+
+	<material>
+		<name>TimeMaterial</name>
+		<data>
+			<type>Time</type>	
+		</data>
+	</material>
+
     <texture>
         <name>HatchingTexture0</name>
         <data>
@@ -134,7 +59,7 @@
             </diffuse>
             <diffuse1>
                 <texture>HatchingTexture1</texture>
-            </diffuse1>         
+            </diffuse1>
             <diffuse2>
                 <texture>HatchingTexture2</texture>
             </diffuse2>
@@ -155,7 +80,7 @@
             </diffuse>
             <diffuse1>
                 <texture>HatchingTexture1</texture>
-            </diffuse1>         
+            </diffuse1>
             <diffuse2>
                 <texture>HatchingTexture2</texture>
             </diffuse2>
@@ -165,7 +90,7 @@
             <diffuse4>
                 <texture>HatchingTexture4</texture>
             </diffuse4>
-            
+
         </data>
     </material>
     <material>
@@ -174,7 +99,7 @@
             <type>Discrete</type>
         </data>
     </material>
-    
+
     <material>
         <name>GoochMaterial</name>
         <data>
@@ -272,7 +197,7 @@
         </data>
     </mesh>
 
-    
+
     <mesh>
         <name>Room.obj</name>
         <data>
@@ -286,7 +211,7 @@
             <file>data/meshes/table2.obj</file>
         </data>
     </mesh>
-        
+
     <object>
         <name>Room</name>
         <data>
@@ -324,7 +249,7 @@
             <material>TeapotMaterial</material>
         </data>
     </object>
-    
+
     <object>
         <name>Camera</name>
         <data type="SceneCamera">
@@ -405,5 +330,5 @@
         </data>
     </object>
 
-    
+
 </scene>
