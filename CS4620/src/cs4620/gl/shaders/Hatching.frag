@@ -88,11 +88,6 @@ void main() {
 		
 	// Shade using hatching  	
   	finalColor = getHatchingColor(luminance, fUV);
-	
-	// Color edges and creases black
-	if (dot(N, V) < .4) {
-		//finalColor = vec4(0.0);
-	}
 
 	gl_FragColor = finalColor;
 	 

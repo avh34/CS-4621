@@ -195,7 +195,7 @@ public class SplineScreen extends GameScreen {
 		
 		rController = new RenderController(app.sweepScene, new Vector2(app.getWidth()/NUM_PANELS, app.getHeight()));
 		
-		renderer.buildPasses(rController.env.root);
+		renderer.buildPasses(rController.env); //renderer.buildPasses(rController.env.root);
 		camController = new SplineCameraController(app.sweepScene, rController.env, null, (SweepSplinePanel)panels[2]);
 		createCamController();
 		gridRenderer = new GridRenderer();
