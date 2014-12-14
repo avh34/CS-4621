@@ -43,8 +43,9 @@ public class Renderer implements IDisposable {
 		pickProgram.dispose();
 	}
 	
-	public void buildPasses(RenderObject root) {
+	public void buildPasses(RenderEnvironment env) { //(RenderObject root) {
 		// Create An Array Of Objects To Draw From The Root
+		RenderObject root = env.root;
 		ArrayList<RenderObject> objs = new ArrayList<>();
 		addToDrawList(root, objs);
 
@@ -56,15 +57,34 @@ public class Renderer implements IDisposable {
 		passes = new ArrayList<>();
 		RenderPass curPass = new RenderPass();
 		for(RenderObject ro : objs) {
+			/*if(ro.mesh != curPass.mesh || ro.material != curPass.material) {
+				curPass = new RenderPass();
+				curPass.material = ro.material;
+				curPass.mesh = ro.mesh;
+				passes.add(curPass);
+				
+			}
+			curPass.objects.add(ro); */
+			
+			//MYCODE
 			if(ro.mesh != curPass.mesh || ro.material != curPass.material) {
 				curPass = new RenderPass();
 				curPass.material = ro.material;
 				curPass.mesh = ro.mesh;
 				passes.add(curPass);
+				curPass.objects.add(ro);
+				
+			
+				curPass = new RenderPass();
+				curPass.material = env.materials.get("SilhouetteMaterial");
+				curPass.mesh = ro.mesh.silhouette;
+				passes.add(curPass);
+				curPass.objects.add(ro);
 			}
-			curPass.objects.add(ro);
+			
 		}
 	}
+	
 	private void addToDrawList(RenderObject ro, ArrayList<RenderObject> objs) {
 		if(ro.mesh != null && ro.material != null) objs.add(ro);
 		for(RenderObject c : ro.children) {
@@ -105,7 +125,7 @@ public class Renderer implements IDisposable {
 			mesh.vBuffer.useAsAttrib(material.shaderInterface);
 			for(RenderObject ro : p.objects) {
 				material.useObject(ro);
-				GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
+				//GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
 				GLError.get("Draw");
 			}
 		}
@@ -145,6 +165,8 @@ public class Renderer implements IDisposable {
 			mesh.vBuffer.useAsAttrib(material.shaderInterface);
 			for(RenderObject ro : p.objects) {
 				material.useObject(ro);
+				//GL11.glLineWidth(3.8f);
+				//GL11.glDrawElements(PrimitiveType.Lines, mesh.indexCount, GLType.UnsignedInt, 0);				
 				GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
 				GLError.get("Draw");
 			}
@@ -188,7 +210,7 @@ public class Renderer implements IDisposable {
 			mesh.vBuffer.useAsAttrib(material.shaderInterface);
 			for(RenderObject ro : p.objects) {
 				material.useObject(ro);
-				GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
+				//GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
 				GLError.get("Draw");
 			}
 		}

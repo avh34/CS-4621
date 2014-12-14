@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <scene>
   <texture>
+    <name>HatchingTexture4</name>
+    <data>
+      <file>data/textures/hatching/Hatching4.png</file>
+    </data>
+  </texture>
+  <texture>
+    <name>HatchingTexture3</name>
+    <data>
+      <file>data/textures/hatching/Hatching3.png</file>
+    </data>
+  </texture>
+  <texture>
+    <name>HatchingTexture2</name>
+    <data>
+      <file>data/textures/hatching/Hatching2.png</file>
+    </data>
+  </texture>
+  <texture>
+    <name>HatchingTexture1</name>
+    <data>
+      <file>data/textures/hatching/Hatching1.png</file>
+    </data>
+  </texture>
+  <texture>
+    <name>HatchingTexture0</name>
+    <data>
+      <file>data/textures/hatching/Hatching0.png</file>
+    </data>
+  </texture>
+  <texture>
     <name>NormalMapped</name>
     <data>
       <generator>
@@ -8,12 +38,12 @@
       </generator>
     </data>
   </texture>
-  <texture>
-    <name>EarthTexture</name>
+  <mesh>
+    <name>cube.obj</name>
     <data>
-      <file>data/textures/Earth.png</file>
+      <file>data/meshes/cube.obj</file>
     </data>
-  </texture>
+  </mesh>
   <mesh>
     <name>Plane</name>
     <data>
@@ -25,12 +55,28 @@
       </genOptions>
     </data>
   </mesh>
-  <material>
-    <name>EarthMaterial</name>
+  <mesh>
+    <name>cube2.obj</name>
     <data>
-      <type>Phong</type>
+      <file>data/meshes/cube2.obj</file>
+    </data>
+  </mesh>
+  <mesh>
+    <name>teapot.obj</name>
+    <data>
+      <file>data/meshes/teapot.obj</file>
+    </data>
+  </mesh>
+  <material>
+    <name>SilhouetteMaterial</name>
+    <data>
+      <type>Silhouette</type>
       <diffuse>
-        <texture>EarthTexture</texture>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
       </diffuse>
       <normal>
         <color>128 128 255 255 </color>
@@ -49,6 +95,98 @@
       <type>Ambient</type>
       <diffuse>
         <color>255 255 255 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+      </diffuse>
+      <normal>
+        <color>128 128 255 255 </color>
+      </normal>
+      <specular>
+        <color>255 255 255 255 </color>
+      </specular>
+      <shininess>50.0</shininess>
+      <roughness>0.3</roughness>
+      <dispMagnitude>0.3</dispMagnitude>
+    </data>
+  </material>
+  <material>
+    <name>DiscreteMaterial</name>
+    <data>
+      <type>Discrete</type>
+      <diffuse>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+      </diffuse>
+      <normal>
+        <color>128 128 255 255 </color>
+      </normal>
+      <specular>
+        <color>255 255 255 255 </color>
+      </specular>
+      <shininess>50.0</shininess>
+      <roughness>0.3</roughness>
+      <dispMagnitude>0.3</dispMagnitude>
+    </data>
+  </material>
+  <material>
+    <name>CookTorranceMaterial</name>
+    <data>
+      <type>CookTorrance</type>
+      <diffuse>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+      </diffuse>
+      <normal>
+        <color>128 128 255 255 </color>
+      </normal>
+      <specular>
+        <color>255 255 255 255 </color>
+      </specular>
+      <shininess>50.0</shininess>
+      <roughness>0.2</roughness>
+      <dispMagnitude>0.3</dispMagnitude>
+    </data>
+  </material>
+  <material>
+    <name>HatchingMaterial</name>
+    <data>
+      <type>Hatching</type>
+      <diffuse>
+        <texture>HatchingTexture0</texture>
+        <texture>HatchingTexture1</texture>
+        <texture>HatchingTexture2</texture>
+        <texture>HatchingTexture3</texture>
+        <texture>HatchingTexture4</texture>
+      </diffuse>
+      <normal>
+        <color>128 128 255 255 </color>
+      </normal>
+      <specular>
+        <color>255 255 255 255 </color>
+      </specular>
+      <shininess>50.0</shininess>
+      <roughness>0.3</roughness>
+      <dispMagnitude>0.3</dispMagnitude>
+    </data>
+  </material>
+  <material>
+    <name>GoochMaterial</name>
+    <data>
+      <type>Gooch</type>
+      <diffuse>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
+        <color>211 211 211 255 </color>
       </diffuse>
       <normal>
         <color>128 128 255 255 </color>
@@ -62,21 +200,39 @@
     </data>
   </material>
   <object>
-    <name>LightObj1</name>
+    <name>LightObj0</name>
     <data>
-      <matrix>0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.0 0.1 0.0 -0.75 -1.5 2.0 1.0</matrix>
+      <matrix>0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.0 0.1 0.0 2.2 2.5 2.0 1.0</matrix>
       <parent>World</parent>
       <mesh>Sphere</mesh>
       <material>Ambient</material>
     </data>
   </object>
   <object>
-    <name>Light1</name>
-    <data type="cs4620.common.SceneLight">
-      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0</matrix>
-      <parent>LightObj1</parent>
-      <intensity>1.0 1.0 1.0</intensity>
-      <isAmbient>false</isAmbient>
+    <name>Sphere</name>
+    <data>
+      <matrix>0.5 0.0 0.0 0.0 0.0 0.5 0.0 0.0 0.0 0.0 0.5 0.0 3.0 1.5 0.0 1.0</matrix>
+      <parent>World</parent>
+      <mesh>Sphere</mesh>
+      <material>HatchingMaterial</material>
+    </data>
+  </object>
+  <object>
+    <name>Teapot</name>
+    <data>
+      <matrix>0.5 0.0 0.0 0.0 0.0 0.5 0.0 0.0 0.0 0.0 0.5 0.0 -3.0 0.0 0.0 1.0</matrix>
+      <parent>World</parent>
+      <mesh>teapot.obj</mesh>
+      <material>HatchingMaterial</material>
+    </data>
+  </object>
+  <object>
+    <name>CubeSilhouette</name>
+    <data>
+      <matrix>1.05 0.0 0.0 0.0 0.0 1.05 0.0 0.0 0.0 0.0 1.05 0.0 0.0 1.0 -3.0 1.0</matrix>
+      <parent>World</parent>
+      <mesh>cube2.obj</mesh>
+      <material>SilhouetteMaterial</material>
     </data>
   </object>
   <object>
@@ -89,12 +245,58 @@
     </data>
   </object>
   <object>
-    <name>Earth</name>
+    <name>Light1</name>
+    <data type="cs4620.common.SceneLight">
+      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0</matrix>
+      <parent>LightObj1</parent>
+      <intensity>1.0 1.0 1.0</intensity>
+      <isAmbient>false</isAmbient>
+    </data>
+  </object>
+  <object>
+    <name>Light2</name>
+    <data type="cs4620.common.SceneLight">
+      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0</matrix>
+      <parent>LightObj2</parent>
+      <intensity>1.0 1.0 1.0</intensity>
+      <isAmbient>false</isAmbient>
+    </data>
+  </object>
+  <object>
+    <name>Cube</name>
     <data>
-      <matrix>0.5 0.0 0.0 0.0 0.0 0.5 0.0 0.0 0.0 0.0 0.5 0.0 0.0 0.0 0.0 1.0</matrix>
+      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 1.0 -3.0 1.0</matrix>
+      <parent>World</parent>
+      <mesh>cube.obj</mesh>
+      <material>GoochMaterial</material>
+    </data>
+  </object>
+  <object>
+    <name>SphereSilhouette</name>
+    <data>
+      <matrix>0.8 0.0 0.0 0.0 0.0 0.8 0.0 0.0 0.0 0.0 0.8 0.0 3.0 1.5 0.0 1.0</matrix>
       <parent>World</parent>
       <mesh>Sphere</mesh>
-      <material>EarthMaterial</material>
+      <material>SilhouetteMaterial</material>
+    </data>
+  </object>
+  <object>
+    <name>Camera</name>
+    <data type="cs4620.common.SceneCamera">
+      <matrix>0.99040604 0.06599186 0.12140923 0.0 -0.07264973 0.9960389 0.0512489 0.0 -0.11754654 -0.059577603 0.99127775 0.0 0.0 0.0 10.0 1.0</matrix>
+      <parent>World</parent>
+      <zPlanes>0.02 1000.0</zPlanes>
+      <perspective>0.01 0.01</perspective>
+      <exposure>2.0</exposure>
+    </data>
+  </object>
+  <object>
+    <name>LightObj1</name>
+    <data>
+      <matrix>0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.0 0.1 0.0 -2.0 2.0 1.5 1.0</matrix>
+      <parent>World</parent>
+      <mesh>Sphere</mesh>
+      <material>Ambient</material>
     </data>
   </object>
   <object>
@@ -107,19 +309,9 @@
     </data>
   </object>
   <object>
-    <name>Camera</name>
-    <data type="cs4620.common.SceneCamera">
-      <matrix>1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 10.0 1.0</matrix>
-      <parent>World</parent>
-      <zPlanes>0.02 1000.0</zPlanes>
-      <perspective>0.01 0.01</perspective>
-      <exposure>2.0</exposure>
-    </data>
-  </object>
-  <object>
-    <name>LightObj0</name>
+    <name>LightObj2</name>
     <data>
-      <matrix>0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.75 1.5 0.0 1.0</matrix>
+      <matrix>0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.5 3.5 -1.5 1.0</matrix>
       <parent>World</parent>
       <mesh>Sphere</mesh>
       <material>Ambient</material>
