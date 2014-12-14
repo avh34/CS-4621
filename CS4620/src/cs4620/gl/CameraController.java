@@ -155,18 +155,19 @@ public class CameraController {
 		// TODO#A3 SOLUTION START
 		
 		rotation = rotation.clone().mul((float)(Math.PI / 180.0));
-		Matrix4 mRot = Matrix4.createRotationX(rotation.x);
+		Matrix4 mRotx = Matrix4.createRotationX(rotation.x);
 				
-		mRot.mulAfter(Matrix4.createRotationY(rotation.y));
-		mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
+		Matrix4 mRoty = (Matrix4.createRotationY(rotation.y));
+		Matrix4 mRot = mRotx.clone().mulAfter(mRoty);
+		//mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
 		
-		if (orbitMode) {
-			Vector3 rotCenter = new Vector3(0,0,0);
-			transformation.clone().invert().mulPos(rotCenter);
-			parentWorld.clone().invert().mulPos(rotCenter);
-			mRot.mulBefore(Matrix4.createTranslation(rotCenter.clone().negate()));
-			mRot.mulAfter(Matrix4.createTranslation(rotCenter));
-		}
+//		if (orbitMode) {
+//			Vector3 rotCenter = new Vector3(0,0,0);
+//			transformation.clone().invert().mulPos(rotCenter);
+//			parentWorld.clone().invert().mulPos(rotCenter);
+//			mRot.mulBefore(Matrix4.createTranslation(rotCenter.clone().negate()));
+//			mRot.mulAfter(Matrix4.createTranslation(rotCenter));
+//		}
 		
 		Matrix4 wouldBe = new Matrix4(transformation);
 		wouldBe.mulBefore(mRot);
@@ -174,11 +175,15 @@ public class CameraController {
 		Vector3 camPos = new Vector3(wouldBe.getTrans());
 		Boolean intersect = doesIntersect(camPos);
 		
-		
 		if (!intersect){
-			transformation.mulBefore(mRot);
+			Matrix4 cameraTrans = Matrix4.createTranslation(camera.mWorldTransform.getTrans());
+			Matrix4 cameraTransn = Matrix4.createTranslation(camera.mWorldTransform.getTrans().negate());
+			mRoty.mulBefore(cameraTransn);
+			mRoty.mulAfter((cameraTrans));
+			transformation.mulAfter(mRoty);
+			transformation.mulBefore(mRotx);
 			float cosAngle = transformation.getRow(1).y;
-			float sinAngle = transformation.getRow(2).y;
+			 float sinAngle = transformation.getRow(2).y;
 			if(Math.atan2(cosAngle, sinAngle) < 0) 
 				{  transformation.mulBefore(Matrix4.createRotationX(rotation.x).invert());}
 		}

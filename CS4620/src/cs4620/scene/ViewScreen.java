@@ -19,11 +19,13 @@ import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
 import blister.GameScreen;
 import blister.GameTime;
 import blister.ScreenState;
+import blister.MainGame.WindowResizeArgs;
 import blister.input.KeyboardEventDispatcher;
 import blister.input.KeyboardKeyEventArgs;
 import cs4620.common.Material;
@@ -58,13 +60,16 @@ public class ViewScreen extends GameScreen {
 	boolean pick;
 	int prevCamScroll = 0;
 	boolean wasPickPressedLast = false;
-	boolean showGrid = true;
+	boolean showGrid = false;
+	
 	
 	SceneApp app;
 	ScenePanel sceneTree;
 	RPMeshData dataMesh;
 	RPMaterialData dataMaterial;
 	RPTextureData dataTexture;
+	
+	DisplayMode prevDisplay =Display.getDisplayMode();
 
 	
 	RenderController rController;
@@ -113,9 +118,9 @@ public class ViewScreen extends GameScreen {
 					dataMaterial.addBasic();
 				}
 				break;
-			case Keyboard.KEY_G:
-				showGrid = !showGrid;
-				break;
+//			case Keyboard.KEY_G:
+//				showGrid = !showGrid;
+//				break;
 			case Keyboard.KEY_F3:
 				FileDialog fd = new FileDialog(app.otherWindow);
 				fd.setVisible(true);
@@ -165,6 +170,7 @@ public class ViewScreen extends GameScreen {
 			case Keyboard.KEY_6:
 				app.otherWindow.dispose();
 				
+				
 			case Keyboard.KEY_ESCAPE:
 				
 				try{
@@ -177,8 +183,6 @@ public class ViewScreen extends GameScreen {
 					e.printStackTrace();
 				}
 
-			
-
 				try {
 					Mouse.setNativeCursor(null);
 				} catch (LWJGLException e) {
@@ -189,6 +193,42 @@ public class ViewScreen extends GameScreen {
 				break;
 			default:
 				break;
+				
+			case Keyboard.KEY_F:
+				try {
+					if(Display.isFullscreen()){
+						Display.setDisplayMode(prevDisplay);
+						//prevDisplay = Display.getDisplayMode();
+						Display.setFullscreen(false);
+					}
+					else{
+
+						Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
+						Display.setFullscreen(true);
+//					for(DisplayMode i: Display.getAvailableDisplayModes()){
+//						if (i.isFullscreenCapable() && i.getHeight() == height){
+//							//prevDisplay = Display.getDisplayMode();
+//							Display.setDisplayMode(i);
+//							Display.setFullscreen(true);
+//							break;
+//							}
+//						}
+					}
+					
+					try{
+						Robot mouseMover = new Robot();
+						float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+						float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+						 mouseMover.mouseMove((int) centerx, (int) centery);
+
+						} catch (AWTException e) {
+							e.printStackTrace();
+						}
+					camController.changeWindow();
+					}
+				catch (LWJGLException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 	};
