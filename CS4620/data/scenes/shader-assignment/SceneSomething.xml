@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+
+    <mesh>
+    <name>Flip.obj</name>
+        <data>
+            <file>data/meshes/testwall.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Bed.obj</name>
+        <data>
+            <file>data/meshes/bed.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>BedsideTable.obj</name>
+        <data>
+            <file>data/meshes/bedsidetable.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Closet.obj</name>
+        <data>
+            <file>data/meshes/talldresser.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>DiningTable.obj</name>
+        <data>
+            <file>data/meshes/diningtable.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Sofa.obj</name>
+        <data>
+            <file>data/meshes/sofa.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>KitchenBase.obj</name>
+        <data>
+            <file>data/meshes/kitchen.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>KitchenCabinets.obj</name>
+        <data>
+            <file>data/meshes/kitchencabs.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>TVTable.obj</name>
+        <data>
+            <file>data/meshes/tvtable.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>TV.obj</name>
+        <data>
+            <file>data/meshes/tv.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Potty.obj</name>
+        <data>
+            <file>data/meshes/toilet.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Fridge.obj</name>
+        <data>
+            <file>data/meshes/fridge.obj</file>
+        </data>
+    </mesh>
+
+
+<!-- _________________ TEXTURES _________________ -->
+
+    <texture>
+        <name>Room</name>
+        <data>
+            <file>data/textures/roomtex.png</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>Bed</name>
+        <data>
+            <file>data/textures/bed.png</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>BedsideTableWood</name>
+        <data>
+            <file>data/textures/bedsidetablewood.png</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>ClosetWood</name>
+        <data>
+            <file>data/textures/closet.jpg</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>TVTexture</name>
+        <data>
+            <file>data/textures/tvtex.png</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>TVTableWood</name>
+        <data>
+            <file>data/textures/tvtabletex.png</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>FridgeTexture</name>
+        <data>
+            <file>data/textures/fridgetexture.png</file>
+        </data>
+    </texture>
+
+
+    <!-- _________________ SHADER MATERIALS _________________ -->
+    <texture>
+        <name>HatchingTexture0</name>
+        <data>
+            <file>data/textures/hatching/Hatching0.png</file>
+        </data>
+    </texture>
+    <texture>
+        <name>HatchingTexture1</name>
+        <data>
+            <file>data/textures/hatching/Hatching1.png</file>
+        </data>
+    </texture>
+    <texture>
+        <name>HatchingTexture2</name>
+        <data>
+            <file>data/textures/hatching/Hatching2.png</file>
+        </data>
+    </texture>
+    <texture>
+        <name>HatchingTexture3</name>
+        <data>
+            <file>data/textures/hatching/Hatching3.png</file>
+        </data>
+    </texture>
+    <texture>
+        <name>HatchingTexture4</name>
+        <data>
+            <file>data/textures/hatching/Hatching4.png</file>
+        </data>
+    </texture>
+
+    <material>
+        <name>HatchingMaterial</name>
+        <data>
+            <type>Hatching</type>
+            <diffuse>
+                <texture>HatchingTexture0</texture>
+            </diffuse>
+            <diffuse1>
+                <texture>HatchingTexture1</texture>
+            </diffuse1>
+            <diffuse2>
+                <texture>HatchingTexture2</texture>
+            </diffuse2>
+            <diffuse3>
+                <texture>HatchingTexture3</texture>
+            </diffuse3>
+            <diffuse4>
+                <texture>HatchingTexture4</texture>
+            </diffuse4>
+        </data>
+    </material>
+
+    <material>
+        <name>SilhouetteMaterial</name>
+        <data>
+            <type>Silhouette</type>
+        </data>
+    </material>
+
+    <material>
+        <name>DiscreteMaterial</name>
+        <data>
+            <type>Discrete</type>
+        </data>
+    </material>
+
+    <material>
+        <name>GoochMaterial</name>
+        <data>
+            <type>Gooch</type>
+        </data>
+    </material>
+
+    <material>
+        <name>TimeMaterial</name>
+        <data>
+            <type>Time</type>
+        </data>
+    </material>
+
+       <!-- _________________ MATERIALS _________________ -->
+
+    <material>
+        <name>PhongMaterialGrey</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <color>173 173 173 255</color>
+            </diffuse>
+            <shininess>0</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>PhongMaterialRed</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <color>227 26 75 255</color>
+            </diffuse>
+            <shininess>0</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>CookTorranceMaterial</name>
+        <data>
+            <type>CookTorrance</type>
+
+            <roughness>0.2</roughness>
+        </data>
+    </material>
+
+    <material>
+        <name>RoomMaterial</name>
+        <data>
+            <type>CookTorrance</type>
+            <diffuse>
+                <texture>Room</texture>
+            </diffuse>
+            <roughness>0.7</roughness>
+        </data>
+    </material>
+
+    <material>
+        <name>BedMaterial</name>
+        <data>
+            <type>CookTorrance</type>
+            <diffuse>
+                <texture>Bed</texture>
+            </diffuse>
+            <roughness>0.2</roughness>
+        </data>
+    </material>
+
+    <material>
+        <name>BedsideTableMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>BedsideTableWood</texture>
+            </diffuse>
+            <shininess>0.1</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>ClosetMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>ClosetWood</texture>
+            </diffuse>
+            <shininess>0.2</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>TVTableMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>TVTableWood</texture>
+            </diffuse>
+            <shininess>0.2</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>TVMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>TVTexture</texture>
+            </diffuse>
+            <shininess>0.5</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>FridgeMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>FridgeTexture</texture>
+            </diffuse>
+            <shininess>0.5</shininess>
+        </data>
+    </material>
+
+
+<!-- _________________ OBJECTS _________________ -->
+
+    <object>
+        <name>House</name>
+        <data>
+            <mesh>Flip.obj</mesh>
+            <material>RoomMaterial</material>
+<!--             <scale>0.5 1 0.7</scale> -->
+        </data>
+    </object>
+    <object>
+        <name>Bed</name>
+        <data>
+            <mesh>Bed.obj</mesh>
+            <material>BedMaterial</material>
+            <scale>1.8 1.8 1.8</scale>
+            <rotation> 0 -90 0 </rotation>
+            <translation>15 0 -9</translation>
+        </data>
+    </object>
+    <object>
+        <name>BedsideTable</name>
+        <data>
+            <mesh>BedsideTable.obj</mesh>
+            <material>BedsideTableMaterial</material>
+            <scale>1.5 1.5 1.5</scale>
+            <rotation> 0 -90 0 </rotation>
+            <translation>17.5 0 -11.6</translation>
+        </data>
+    </object>
+    <object>
+        <name>Closet</name>
+        <data>
+            <mesh>Closet.obj</mesh>
+            <material>ClosetMaterial</material>
+            <scale>1.5 1.5 1.5</scale>
+            <rotation> 0 180 0 </rotation>
+            <translation>8.5 0 -5.5</translation>
+        </data>
+    </object>
+    <object>
+        <name>DiningTable</name>
+        <data>
+            <mesh>DiningTable.obj</mesh>
+            <material>PhongMaterialGrey</material>
+            <scale>1.5 1.5 1.5</scale>
+            <translation>0 0 -10</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>Sofa</name>
+        <data>
+            <mesh>Sofa.obj</mesh>
+            <material>PhongMaterialGrey</material>
+            <scale>1.5 1.5 1</scale>
+            <rotation>0 -45 0</rotation>
+            <translation>-3 0 3</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>KitchenBase</name>
+        <data>
+            <mesh>KitchenBase.obj</mesh>
+            <material>PhongMaterialGrey</material>
+            <scale>1.5 1.15 1.5</scale>
+            <rotation> 0 -90 0 </rotation>
+            <translation>-6.2 0 -23.5</translation>
+        </data>
+    </object>
+    <object>
+        <name>KitchenCabinets</name>
+        <data>
+            <parent>KitchenBase</parent>
+            <mesh>KitchenCabinets.obj</mesh>
+            <material>PhongMaterialRed</material>
+        </data>
+    </object>
+
+    <object>
+        <name>TVTable</name>
+        <data>
+            <mesh>TVTable.obj</mesh>
+            <material>TVTableMaterial</material>
+            <scale>1.5 1.5 1.5</scale>
+            <rotation>0 -45 0</rotation>
+            <translation>-6 0 6.5</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>TV</name>
+        <data>
+            <parent>TVTable</parent>
+            <mesh>TV.obj</mesh>
+            <material>TVMaterial</material>
+            <scale>0.75 0.75 0.75</scale>
+            <rotation>0 90 0</rotation>
+            <translation>0 0.75 0</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>Potty</name>
+        <data>
+            <mesh>Potty.obj</mesh>
+            <material>PhongMaterialGrey</material> 
+            <rotation>0 -90 0</rotation> 
+            <translation>17 0 -15</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>Fridge</name>
+        <data>
+            <mesh>Fridge.obj</mesh>
+            <material>FridgeMaterial</material> 
+            <scale>1.5 1.5 1.5</scale>
+            <translation>-5 0 -18</translation>
+<!--             <rotation>0 90 0</rotation> 
+            <translation>21 0 -21</translation> -->
+        </data>
+    </object>
+
+
+
+    <object>
+        <name>Camera</name>
+        <data type="SceneCamera">
+            <parent>House</parent>
+            <zPlanes>0.02 500.0</zPlanes>
+            <perspective>0.01 0.01</perspective>
+            <exposure>1</exposure>
+            <translation>6 3 0</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>AmbientLight</name>
+        <data type="SceneLight">
+            <translation>3 1 4</translation>
+            <intensity>0.2 0.2 0.2</intensity>
+            <isAmbient>True</isAmbient>
+        </data>
+    </object>
+
+    <object>
+        <name>MysteriousLight</name>
+        <data type="SceneLight">
+            <translation>-7 4 4</translation>
+            <intensity>5 5 5</intensity>
+        </data>
+    </object>
+
+    <object>
+        <name>LightObj0</name>
+        <data>
+            <mesh>Sphere</mesh>
+            <scale>0.1 0.1 0.1</scale>
+            <translation>0 3 -1</translation>
+
+            <material>Ambient</material>
+        </data>
+    </object>
+    
+    <object>
+    <name>Light0</name>
+        <data type="SceneLight">
+            <parent>LightObj0</parent>
+            <intensity>5 5 5</intensity>
+        </data>
+    </object>
+
+</scene>
