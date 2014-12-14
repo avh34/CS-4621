@@ -65,24 +65,22 @@ public class Renderer implements IDisposable {
 				
 			}
 			curPass.objects.add(ro); */
-				
+			
 			//MYCODE
 			if(ro.mesh != curPass.mesh || ro.material != curPass.material) {
 				curPass = new RenderPass();
 				curPass.material = ro.material;
 				curPass.mesh = ro.mesh;
 				passes.add(curPass);
+				curPass.objects.add(ro);
+				
+			
+				curPass = new RenderPass();
+				curPass.material = env.materials.get("SilhouetteMaterial");
+				curPass.mesh = ro.mesh.silhouette;
+				passes.add(curPass);
+				curPass.objects.add(ro);
 			}
-			curPass.objects.add(ro);
-			
-			curPass = new RenderPass();
-			curPass.material = env.materials.get("SilhouetteMaterial");
-			curPass.mesh = ro.mesh.silhouette;
-			passes.add(curPass);
-			curPass.objects.add(ro);
-			
-			//
-			
 			
 		}
 	}

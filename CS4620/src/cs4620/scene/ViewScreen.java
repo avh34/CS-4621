@@ -304,10 +304,10 @@ public class ViewScreen extends GameScreen {
 
 		}
 		for (SceneObject s:app.scene.objects){
-			if ((s.material != null))// && (!s.material.equals("Ambient")) && (!s.mesh.equals("Room.obj"))) {
+			if ((s.material != null) && (!s.material.equals("Ambient"))) {//  && (!s.mesh.equals("Room.obj"))) {
 				s.setMaterial(shadername);
 				app.scene.sendEvent(new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material));}
-		//}
+		 	}
 		
 	}
 	
