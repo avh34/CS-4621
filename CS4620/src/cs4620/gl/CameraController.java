@@ -18,6 +18,7 @@ import org.lwjgl.opengl.Display;
 
 import cs4620.common.Scene;
 import cs4620.common.event.SceneTransformationEvent;
+import cs4620.scene.ViewScreen;
 import cs4620.scene.form.ScenePanel;
 import cs4620.scene.form.SimpleMeshWindow;
 import egl.math.Matrix4;
@@ -26,11 +27,11 @@ import egl.math.Vector3i;
 
 public class CameraController {
 	
+	public boolean shader = false;
 	public boolean ishighlighted = true;
 	protected final Scene scene;
 	public RenderCamera camera;
 	protected final RenderEnvironment rEnv;
-
 	protected boolean prevFrameButtonDown = false;
 	protected int prevMouseX, prevMouseY;
 	
@@ -85,7 +86,7 @@ public class CameraController {
 		if(Keyboard.isKeyDown(Keyboard.KEY_A)) { motion.add(-1, 0, 0); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_D)) { motion.add(1, 0, 0); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) { motion.add(0, -1, 0); }
-		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { motion.add(0, 1, 0); }
+		//if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { motion.add(0, 1, 0); }
 		
 		//check if correct window is brought to front- otherwise mouse position is being calculated from 
 		//relation to options window- want center of screen in relation to screen.
@@ -211,7 +212,11 @@ public class CameraController {
 		Vector3 camPos = new Vector3(wouldBe.getTrans());
 		Boolean intersect = doesIntersect(camPos);
 		
+		
+		if (intersect) {shader = true;}
+		
 		if (!intersect){
+			shader = false;
 			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
 			transformation.mulBefore(mTrans);
 			transformation.m[13] = yNoTrans;
@@ -228,7 +233,6 @@ public class CameraController {
 		while (itr.hasNext()){
 			RenderMesh temp = rEnv.meshes.get(itr.next());
 			Boolean objIntersect = false;
-			
 			if (temp!=null){
 				//TODO: make this less messy?
 				Vector3 currMax = new Vector3(temp.maxCoords);
@@ -270,7 +274,8 @@ public class CameraController {
 //						
 //						
 //					}
-					
+					ViewScreen.intersected = temp.sceneMesh.file;
+
 					intersect = true;
 				}
 			}

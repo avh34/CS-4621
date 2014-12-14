@@ -95,4 +95,7 @@ public class RenderMesh implements IDisposable {
 		}
 		indexCount = data.indexCount;
 	}
+	public String toString(){
+		return sceneMesh.toString();
+	}
 }

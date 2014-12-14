@@ -1,16 +1,20 @@
 package cs4620.scene;
 
 import java.awt.AWTException;
+import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.IntBuffer;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -43,10 +47,12 @@ import cs4620.gl.RenderCamera;
 import cs4620.gl.RenderController;
 import cs4620.gl.Renderer;
 import cs4620.gl.manip.ManipController;
+import cs4620.scene.form.ControlWindow;
 import cs4620.scene.form.RPMaterialData;
 import cs4620.scene.form.RPMeshData;
 import cs4620.scene.form.RPTextureData;
 import cs4620.scene.form.ScenePanel;
+import cs4620.scene.form.VictoryScreen;
 import egl.GLError;
 import egl.math.Vector2;
 import egl.math.Vector3;
@@ -55,6 +61,8 @@ import ext.java.Parser;
 
 
 public class ViewScreen extends GameScreen {
+	public static String intersected; //Object that the player ran into, null if not close to object
+	private int shader = 0; // shader that the player is on
 	Renderer renderer = new Renderer();
 	int cameraIndex = 0;
 	boolean pick;
@@ -62,7 +70,11 @@ public class ViewScreen extends GameScreen {
 	boolean wasPickPressedLast = false;
 	boolean showGrid = false;
 	
-	
+	JPanel panel = new JPanel();
+	JFrame frame = new JFrame("");
+	Canvas canvas = new Canvas();
+	//frame.add(canvas);
+	Window window = new Window(frame);
 	SceneApp app;
 	ScenePanel sceneTree;
 	RPMeshData dataMesh;
@@ -95,7 +107,8 @@ public class ViewScreen extends GameScreen {
 
 	@Override
 	public void build() {
-						
+		
+		
 		app = (SceneApp)game;
 		renderer = new Renderer();	
 	}
@@ -165,11 +178,7 @@ public class ViewScreen extends GameScreen {
 			
 			case Keyboard.KEY_5:
 				changeShader(4);
-				break;
-					
-			case Keyboard.KEY_6:
-				app.otherWindow.dispose();
-				
+				break;				
 				
 			case Keyboard.KEY_ESCAPE:
 				
@@ -198,7 +207,7 @@ public class ViewScreen extends GameScreen {
 				try {
 					if(Display.isFullscreen()){
 						Display.setDisplayMode(prevDisplay);
-						//prevDisplay = Display.getDisplayMode();
+						//sprevDisplay = Display.getDisplayMode();
 						Display.setFullscreen(false);
 					}
 					else{
@@ -235,6 +244,20 @@ public class ViewScreen extends GameScreen {
 	
 	@Override
 	public void onEntry(GameTime gameTime) {	
+		
+//		frame.setSize(700, 500);
+//		frame.add(canvas);
+//		frame.setVisible(true);
+//		canvas.setSize(700, 500);
+//		try {
+//			Display.setParent(canvas);
+//		} catch (LWJGLException e) {
+//			e.printStackTrace();
+//		}
+//			Display.update();
+		
+		//frame.setVisible(true);
+
 		
 		cameraIndex = 0;
 		rController = new RenderController(app.scene, new Vector2(app.getWidth(), app.getHeight()));
@@ -279,6 +302,53 @@ public class ViewScreen extends GameScreen {
 	@Override
 	public void update(GameTime gameTime) {
 		
+		if (camController.shader && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+
+					switch(shader){
+
+						case(0):  if(intersected.equals("data/meshes/teapot.obj")) changeShader(2); shader += 1;
+						VictoryScreen victory2 = new VictoryScreen(app);
+
+						try{
+							Robot mouseMover = new Robot();
+							float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+							float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+							 mouseMover.mouseMove((int) centerx, (int) centery);
+
+							} catch (AWTException e) {
+								e.printStackTrace();
+							}
+
+							try {
+								Mouse.setNativeCursor(null);
+							} catch (LWJGLException e) {
+								e.printStackTrace();
+							}
+							camController.isHighlighted();
+							camController.changeWindow();
+						return;
+						case(1):if(intersected.equals("data/meshes/mayberoom3.obj")) changeShader(1); shader -= 1;
+						VictoryScreen victory = new VictoryScreen(app);
+						try{
+							Robot mouseMover = new Robot();
+							float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+							float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+							 mouseMover.mouseMove((int) centerx, (int) centery);
+
+							} catch (AWTException e) {
+								e.printStackTrace();
+							}
+
+							try {
+								Mouse.setNativeCursor(null);
+							} catch (LWJGLException e) {
+								e.printStackTrace();
+							}
+							camController.isHighlighted();
+							camController.changeWindow();
+							return;
+						} }
+					
 		pick = false;
 		int curCamScroll = 0;
 		

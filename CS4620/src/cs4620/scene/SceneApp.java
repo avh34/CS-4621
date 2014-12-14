@@ -1,5 +1,14 @@
 package cs4620.scene;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import blister.FalseFirstScreen;
 import blister.MainGame;
 import blister.ScreenList;
@@ -27,10 +36,28 @@ public class SceneApp extends MainGame {
 	}
 	
 	public SceneApp() {
-		super("CS 4620 Mesh Workspace", 800, 600);
+		super("", 800, 600);
 		
 		scene = new Scene();
 		otherWindow = new ControlWindow(this);
+		otherWindow.setLocationRelativeTo(null);
+//		try {
+//			Clip sound = AudioSystem.getClip();
+//			File scene_file = new File("data/Audraulic_-_08_-_Distant_Winds.wav");
+//			//String file = scene_file.getAbsolutePath();
+//			AudioInputStream song = (AudioSystem.getAudioInputStream(scene_file));
+//			sound.open(song);
+//			sound.loop(Clip.LOOP_CONTINUOUSLY);
+//			//sound.start();
+//			
+//		} catch (LineUnavailableException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (UnsupportedAudioFileException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	@Override
