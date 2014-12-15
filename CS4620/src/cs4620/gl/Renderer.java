@@ -66,7 +66,6 @@ public class Renderer implements IDisposable {
 			}
 			curPass.objects.add(ro); */
 			
-			//MYCODE
 			if(ro.mesh != curPass.mesh || ro.material != curPass.material) {
 				curPass = new RenderPass();
 				curPass.material = ro.material;
@@ -74,12 +73,14 @@ public class Renderer implements IDisposable {
 				passes.add(curPass);
 				curPass.objects.add(ro);
 				
-			
-				curPass = new RenderPass();
-				curPass.material = env.materials.get("SilhouetteMaterial");
-				curPass.mesh = ro.mesh.silhouette;
-				passes.add(curPass);
-				curPass.objects.add(ro);
+				String material = ro.material.sceneMaterial.getID().name;
+				if (material.equals("HatchingMaterial") || material.equals("GoochMaterial") || material.equals("DiscreteMaterial")) {
+					curPass = new RenderPass();
+					curPass.material = env.materials.get("SilhouetteMaterial");
+					curPass.mesh = ro.mesh.silhouette;
+					passes.add(curPass);
+					curPass.objects.add(ro);
+				}
 			}
 			
 		}

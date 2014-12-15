@@ -81,7 +81,7 @@ class Panel extends JPanel{
 		restart.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				File scene_file = new File("data/scenes/shader-assignment/TestScene.xml");
+				File scene_file = new File("data/scenes/shader-assignment/SceneSomething.xml");
 				String file = scene_file.getAbsolutePath();
 				if(file != null) {
 					Parser p = new Parser();

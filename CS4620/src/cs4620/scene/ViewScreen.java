@@ -65,7 +65,7 @@ import ext.java.Parser;
 
 
 public class ViewScreen extends GameScreen {
-	public static String intersected; //Object that the player ran into, null if not close to object
+	public static String intersected = ""; //Object that the player ran into, null if not close to object
 	private int shader = 0; // shader that the player is on
 	Renderer renderer = new Renderer();
 	int cameraIndex = 0;
@@ -184,7 +184,7 @@ public class ViewScreen extends GameScreen {
 				changeShader(4);
 				break;				
 				
-			case Keyboard.KEY_7:
+			case Keyboard.KEY_6:
 				changeShader(5);
 				
 			case Keyboard.KEY_ESCAPE:
@@ -287,6 +287,7 @@ public class ViewScreen extends GameScreen {
 		
 		wasPickPressedLast = false;
 		prevCamScroll = 0;
+		changeShader(4);
 	}
 	@Override
 	public void onExit(GameTime gameTime) {
@@ -398,31 +399,46 @@ public class ViewScreen extends GameScreen {
 	//Take an int value. 0 = CookTorrancess, 1 = Discrete, 2 = Gooch, 3 = Hatching
 	public void changeShader(int shader){
 		String shadername = "";
+		String notShaded = "";
+		String next = "";
 		switch(shader){
 			case 0:
 				shadername = "CookTorranceMaterial";
 				break;
 			case 1: 
 				shadername = "DiscreteMaterial";
+				notShaded = "Closet.obj";
+				next = "Original";
 				break;
 			case 2: 
 				shadername = "GoochMaterial";
+				notShaded = "KitchenCabinets.obj";
+				next = "DiscreteMaterial";
 				break;
 			case 3: 
 				shadername = "HatchingMaterial";
+				notShaded = "TV.obj";
+				next = "GoochMaterial";
 				break;
 			case 4:
 				shadername = "TimeMaterial";
+				notShaded = "Potty.obj";
+				next = "HatchingMaterial";
 				break;
 			case 5:
-				shadername = "Original";
+				shadername = "XRayMaterial";
+				notShaded = "BedsideTable.obj";
+				next = "GoochMaterial";
 				break;
 			default:
 				shadername = "Original";
 		}
-		String shaderkey = shadername;
+		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){
-			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
+			System.out.println(s.mesh);
+			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals(notShaded))) {
+				 shaderkey = shadername;
+
 				if(shadername.equals("Original")) {
 					shaderkey = s.originalMaterial;
 				}
@@ -432,6 +448,20 @@ public class ViewScreen extends GameScreen {
 					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
 				}
 				s.setMaterial(shaderkey);
+				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
+			}
+			if ((s.material != null) && (!s.material.equals("Ambient")) && (s.mesh.equals(notShaded))) {
+				 shaderkey = next;
+				if(next.equals("Original")) {
+					shaderkey = s.originalMaterial;
+				}
+				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
+				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
+				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
+					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
+				}
+				s.setMaterial(shaderkey);
+				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
 		}
 	}
