@@ -286,31 +286,32 @@ public class ViewScreen extends GameScreen {
 	@Override
 	public void update(GameTime gameTime) {
 		if (intersected.contains(object) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			shader -= 1;
-			if (shader == 2) {
-				changeShader(shader);
-				if(Display.isFullscreen()) {fullScreen();}
-				VictoryScreen victory = new VictoryScreen(app);
-				try{
-					Robot mouseMover = new Robot();
-					float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
-					float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
-					mouseMover.mouseMove((int) centerx, (int) centery);
+						shader -= 1;
+						if (shader == 1) {
+							changeShader(shader);
+							if(Display.isFullscreen()) {fullScreen();}
+						VictoryScreen victory = new VictoryScreen(app);
+						try{
+							Robot mouseMover = new Robot();
+							float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+							float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+							 mouseMover.mouseMove((int) centerx, (int) centery);
 
-				} catch (AWTException e) {
-					e.printStackTrace();
-				}
-				try {
-					Mouse.setNativeCursor(null);
-				} catch (LWJGLException e) {
-					e.printStackTrace();
-				}
-				camController.isHighlighted();
-				camController.changeWindow();
-
-				return;
-			} else{changeShader(shader);}}
-
+							} catch (AWTException e) {
+								e.printStackTrace();
+							}
+							try {
+								Mouse.setNativeCursor(null);
+							} catch (LWJGLException e) {
+								e.printStackTrace();
+							}
+							camController.isHighlighted();
+							camController.changeWindow();
+							
+							return;
+						} else{changeShader(shader);}}
+							
+					
 
 		pick = false;
 		int curCamScroll = 0;
@@ -388,41 +389,42 @@ public class ViewScreen extends GameScreen {
 		String notShaded = "";
 		String next = "";
 		switch(shader){
-		case 0:
-			shadername = "CookTorranceMaterial";
-			break;
-		case 3: 
-			shadername = "DiscreteMaterial";
-			notShaded = "kitchen.obj";
-			next = "Original";
-			break;
-		case 4: 
-			shadername = "GoochMaterial";
-			notShaded = "tv.obj";
-			next = "DiscreteMaterial";
-			break;
-		case 5: 
-			shadername = "HatchingMaterial";
-			notShaded = "fridge.obj";
-			next = "GoochMaterial";
-			break;
-		case 6:
-			shadername = "TimeMaterial";
-			notShaded = "talldresser.obj";
-			next = "HatchingMaterial";
-			break;
-		case 1:
-			shadername = "XRayMaterial";
-			notShaded = "Closet.obj";
-			next = "GoochMaterial";
-			break;
-		case 2:
-			shadername = "Original";
-			notShaded = "Closet.obj";
-			next = "Original";
-			break;
-		default:
-			shadername = "Original";
+			case 0:
+				shadername = "CookTorranceMaterial";
+				break;
+			case 3: 
+				shadername = "DiscreteMaterial";
+				notShaded = "talldresser.obj";
+				next = "XRayMaterial";
+				break;
+			case 4: 
+				shadername = "GoochMaterial";
+				notShaded = "toothbrush.obj";
+				next = "DiscreteMaterial";
+				break;
+			case 5: 
+				shadername = "HatchingMaterial";
+				notShaded = "book.obj";
+				next = "GoochMaterial";
+				break;
+			case 6:
+				shadername = "TimeMaterial";
+				notShaded = "candle.obj";
+				next = "HatchingMaterial";
+				break;
+			case 2:
+				shadername = "XRayMaterial";
+				notShaded = "sofa.obj";
+				next = "Original";
+				break;
+			case 1:
+				shadername = "Original";
+				notShaded = "Closet.obj";
+				next = "Original";
+				break;
+			default:
+				shadername = "Original";
+
 		}
 		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+TIME:                         Mon Dec 15 04:35:31 EST 2014
+=======
 TIME:                         Mon Dec 15 04:32:40 EST 2014
+>>>>>>> 6168290fed60ddd47dfe4ae6e89bfdb28f14dabf
 
 === Java System Properties ===
 java.version:                 1.8.0_20

@@ -30,7 +30,6 @@ import egl.math.Vector4;
 
 public class CameraController {
 	
-	public boolean shader = false;
 	public boolean ishighlighted = true;
 	protected final Scene scene;
 	public RenderCamera camera;
@@ -216,6 +215,7 @@ public class CameraController {
 		//change newMotion back into camera space
 		cam2World.clone().invert().mulDir(newMotion);
 		
+
 		float yNoTrans = cam2World.m[13];
 		Matrix4 mTrans = Matrix4.createTranslation(newMotion);
 		transformation.mulBefore(mTrans);
@@ -240,6 +240,12 @@ public class CameraController {
 				//get min/max coords in world space
 				Vector3 meshMax = new Vector3(temp.mesh.maxCoords);
 				Vector3 meshMin = new Vector3(temp.mesh.minCoords);
+				temp.mWorldTransform.mulPos(meshMax);
+				temp.mWorldTransform.mulPos(meshMin);
+				
+				Vector3 meshAvg = (meshMax.clone().add(meshMin.clone()));
+				meshAvg.div(2);
+				
 				
 				ArrayList<Vector3> boundingPoints = new ArrayList<Vector3>();
 				boundingPoints.add(new Vector3(meshMin.x, meshMin.y, meshMin.z));
@@ -274,6 +280,7 @@ public class CameraController {
 				Boolean in_top    = currMax.y>camPos.y;
 				Boolean in_bottom = currMin.y<camPos.y;
 				
+
 //				//top
 //				if (Math.abs(currMax.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
 //					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
@@ -309,9 +316,6 @@ public class CameraController {
 					collisions.add(tempVecs);
 				}
 				
-				if (Math.abs(currMin.x-camPos.x)< (radius * 3) && in_top && in_bottom && in_front && in_back ){
-					closeTo = true; }
-				
 				//right
 				if (Math.abs(currMax.x-camPos.x)<radius && in_front && in_back){//in_top && in_bottom && in_front && in_back){
 					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
@@ -320,9 +324,6 @@ public class CameraController {
 				    tempVecs.add(new Vector3(1,0,0));
 				    collisions.add(tempVecs);
 				}
-				
-				if (Math.abs(currMax.x-camPos.x)< (radius * 3) && in_top && in_bottom && in_front && in_back){
-				    closeTo = true;}
 				
 				//front
 				if (Math.abs(currMax.z-camPos.z)<radius && in_left && in_right){//in_top && in_bottom && in_left && in_right){
@@ -333,10 +334,11 @@ public class CameraController {
 				    collisions.add(tempVecs);
 				}
 				
-				if (Math.abs(currMax.z-camPos.z)<(radius * 3) && in_top && in_bottom && in_left && in_right){
-				    closeTo = true; }
-				
 				//back
+
+				
+				if(camPos.clone().dist(meshAvg.clone()) < 5) closeArray.add(temp.mesh.sceneMesh.file);
+
 				if (Math.abs(currMin.z-camPos.z)<radius && in_left && in_right){//in_top && in_bottom && in_left && in_right){
 					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
 					tempVecs.add(new Vector3(currMin.x, currMin.y, currMin.z)); //minCoord

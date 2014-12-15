@@ -51,7 +51,7 @@
     </mesh>
 
     <mesh>
-    <name>Sofa.obj</name>
+    <name>sofa.obj</name>
         <data>
             <file>data/meshes/sofa.obj</file>
         </data>
@@ -86,7 +86,7 @@
     </mesh>
 
     <mesh>
-    <name>Potty.obj</name>
+    <name>toilet.obj</name>
         <data>
             <file>data/meshes/toilet.obj</file>
         </data>
@@ -114,21 +114,21 @@
     </mesh>
 
     <mesh>
-    <name>Book.obj</name>
+    <name>book.obj</name>
         <data>
             <file>data/meshes/book.obj</file>
         </data>
     </mesh>
 
     <mesh>
-    <name>Candle.obj</name>
+    <name>candle.obj</name>
         <data>
             <file>data/meshes/candle.obj</file>
         </data>
     </mesh>
 
     <mesh>
-    <name>Toothbrush.obj</name>
+    <name>toothbrush.obj</name>
         <data>
             <file>data/meshes/toothbrush.obj</file>
         </data>
@@ -142,7 +142,7 @@
     </mesh>
 
     <mesh>
-    <name>Teapot.obj</name>
+    <name>teapot.obj</name>
         <data>
             <file>data/meshes/teapot.obj</file>
         </data>
@@ -521,7 +521,7 @@
     <object>
         <name>Sofa</name>
         <data>
-            <mesh>Sofa.obj</mesh>
+            <mesh>sofa.obj</mesh>
             <material>PhongMaterialGrey</material>
             <scale>1.5 1.5 1</scale>
             <rotation>0 -45 0</rotation>
@@ -574,7 +574,7 @@
     <object>
         <name>Potty</name>
         <data>
-            <mesh>Potty.obj</mesh>
+            <mesh>toilet.obj</mesh>
             <material>PhongMaterialGrey</material> 
             <rotation>0 -90 0</rotation> 
             <translation>17 0 -15</translation>
@@ -615,7 +615,7 @@
     <object>
         <name>Book</name>
         <data>
-            <mesh>Book.obj</mesh>
+            <mesh>book.obj</mesh>
             <material>BrownMaterial</material> 
             <scale>1 1 1</scale>
             <translation>4.8 1.55 -3</translation>
@@ -625,7 +625,7 @@
     <object>
         <name>Candle</name>
         <data>
-            <mesh>Candle.obj</mesh>
+            <mesh>candle.obj</mesh>
             <material>PhongMaterialGrey</material> 
             <translation>16.9 1.2 -11.9</translation>
         </data>
@@ -644,7 +644,7 @@
     <object>
         <name>Toothbrush</name>
         <data>
-            <mesh>Toothbrush.obj</mesh>
+            <mesh>toothbrush.obj</mesh>
             <material>BlueMaterial</material> 
             <scale>0.7 0.7 0.7</scale>
             <translation>18 2.1 -15</translation>
