@@ -187,163 +187,285 @@ public class CameraController {
 	protected void translate(Matrix4 parentWorld, Matrix4 transformation, Vector3 motion) {
 		// TODO#A3 SOLUTION START
 		
-		//Matrix4 wouldBe = new Matrix4(transformation);
-		//wouldBe.mulBefore(mTrans);
-		//wouldBe.mulAfter(parentWorld);
+		//parentWorld.mulDir(motion);
+		Matrix4 cam2World = new Matrix4(transformation).mulAfter(parentWorld);
+		Vector3 oldCam = new Vector3(cam2World.getTrans()); //world coords of camera
+		Vector3 camPos = oldCam.clone();
+		cam2World.mulDir(motion);
+		//call with motion and camPos in world space
+		getNewPosition(camPos, motion, 0);
 		
-		parentWorld.mulDir(motion);
-		Vector3 camPos = new Vector3(transformation.clone().mulAfter(parentWorld).getTrans()); //world coords of camera
-		//Vector3 newMotion = getNewPosition(camPos, motion);
+		//calculate motion camera should have in world space
+		Vector3 newMotion = camPos.clone().sub(oldCam);
 		
+		//change newMotion back into camera space
+		cam2World.clone().invert().mulDir(newMotion);
 		
-		if (getNewPosition(camPos, motion)){
-			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
-			Matrix4 mTrans = Matrix4.createTranslation(motion);
-			transformation.mulBefore(mTrans);
-			transformation.m[13] = yNoTrans;
-		}
+		float yNoTrans = cam2World.m[13];
+		Matrix4 mTrans = Matrix4.createTranslation(newMotion);
+		transformation.mulBefore(mTrans);
+		transformation.m[13] = yNoTrans;
 		// SOLUTION END
 	}
 	
-	private ArrayList<RenderObject> findPossColliders(Vector3 camPos, double radius){
+	private ArrayList<ArrayList<Vector3>> findPossColliders(Vector3 camPos, double radius){
 		Iterator<SceneObject> itr = scene.objects.iterator();
 		
-		ArrayList<RenderObject> possCollisions = new ArrayList<RenderObject>();
-		
 		//collisions will contain minCoord, maxCoord, normal for each square with an intersection
-		//ArrayList<ArrayList<Vector3>> collisions = new ArrayList<ArrayList<Vector3>>();
+		ArrayList<ArrayList<Vector3>> collisions = new ArrayList<ArrayList<Vector3>>();
 		
 		while (itr.hasNext()){
 			SceneObject sceneObj = itr.next();
 			RenderObject temp = rEnv.findObject(sceneObj);
-			Boolean objIntersect = false;
-			
+
 			if (temp.mesh!=null){
 				//get min/max coords in world space
-				//TODO: Check all 8 bounding coords rather than just two
 				Vector3 meshMax = new Vector3(temp.mesh.maxCoords);
 				Vector3 meshMin = new Vector3(temp.mesh.minCoords);
-				temp.mWorldTransform.mulPos(meshMax);
-				temp.mWorldTransform.mulPos(meshMin);
 				
-				Vector3 currMax = new Vector3();
-				Vector3 currMin = new Vector3();
+				ArrayList<Vector3> boundingPoints = new ArrayList<Vector3>();
+				boundingPoints.add(new Vector3(meshMin.x, meshMin.y, meshMin.z));
+				boundingPoints.add(new Vector3(meshMin.x, meshMax.y, meshMin.z));
+				boundingPoints.add(new Vector3(meshMax.x, meshMax.y, meshMin.z));
+				boundingPoints.add(new Vector3(meshMax.x, meshMin.y, meshMin.z));
+				boundingPoints.add(new Vector3(meshMin.x, meshMin.y, meshMax.z));
+				boundingPoints.add(new Vector3(meshMin.x, meshMax.y, meshMax.z));
+				boundingPoints.add(new Vector3(meshMax.x, meshMax.y, meshMax.z));
+				boundingPoints.add(new Vector3(meshMax.x, meshMin.y, meshMax.z));
 				
-				currMax.x = (meshMax.x>meshMin.x)? meshMax.x : meshMin.x;
-				currMin.x = (meshMax.x<meshMin.x)? meshMax.x : meshMin.x;
-				
-				currMax.y = (meshMax.y>meshMin.y)? meshMax.y : meshMin.y;
-				currMin.y = (meshMax.y<meshMin.y)? meshMax.y : meshMin.y;
-				
-				currMax.z = (meshMax.z>meshMin.z)? meshMax.z : meshMin.z;
-				currMin.z = (meshMax.z<meshMin.z)? meshMax.z : meshMin.z;
+				Vector3 currMax = new Vector3(Float.NEGATIVE_INFINITY);
+				Vector3 currMin = new Vector3(Float.POSITIVE_INFINITY);
+				 
+				for (int i=0; i<boundingPoints.size(); i+=1){
+					Vector3 curPoint = boundingPoints.get(i);
+				    temp.mWorldTransform.mulPos(curPoint);
+				    if (curPoint.x>currMax.x) currMax.x = curPoint.x;
+				    if (curPoint.y>currMax.y) currMax.y = curPoint.y;
+				    if (curPoint.z>currMax.z) currMax.z = curPoint.z;
+				    
+				    if (curPoint.x<currMin.x) currMin.x = curPoint.x;
+				    if (curPoint.y<currMin.y) currMin.y = curPoint.y;
+				    if (curPoint.z<currMin.z) currMin.z = curPoint.z;
+				}
 
+				//check that the camera is within the listed planes of bounding box
 				Boolean in_left   = currMin.x<camPos.x;
 				Boolean in_right  = currMax.x>camPos.x;
 				Boolean in_front  = currMax.z>camPos.z;
 				Boolean in_back   = currMin.z<camPos.z;
 				Boolean in_top    = currMax.y>camPos.y;
 				Boolean in_bottom = currMin.y<camPos.y;
-
-				ArrayList<Boolean> collisions = new ArrayList<Boolean>();
-				//top
-				if (Math.abs(currMax.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
-					objIntersect = true; collisions.add(true);
-					
-				}else { collisions.add(false);}
 				
-				//bottom
-				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
-					objIntersect = true; collisions.add(true);
-				}else{ collisions.add(false);}
+//				//top
+//				if (Math.abs(currMax.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
+//					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
+//					tempVecs.add(new Vector3(currMin.x, currMax.y, currMin.z)); //minCoord
+//					tempVecs.add(new Vector3(currMax.x, currMax.y, currMax.z)); //maxCoord
+//					tempVecs.add(new Vector3(0,1,0)); //normal
+//					collisions.add(tempVecs);
+//				}
+//				
+//				//bottom
+//				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
+//					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
+//					tempVecs.add(new Vector3(currMin.x, currMin.y, currMin.z)); //minCoord
+//					tempVecs.add(new Vector3(currMax.x, currMin.y, currMax.z)); //maxCoord
+//					tempVecs.add(new Vector3(0, -1, 0)); //normal
+//					collisions.add(tempVecs);
+//				}
 				
 				//left
-				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
-					objIntersect = true; collisions.add(true);
-				}else{ collisions.add(false);}
+				if (Math.abs(currMin.x-camPos.x)<radius && in_front && in_back){ //in_top && in_bottom && in_front && in_back){
+					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
+					tempVecs.add(new Vector3(currMin.x, currMin.y, currMin.z)); //minCoord
+					tempVecs.add(new Vector3(currMin.x, currMax.y, currMax.z)); //maxCoord
+					tempVecs.add(new Vector3(-1, 0, 0));//normal
+					collisions.add(tempVecs);
+				}
 				
 				//right
-				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
-				    objIntersect = true; collisions.add(true);
-				}else{ collisions.add(false);}
+				if (Math.abs(currMax.x-camPos.x)<radius && in_front && in_back){//in_top && in_bottom && in_front && in_back){
+					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
+					tempVecs.add(new Vector3(currMax.x, currMin.y, currMin.z)); //minCoord
+				    tempVecs.add(new Vector3(currMax.x, currMax.y, currMax.z)); //maxCoord
+				    tempVecs.add(new Vector3(1,0,0));
+				    collisions.add(tempVecs);
+				}
 				
 				//front
-				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
-				    objIntersect = true; collisions.add(true);
-				}else{ collisions.add(false);}
+				if (Math.abs(currMax.z-camPos.z)<radius && in_left && in_right){//in_top && in_bottom && in_left && in_right){
+					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
+					tempVecs.add(new Vector3(currMin.x, currMin.y, currMax.z)); //minCoord
+				    tempVecs.add(new Vector3(currMax.x, currMax.y, currMax.z)); //maxCoord
+				    tempVecs.add(new Vector3(0,0,1)); //normal
+				    collisions.add(tempVecs);
+				}
 				
 				//back
-				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
-				    objIntersect = true; collisions.add(true);
-				}else{ collisions.add(false);}
-				
-				if (objIntersect){
-					possCollisions.add(temp);
+				if (Math.abs(currMin.z-camPos.z)<radius && in_left && in_right){//in_top && in_bottom && in_left && in_right){
+					ArrayList<Vector3> tempVecs = new ArrayList<Vector3>();
+					tempVecs.add(new Vector3(currMin.x, currMin.y, currMin.z)); //minCoord
+				    tempVecs.add(new Vector3(currMax.x, currMax.y, currMin.z)); //maxCoord
+				    tempVecs.add(new Vector3(0,0,-1)); //normal
+				    collisions.add(tempVecs);
 				}
 			}
 		}
 		
-		return possCollisions;
+		return collisions;
 		
 	}
 	
-	private boolean getNewPosition(Vector3 camPos, Vector3 velocity){
+	private void getNewPosition(Vector3 camPos, Vector3 velocity, int depth){
+		if (depth>5) return; //reached maximum recursion depth
 		float EPSILON = (float) 0.005;
-		double radius = 0.5;
+		double radius = 2;
 		
 		if (velocity.len()<EPSILON){
 			//velocity vector is smaller than our bound, so don't bother
-			//return new Vector3(0);
-			return true;
+			return;
 		}
+		//newCam holds the would be position of camera, then find possible collisions with that position
 		Vector3 newCam = new Vector3(camPos);
 		newCam.add(velocity);
-		ArrayList<RenderObject> possCollisions;
-		float nearestDistance;
-		possCollisions = findPossColliders(newCam, radius);
+		ArrayList<ArrayList<Vector3>> collisions = findPossColliders(newCam, radius);
 		
-		if (possCollisions.size() == 0){
+		if (collisions.size() == 0){
 			//no collisions, so we can move the camera as expected
-			//return velocity;
-			return true;
-		}else{
-			return false;
+			camPos.add(velocity);
+			return;
 		}
 		
-//		//move along velocity vector until we hit an object
-//		Vector3 V = new Vector3(velocity);
-//		V.normalize();
-//		V.mul(nearestDistance-EPSILON);
-//		Vector3 distToMove = new Vector3(V);
-//		
-//		//still want to travel velocity.len-nearestDistance, so slide along 
-//		// plane of object we intersected with
-//		V.normalize();
-//		V.mul(velocity.len()-nearestDistance);
-//		Vector3 destPoint = nearestIntersectionPoint.add(V);
-//		
-//		//calculate a point on the sliding plane and it's normal
-//		Vector3 slideOrigin = new Vector3();//nearestIntersectionPoint);
-//		Vector3 slideNormal = new Vector3();//nearestIntersectionPoint);
-//		slideNormal.sub(camPos);
-//		
-//		//project destination point onto sliding plane
-//		float t = (float) intersect(slideOrigin, slideNormal.normalize(), destPoint, slideNormal.normalize());
-//		slideNormal.mul(t);
-//		
-//		Vector3 destinationProj = new Vector3(destPoint);
-//		destinationProj.add(slideNormal);
-//		
-//		Vector3 newVelocity = destinationProj.sub(nearestIntersectionPoint);
-//		Vector3 additionalDist = getNewPosition(camPos, newVelocity);
-//		
-//		return distToMove.add(additionalDist);
+		float nearestDistance = Float.POSITIVE_INFINITY;
+		Vector3 nearestIntersectionPoint = new Vector3();
+		Vector3 nearestPolygonIntersectionPoint = new Vector3();
+		camPos.y = 0;
+		velocity.y = 0;
+		for(int i = 0; i < collisions.size(); i+=1){
+			ArrayList<Vector3> currCollider = collisions.get(i);
+			Vector3 currMin = currCollider.get(0).clone();
+			Vector3 currMax = currCollider.get(1).clone();
+			Vector3 currNorm= currCollider.get(2).clone();
+			currMin.y = 0; currMax.y = 0; currNorm.y = 0;
+			
+			float pDist = (float) intersect(currMin, currNorm, camPos, currNorm.clone().negate());
+			Vector3 sphereIntersectionPoint = new Vector3();
+			Vector3 planeIntersectionPoint = new Vector3();
+			pDist = Math.abs(pDist);
+			if (pDist<=radius){
+				//plane is embedded in sphere
+				//planeIntersectionPoint = camPos - currNorm with length set to pDist
+				planeIntersectionPoint.set(currNorm.clone().negate().normalize().mul(pDist).add(camPos));
+			}else{
+				sphereIntersectionPoint.set(camPos.clone().sub(currNorm));
+				
+				Vector3 rV = velocity.clone();
+				rV.normalize();
+				
+				float t = (float)intersect(currMax, currNorm, sphereIntersectionPoint, rV);
+				if (t < 0){
+					t = -t;continue; //we are moving away from the object, so don't worry about it
+				}
+				Vector3 V = velocity.clone().normalize().mul(t);
+				planeIntersectionPoint = sphereIntersectionPoint.clone().add(V);
+			}
+			
+			Vector3 polygonIntersectionPoint = new Vector3(planeIntersectionPoint);
+			
+			//clip the polygonIntersectionPoint so it is within the current polygon
+			polygonIntersectionPoint.set(Math.max(polygonIntersectionPoint.x, currMin.x), 
+										Math.max(polygonIntersectionPoint.y, currMin.y), 
+										Math.max(polygonIntersectionPoint.z, currMin.z));
+			
+			polygonIntersectionPoint.set(Math.min(polygonIntersectionPoint.x, currMax.x), 
+										Math.min(polygonIntersectionPoint.y, currMax.y), 
+										Math.min(polygonIntersectionPoint.z, currMax.z));
+			
+			float t = (float) intersectSphere(polygonIntersectionPoint, velocity.clone().negate(), camPos, radius);
+			if (t>=0 && t<=velocity.len()){
+				//there was an intersection, so find where it was
+				if (t<nearestDistance){
+					nearestDistance = t;
+					nearestIntersectionPoint = polygonIntersectionPoint.add(velocity.clone().negate().normalize().mul(t));
+					nearestPolygonIntersectionPoint.set(polygonIntersectionPoint);
+				}
+				
+			}
+		}
+		
+		
+		if (Float.isInfinite(nearestDistance)){
+			//only happens if there were no collisions, so return
+			camPos.add(velocity);
+			return;
+		}
+		//move along velocity vector until we hit an object
+		Vector3 V = new Vector3(velocity);
+		V.normalize();
+		V.mul(nearestDistance-EPSILON);
+		camPos.add(V);
+		
+		//still want to travel velocity.len-nearestDistance, so slide along 
+		// plane of object we intersected with
+		V.normalize();
+		V.mul(velocity.len()-nearestDistance);
+		Vector3 destPoint = nearestPolygonIntersectionPoint.clone().add(V);
+		
+		//calculate a point on the sliding plane and it's normal
+		Vector3 slideOrigin = new Vector3(nearestPolygonIntersectionPoint);
+		Vector3 slideNormal = new Vector3(nearestPolygonIntersectionPoint);
+		slideNormal.sub(camPos);
+		
+		//project destination point onto sliding plane
+		float t = (float) intersect(slideOrigin, slideNormal.normalize(), destPoint, slideNormal.normalize());
+		slideNormal.mul(t);
+		
+		Vector3 destinationProj = new Vector3(destPoint);
+		destinationProj.add(slideNormal);
+		
+		Vector3 newVelocity = destinationProj.clone().sub(nearestPolygonIntersectionPoint);
+		
+		getNewPosition(camPos, newVelocity, depth+1);
+		
+		return;
 	}
 	//takes in a point on a plane (pO), the plane's normal (pN), a ray origin (rO),
 	// and the ray direction vector (rV). Calculates the t value where the given 
 	// ray intersects the given plane
 	private double intersect(Vector3 pO, Vector3 pN, Vector3 rO, Vector3 rV){
+		Vector3 pNnorm = pN.clone().normalize();
+		Vector3 rVnorm = rV.clone().normalize();
+//		double d = -(pNnorm.dot(pO));
+//		double numer = pNnorm.dot(rO) + d;
+//		double denom = pNnorm.dot(rVnorm);
+//		return -(numer/denom);
+		
 		Vector3 num = pO.clone().sub(rO);
-		return num.dot(pN)/rV.dot(pN);
+		double top = num.dot(pNnorm);
+		Vector3 den = rVnorm.sub(rO);
+		double bottom = den.dot(pNnorm);
+		return top/bottom;
+	}
+	//rO = ray origin, rV = ray vector, sO = sphere origin, sR = sphere radius
+	private double intersectSphere(Vector3 rO, Vector3 rV, Vector3 sO, double sR){
+//		Vector3 Q = rO.clone().sub(sO);
+//		double disc = (rV.dot(Q)*rV.dot(Q)) - (rV.dot(rV)*(Q.dot(Q)-sR*sR));
+//		if (disc< 0) return -1;
+//		
+//		double a = -(rV.dot(Q));
+//		return (a - Math.sqrt(disc))/(rV.dot(rV));
+		
+		Vector3 Q = sO.clone().sub(rO);
+		double c = Q.len();
+		double v = Q.dot(rV.clone().normalize());
+		double d = sR*sR - (c*c-v*v);
+		if (d<0) return -1;
+		double t1 = v-Math.sqrt(d); double t2 = v+Math.sqrt(d);
+		if (t1>0 && t2>0){ return Math.min(t1, t2);}
+		else if (t1>0 && t2<0) return t1;
+		else if (t1<0 && t2>0) return t2;
+		else return Math.max(t1, t2);
+		//return Math.min(v-Math.sqrt(d), v+Math.sqrt(d));
+		
 	}
 }
