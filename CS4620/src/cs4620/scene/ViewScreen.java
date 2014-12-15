@@ -423,6 +423,7 @@ public class ViewScreen extends GameScreen {
 		}
 		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){
+<<<<<<< HEAD
 			System.out.println(s.mesh);
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals(notShaded))) {
 				 shaderkey = shadername;
@@ -439,6 +440,26 @@ public class ViewScreen extends GameScreen {
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (s.mesh.equals(notShaded))) {
 				 shaderkey = next;
 				if(next.equals("Original")) {
+=======
+			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
+
+				
+				if (s.mesh.equals("House2.obj") && shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("House.obj");
+				}
+				else if (s.mesh.equals("House.obj") && !shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("House2.obj");
+				}
+					
+				if (s.mesh.equals("Bed2.obj") && shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("Bed.obj");
+				}
+				else if (s.mesh.equals("Bed.obj") && !shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("Bed2.obj");
+				}
+				
+				/*if(shadername.equals("Original")) {
+>>>>>>> 675e321ceef4c3dababf480373843df10bcfd0f1
 					shaderkey = s.originalMaterial;
 				}
 				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;

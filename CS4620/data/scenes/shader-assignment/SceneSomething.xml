@@ -2,9 +2,16 @@
 <scene>
 
     <mesh>
-    <name>Flip.obj</name>
+    <name>House.obj</name>
         <data>
-            <file>data/meshes/testwall.obj</file>
+            <file>data/meshes/house.obj</file>
+        </data>
+    </mesh>
+	
+	<mesh>
+    <name>House2.obj</name>
+        <data>
+            <file>data/meshes/house2.obj</file>
         </data>
     </mesh>
 
@@ -12,6 +19,13 @@
     <name>Bed.obj</name>
         <data>
             <file>data/meshes/bed.obj</file>
+        </data>
+    </mesh>
+	
+	<mesh>
+    <name>Bed2.obj</name>
+        <data>
+            <file>data/meshes/bed2.obj</file>
         </data>
     </mesh>
 
@@ -269,6 +283,13 @@
             <type>Time</type>
         </data>
     </material>
+	
+	<material>
+		<name>XRayMaterial</name>
+		<data>
+			<type>XRay</type>
+		</data>
+	</material>
 
        <!-- _________________ MATERIALS _________________ -->
 
@@ -436,13 +457,23 @@
         </data>
     </material>
 
+    <material>
+        <name>Ambient</name>
+        <data>
+            <type>Ambient</type>
+            <diffuse>
+                <color>255 255 255 255</color>
+            </diffuse>
+        </data>
+    </material>
+
 
 <!-- _________________ OBJECTS _________________ -->
 
     <object>
         <name>House</name>
         <data>
-            <mesh>Flip.obj</mesh>
+            <mesh>House2.obj</mesh>
             <material>RoomMaterial</material>
 <!--             <scale>0.5 1 0.7</scale> -->
         </data>
@@ -450,7 +481,7 @@
     <object>
         <name>Bed</name>
         <data>
-            <mesh>Bed.obj</mesh>
+            <mesh>Bed2.obj</mesh>
             <material>BedMaterial</material>
             <scale>1.8 1.8 1.8</scale>
             <rotation> 0 -90 0 </rotation>
@@ -647,48 +678,81 @@
     <object>
         <name>AmbientLight</name>
         <data type="SceneLight">
-            <translation>3 1 4</translation>
-            <intensity>0.2 0.2 0.2</intensity>
-            <isAmbient>True</isAmbient>
+            <intensity>0.07 0.07 0.07</intensity>
+            <isAmbient>true</isAmbient>
         </data>
     </object>
 
-    <object>
-        <name>MysteriousLight</name>
-        <data type="SceneLight">
-            <translation>-7 4 4</translation>
-            <intensity>5 5 5</intensity>
-        </data>
-    </object>
-
-	<object>
-        <name>MysteriousLight</name>
-        <data type="SceneLight">
-            <translation>11 4 -11</translation>
-            <intensity>5 5 5</intensity>
-        </data>
-    </object>
-	
     <object>
         <name>LightObj0</name>
         <data>
             <mesh>Sphere</mesh>
             <scale>0.1 0.1 0.1</scale>
-            <translation>0 3 -1</translation>
+            <translation>17 6 -15</translation>
 
             <material>Ambient</material>
         </data>
     </object>
-    
     <object>
-    <name>Light0</name>
+        <name>Light0</name>
         <data type="SceneLight">
             <parent>LightObj0</parent>
-            <translation>0 4 -1</translation>
-            <intensity>5 5 5</intensity>
+            <intensity>1 1 1</intensity>
         </data>
     </object>
 
+    <object>
+        <name>LightObj1</name>
+        <data>
+            <mesh>Sphere</mesh>
+            <scale>0.1 0.1 0.1</scale>
+            <translation>0 6 -10</translation>
 
+            <material>Ambient</material>
+        </data>
+    </object>
+    <object>
+        <name>Light1</name>
+        <data type="SceneLight">
+            <parent>LightObj1</parent>
+            <intensity>10 10 10</intensity>
+        </data>
+    </object>
+
+    <object>
+        <name>LightObj2</name>
+        <data>
+            <mesh>Sphere</mesh>
+            <scale>0.1 0.1 0.1</scale>
+            <translation>15 6 -9</translation>
+
+            <material>Ambient</material>
+        </data>
+    </object>
+    <object>
+        <name>Light2</name>
+        <data type="SceneLight">
+            <parent>LightObj2</parent>
+            <intensity>10 10 10</intensity>
+        </data>
+    </object>
+
+    <object>
+        <name>LightObj3</name>
+        <data>
+            <mesh>Sphere</mesh>
+            <scale>0.1 0.1 0.1</scale>
+            <translation>-3 6 3</translation>
+
+            <material>Ambient</material>
+        </data>
+    </object>
+    <object>
+        <name>Light3</name>
+        <data type="SceneLight">
+            <parent>LightObj3</parent>
+            <intensity>10 10 10</intensity>
+        </data>
+    </object>
 
 </scene>
