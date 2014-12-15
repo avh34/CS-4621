@@ -157,7 +157,9 @@ public abstract class MainGame implements IDisposable {
 			Display.setDisplayMode(new DisplayMode(eWR.width, eWR.height));
 			org.lwjgl.opengl.PixelFormat pf = new PixelFormat(8, 24, 8);
 			ContextAttribs ca = new ContextAttribs(2, 1);
+			Display.setResizable(true);
 			Display.create(pf, ca);			
+			
 			GLState.enableAll();
 			
 			GL11.glViewport(0, 0, eWR.width, eWR.height);

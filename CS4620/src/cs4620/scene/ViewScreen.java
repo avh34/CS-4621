@@ -1,16 +1,21 @@
 package cs4620.scene;
 
 import java.awt.AWTException;
+import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -19,11 +24,13 @@ import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
 import blister.GameScreen;
 import blister.GameTime;
 import blister.ScreenState;
+import blister.MainGame.WindowResizeArgs;
 import blister.input.KeyboardEventDispatcher;
 import blister.input.KeyboardKeyEventArgs;
 import cs4620.common.Material;
@@ -44,10 +51,12 @@ import cs4620.gl.RenderCamera;
 import cs4620.gl.RenderController;
 import cs4620.gl.Renderer;
 import cs4620.gl.manip.ManipController;
+import cs4620.scene.form.ControlWindow;
 import cs4620.scene.form.RPMaterialData;
 import cs4620.scene.form.RPMeshData;
 import cs4620.scene.form.RPTextureData;
 import cs4620.scene.form.ScenePanel;
+import cs4620.scene.form.VictoryScreen;
 import egl.GLError;
 import egl.math.Matrix4;
 import egl.math.Vector2;
@@ -57,18 +66,29 @@ import ext.java.Parser;
 
 
 public class ViewScreen extends GameScreen {
+	
+	public static ArrayList<String> intersected = new ArrayList<String>(); //Object that the player ran into, null if not close to object
+	public String object = "";
+	private int shader = 6; // shader that the player is on
 	Renderer renderer = new Renderer();
 	int cameraIndex = 0;
 	boolean pick;
 	int prevCamScroll = 0;
 	boolean wasPickPressedLast = false;
-	boolean showGrid = true;
+	boolean showGrid = false;
 	
+	JPanel panel = new JPanel();
+	JFrame frame = new JFrame("");
+	Canvas canvas = new Canvas();
+	//frame.add(canvas);
+	Window window = new Window(frame);
 	SceneApp app;
 	ScenePanel sceneTree;
 	RPMeshData dataMesh;
 	RPMaterialData dataMaterial;
 	RPTextureData dataTexture;
+	
+	DisplayMode prevDisplay =Display.getDisplayMode();
 
 	
 	RenderController rController;
@@ -94,7 +114,8 @@ public class ViewScreen extends GameScreen {
 
 	@Override
 	public void build() {
-						
+		
+		
 		app = (SceneApp)game;
 		renderer = new Renderer();	
 	}
@@ -117,9 +138,9 @@ public class ViewScreen extends GameScreen {
 					dataMaterial.addBasic();
 				}
 				break;
-			case Keyboard.KEY_G:
-				showGrid = !showGrid;
-				break;
+//			case Keyboard.KEY_G:
+//				showGrid = !showGrid;
+//				break;
 			case Keyboard.KEY_F3:
 				FileDialog fd = new FileDialog(app.otherWindow);
 				fd.setVisible(true);
@@ -164,8 +185,8 @@ public class ViewScreen extends GameScreen {
 			
 			case Keyboard.KEY_5:
 				changeShader(4);
-				break;
-					
+				break;				
+									
 			case Keyboard.KEY_6:
 				changeShader(5);
 				break;
@@ -185,8 +206,6 @@ public class ViewScreen extends GameScreen {
 					e.printStackTrace();
 				}
 
-			
-
 				try {
 					Mouse.setNativeCursor(null);
 				} catch (LWJGLException e) {
@@ -197,12 +216,29 @@ public class ViewScreen extends GameScreen {
 				break;
 			default:
 				break;
+				
+			case Keyboard.KEY_F:
+				fullScreen();
 			}
 		}
 	};
 	
 	@Override
 	public void onEntry(GameTime gameTime) {	
+		
+//		frame.setSize(700, 500);
+//		frame.add(canvas);
+//		frame.setVisible(true);
+//		canvas.setSize(700, 500);
+//		try {
+//			Display.setParent(canvas);
+//		} catch (LWJGLException e) {
+//			e.printStackTrace();
+//		}
+//			Display.update();
+		
+		//frame.setVisible(true);
+
 		
 		cameraIndex = 0;
 		rController = new RenderController(app.scene, new Vector2(app.getWidth(), app.getHeight()));
@@ -225,6 +261,7 @@ public class ViewScreen extends GameScreen {
 		
 		wasPickPressedLast = false;
 		prevCamScroll = 0;
+		changeShader(6);
 	}
 	@Override
 	public void onExit(GameTime gameTime) {
@@ -237,7 +274,8 @@ public class ViewScreen extends GameScreen {
 		if(rController.env.cameras.size() > 0) {
 			RenderCamera cam = rController.env.cameras.get(cameraIndex);
 			camController.camera = cam;
-			
+			fullScreen();
+
 		}
 		else {
 			camController.camera = null;
@@ -246,7 +284,33 @@ public class ViewScreen extends GameScreen {
 	
 	@Override
 	public void update(GameTime gameTime) {
-		
+		if (intersected.contains(object) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+						shader -= 1;
+						if (shader == 2) {
+							changeShader(shader);
+							if(Display.isFullscreen()) {fullScreen();}
+						VictoryScreen victory = new VictoryScreen(app);
+						try{
+							Robot mouseMover = new Robot();
+							float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+							float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+							 mouseMover.mouseMove((int) centerx, (int) centery);
+
+							} catch (AWTException e) {
+								e.printStackTrace();
+							}
+							try {
+								Mouse.setNativeCursor(null);
+							} catch (LWJGLException e) {
+								e.printStackTrace();
+							}
+							camController.isHighlighted();
+							camController.changeWindow();
+							
+							return;
+						} else{changeShader(shader);}}
+							
+					
 		pick = false;
 		int curCamScroll = 0;
 		
@@ -286,65 +350,107 @@ public class ViewScreen extends GameScreen {
 		}
 	}
 	
+	public void fullScreen(){
+		try {
+			if(Display.isFullscreen()){
+				Display.setDisplayMode(prevDisplay);
+				Display.setFullscreen(false);
+			}
+			else{
+
+				Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
+				Display.setFullscreen(true);
+			}
+			
+			try{
+				Robot mouseMover = new Robot();
+				float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+				float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+				 mouseMover.mouseMove((int) centerx, (int) centery);
+
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+			camController.changeWindow();
+			}
+		catch (LWJGLException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
 	//Take an int value. 0 = CookTorrancess, 1 = Discrete, 2 = Gooch, 3 = Hatching
 	public void changeShader(int shader){
 		String shadername = "";
+		String notShaded = "";
+		String next = "";
 		switch(shader){
 			case 0:
 				shadername = "CookTorranceMaterial";
 				break;
-			case 1: 
-				shadername = "DiscreteMaterial";
-				break;
-			case 2: 
-				shadername = "GoochMaterial";
-				break;
 			case 3: 
+				shadername = "DiscreteMaterial";
+				notShaded = "kitchen.obj";
+				next = "Original";
+				break;
+			case 4: 
+				shadername = "GoochMaterial";
+				notShaded = "tv.obj";
+				next = "DiscreteMaterial";
+				break;
+			case 5: 
 				shadername = "HatchingMaterial";
-				break;
-			case 4:
-				shadername = "TimeMaterial";
-				break;
-			case 5:
-				shadername = "XRayMaterial";
+				notShaded = "fridge.obj";
+				next = "GoochMaterial";
 				break;
 			case 6:
+				shadername = "TimeMaterial";
+				notShaded = "talldresser.obj";
+				next = "HatchingMaterial";
+				break;
+			case 1:
+				shadername = "XRayMaterial";
+				notShaded = "Closet.obj";
+				next = "GoochMaterial";
+				break;
+			case 2:
 				shadername = "Original";
+				notShaded = "Closet.obj";
+				next = "Original";
 				break;
 			default:
 				shadername = "Original";
 		}
-		String shaderkey = shadername;
+		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){
-			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
-
-				
-				if (s.mesh.equals("House2.obj") && shaderkey.equals("HatchingMaterial")) {
-					s.setMesh("House.obj");
+			System.out.println(s.mesh);
+			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals(notShaded))) {
+				 shaderkey = shadername;
+				if(shadername.equals("Original")) {
+					shaderkey = s.originalMaterial; }
+				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
+				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
+				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
+					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
 				}
-				else if (s.mesh.equals("House.obj") && !shaderkey.equals("HatchingMaterial")) {
-					s.setMesh("House2.obj");
-				}
-					
-				if (s.mesh.equals("Bed2.obj") && shaderkey.equals("HatchingMaterial")) {
-					s.setMesh("Bed.obj");
-				}
-				else if (s.mesh.equals("Bed.obj") && !shaderkey.equals("HatchingMaterial")) {
-					s.setMesh("Bed2.obj");
-				}
-				
-				/*if(shadername.equals("Original")) {
+				s.setMaterial(shaderkey);
+				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
+			}
+			if ((s.material != null) && (!s.material.equals("Ambient")) && (s.mesh.equals(notShaded))) {
+				 shaderkey = next;
+				if(next.equals("Original")) {
 					shaderkey = s.originalMaterial;
 				}
 				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
 				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
 				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
 					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
-				}*/
+				}
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
-		}
+			}
+		object = "data/meshes/" + notShaded;
+			
 	}
 	
 	@Override
