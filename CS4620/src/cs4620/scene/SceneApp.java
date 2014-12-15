@@ -41,23 +41,23 @@ public class SceneApp extends MainGame {
 		scene = new Scene();
 		otherWindow = new ControlWindow(this);
 		otherWindow.setLocationRelativeTo(null);
-//		try {
-//			Clip sound = AudioSystem.getClip();
-//			File scene_file = new File("data/Audraulic_-_08_-_Distant_Winds.wav");
-//			//String file = scene_file.getAbsolutePath();
-//			AudioInputStream song = (AudioSystem.getAudioInputStream(scene_file));
-//			sound.open(song);
-//			sound.loop(Clip.LOOP_CONTINUOUSLY);
-//			//sound.start();
-//			
-//		} catch (LineUnavailableException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (UnsupportedAudioFileException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			Clip sound = AudioSystem.getClip();
+			File scene_file = new File("data/Audraulic_-_08_-_Distant_Winds.wav");
+			//String file = scene_file.getAbsolutePath();
+			AudioInputStream song = (AudioSystem.getAudioInputStream(scene_file));
+			sound.open(song);
+			sound.loop(Clip.LOOP_CONTINUOUSLY);
+			//sound.start();
+			
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

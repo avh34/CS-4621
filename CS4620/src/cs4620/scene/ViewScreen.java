@@ -12,6 +12,7 @@ import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -65,8 +66,10 @@ import ext.java.Parser;
 
 
 public class ViewScreen extends GameScreen {
-	public static String intersected = ""; //Object that the player ran into, null if not close to object
-	private int shader = 0; // shader that the player is on
+	
+	public static ArrayList<String> intersected = new ArrayList<String>(); //Object that the player ran into, null if not close to object
+	public String object = "";
+	private int shader = 6; // shader that the player is on
 	Renderer renderer = new Renderer();
 	int cameraIndex = 0;
 	boolean pick;
@@ -258,7 +261,7 @@ public class ViewScreen extends GameScreen {
 		
 		wasPickPressedLast = false;
 		prevCamScroll = 0;
-		changeShader(4);
+		changeShader(6);
 	}
 	@Override
 	public void onExit(GameTime gameTime) {
@@ -281,36 +284,12 @@ public class ViewScreen extends GameScreen {
 	
 	@Override
 	public void update(GameTime gameTime) {
-		
-		if (camController.shader && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-					System.out.println("shader    " +  shader);
-					System.out.println("intersected    " +  intersected);
-					switch(shader){
-
-						case(0):  if(intersected.equals("data/meshes/teapot.obj")) changeShader(2); shader += 1;
-						if(Display.isFullscreen()) {fullScreen();}
-						VictoryScreen victory2 = new VictoryScreen(app);
-
-						try{
-							Robot mouseMover = new Robot();
-							float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
-							float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
-							 mouseMover.mouseMove((int) centerx, (int) centery);
-
-							} catch (AWTException e) {
-								e.printStackTrace();
-							}
-
-							try {
-								Mouse.setNativeCursor(null);
-							} catch (LWJGLException e) {
-								e.printStackTrace();
-							}
-							camController.isHighlighted();
-							camController.changeWindow();
-						return;
-						case(1):if(intersected.equals("data/meshes/mayberoom3.obj")) changeShader(1); shader -= 1;
-						if(Display.isFullscreen()) {fullScreen();}
+		System.out.println(intersected);
+		if (intersected.contains(object) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+						shader -= 1;
+						if (shader == 2) {
+							changeShader(shader);
+							if(Display.isFullscreen()) {fullScreen();}
 						VictoryScreen victory = new VictoryScreen(app);
 						try{
 							Robot mouseMover = new Robot();
@@ -321,7 +300,6 @@ public class ViewScreen extends GameScreen {
 							} catch (AWTException e) {
 								e.printStackTrace();
 							}
-
 							try {
 								Mouse.setNativeCursor(null);
 							} catch (LWJGLException e) {
@@ -329,8 +307,10 @@ public class ViewScreen extends GameScreen {
 							}
 							camController.isHighlighted();
 							camController.changeWindow();
+							
 							return;
-						} }
+						} else{changeShader(shader);}}
+							
 					
 		pick = false;
 		int curCamScroll = 0;
@@ -408,40 +388,42 @@ public class ViewScreen extends GameScreen {
 			case 0:
 				shadername = "CookTorranceMaterial";
 				break;
-			case 1: 
+			case 3: 
 				shadername = "DiscreteMaterial";
-				notShaded = "Closet.obj";
+				notShaded = "kitchen.obj";
 				next = "Original";
 				break;
-			case 2: 
+			case 4: 
 				shadername = "GoochMaterial";
-				notShaded = "KitchenCabinets.obj";
+				notShaded = "tv.obj";
 				next = "DiscreteMaterial";
 				break;
-			case 3: 
+			case 5: 
 				shadername = "HatchingMaterial";
-				notShaded = "TV.obj";
-				next = "GoochMaterial";
-				break;
-			case 4:
-				shadername = "TimeMaterial";
-				notShaded = "Potty.obj";
-				next = "HatchingMaterial";
-				break;
-			case 5:
-				shadername = "XRayMaterial";
-				notShaded = "BedsideTable.obj";
+				notShaded = "fridge.obj";
 				next = "GoochMaterial";
 				break;
 			case 6:
+				shadername = "TimeMaterial";
+				notShaded = "talldresser.obj";
+				next = "HatchingMaterial";
+				break;
+			case 1:
+				shadername = "XRayMaterial";
+				notShaded = "Closet.obj";
+				next = "GoochMaterial";
+				break;
+			case 2:
 				shadername = "Original";
+				notShaded = "Closet.obj";
+				next = "Original";
 				break;
 			default:
 				shadername = "Original";
 		}
 		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){
-			//System.out.println(s.mesh);
+			System.out.println(s.mesh);
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals(notShaded))) {
 				 shaderkey = shadername;
 				if(shadername.equals("Original")) {
@@ -468,6 +450,7 @@ public class ViewScreen extends GameScreen {
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
 			}
+		object = "data/meshes/" + notShaded;
 			
 	}
 	

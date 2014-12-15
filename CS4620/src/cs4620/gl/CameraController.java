@@ -226,7 +226,7 @@ public class CameraController {
 		Iterator<SceneObject> itr = scene.objects.iterator();
 		
 		ArrayList<RenderObject> possCollisions = new ArrayList<RenderObject>();
-		
+		ArrayList<String> closeArray = new ArrayList<String>();
 		//collisions will contain minCoord, maxCoord, normal for each square with an intersection
 		//ArrayList<ArrayList<Vector3>> collisions = new ArrayList<ArrayList<Vector3>>();
 		
@@ -234,8 +234,8 @@ public class CameraController {
 			SceneObject sceneObj = itr.next();
 			RenderObject temp = rEnv.findObject(sceneObj);
 			Boolean objIntersect = false;
+			Boolean closeTo = false;
 
-			
 			if (temp.mesh!=null){
 				//get min/max coords in world space
 				//TODO: Check all 8 bounding coords rather than just two
@@ -270,54 +270,67 @@ public class CameraController {
 					
 				}else { collisions.add(false);}
 				
+				if (Math.abs(currMax.y-camPos.y)< ( radius * 3) && in_left && in_right && in_front && in_back){
+					closeTo = true;}
+				
 				//bottom
 				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
 					objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
+				
+				if (Math.abs(currMin.y-camPos.y)< (radius * 3) && in_left && in_right && in_front && in_back){
+					closeTo = true;}
 				
 				//left
 				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
 					objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
+				if (Math.abs(currMin.x-camPos.x)< (radius * 3) && in_top && in_bottom && in_front && in_back ){
+					closeTo = true; }
+				
 				//right
 				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
+				
+				if (Math.abs(currMax.x-camPos.x)< (radius * 3) && in_top && in_bottom && in_front && in_back){
+				    closeTo = true;}
 				
 				//front
 				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
+				if (Math.abs(currMax.z-camPos.z)<(radius * 3) && in_top && in_bottom && in_left && in_right){
+				    closeTo = true; }
+				
 				//back
 				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
+				if (Math.abs(currMin.z-camPos.z)< (radius * 3)  && in_top && in_bottom && in_left && in_right ){
+				    closeTo = true; }
+				
 				if (objIntersect){
-//					for (int i=0; i<temp.indices.size(); i++){
-//						Vector3i curInd = temp.indices.get(i);
-//						Vector3 v1 = temp.vertices.get(curInd.x);
-//						Vector3 v2 = temp.vertices.get(curInd.y);
-//						Vector3 v3 = temp.vertices.get(curInd.z);
-//						
-//						
-//					}
-					ViewScreen.intersected = temp.mesh.sceneMesh.file;
-
-					possCollisions.add(temp);
+					
+					//possCollisions.add(temp);
 				}
+				//System.out.println(objIntersect);
+				//System.out.println(closeTo);
+				if(closeTo)closeArray.add(temp.mesh.sceneMesh.file);
 			}
 		}
 		
+		ViewScreen.intersected = closeArray;
 		return possCollisions;
-		
+				
 	}
 	
 	private boolean getNewPosition(Vector3 camPos, Vector3 velocity){
 		float EPSILON = (float) 0.005;
-		double radius = 1.0;
+		double radius = 1.5;
 		
 		if (velocity.len()<EPSILON){
 			//velocity vector is smaller than our bound, so don't bother
