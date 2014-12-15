@@ -142,59 +142,59 @@ public class ViewScreen extends GameScreen {
 				//			case Keyboard.KEY_G:
 				//				showGrid = !showGrid;
 				//				break;
-			case Keyboard.KEY_F3:
-				FileDialog fd = new FileDialog(app.otherWindow);
-				fd.setVisible(true);
-				for(File f : fd.getFiles()) {
-					String file = f.getAbsolutePath();
-					if(file != null) {
-						Parser p = new Parser();
-						Object o = p.parse(file, Scene.class);
-						if(o != null) {
-							app.otherWindow.dispose();
-							Scene old = app.scene;
-							app.scene = (Scene)o;
-							if(old != null) old.sendEvent(new SceneReloadEvent(file));
-							return;
-						}
-					}
-				}
-				break;
-			case Keyboard.KEY_F4:
-				try {
-					app.scene.saveData("data/scenes/Saved.xml");
-				} catch (ParserConfigurationException | TransformerException e) {
-					e.printStackTrace();
-				}
-				break;
+//			case Keyboard.KEY_F3:
+//				FileDialog fd = new FileDialog(app.otherWindow);
+//				fd.setVisible(true);
+//				for(File f : fd.getFiles()) {
+//					String file = f.getAbsolutePath();
+//					if(file != null) {
+//						Parser p = new Parser();
+//						Object o = p.parse(file, Scene.class);
+//						if(o != null) {
+//							app.otherWindow.dispose();
+//							Scene old = app.scene;
+//							app.scene = (Scene)o;
+//							if(old != null) old.sendEvent(new SceneReloadEvent(file));
+//							return;
+//						}
+//					}
+//				}
+//				break;
+//			case Keyboard.KEY_F4:
+//				try {
+//					app.scene.saveData("data/scenes/Saved.xml");
+//				} catch (ParserConfigurationException | TransformerException e) {
+//					e.printStackTrace();
+//				}
+//				break;
 
-			case Keyboard.KEY_1:
-				changeShader(0);
-				break;
-
-			case Keyboard.KEY_2:
-				changeShader(1);
-				break;
-
-			case Keyboard.KEY_3:
-				changeShader(2);
-				break;
-
-			case Keyboard.KEY_4:
-				changeShader(3);
-				break;
-
-			case Keyboard.KEY_5:
-				changeShader(4);
-				break;				
-
-			case Keyboard.KEY_6:
-				changeShader(5);
-				break;
-
-			case Keyboard.KEY_7:
-				changeShader(6);
-				break;
+//			case Keyboard.KEY_1:
+//				changeShader(0);
+//				break;
+//
+//			case Keyboard.KEY_2:
+//				changeShader(1);
+//				break;
+//
+//			case Keyboard.KEY_3:
+//				changeShader(2);
+//				break;
+//
+//			case Keyboard.KEY_4:
+//				changeShader(3);
+//				break;
+//
+//			case Keyboard.KEY_5:
+//				changeShader(4);
+//				break;				
+//
+//			case Keyboard.KEY_6:
+//				changeShader(5);
+//				break;
+//
+//			case Keyboard.KEY_7:
+//				changeShader(6);
+//				break;
 			case Keyboard.KEY_ESCAPE:
 
 				try{
@@ -289,6 +289,7 @@ public class ViewScreen extends GameScreen {
 						shader -= 1;
 						if (shader == 1) {
 							changeShader(shader);
+							shader = 6;
 							if(Display.isFullscreen()) {fullScreen();}
 						VictoryScreen victory = new VictoryScreen(app);
 						try{
