@@ -186,12 +186,6 @@
         </data>
     </texture>
 
-    <texture>
-        <name>DeskChairTexture</name>
-        <data>
-            <file>data/textures/deskchairtex.png</file>
-        </data>
-    </texture>
 
 
     <!-- _________________ SHADER MATERIALS _________________ -->
@@ -430,16 +424,6 @@
         </data>
     </material>
 
-    <material>
-        <name>DeskChairMaterial</name>
-        <data>
-            <type>Phong</type>
-            <diffuse>
-                <texture>DeskChairTexture</texture>
-            </diffuse>
-            <shininess>0.5</shininess>
-        </data>
-    </material>
 
     <material>
         <name>BooksMaterial</name>
@@ -592,7 +576,7 @@
         <name>DeskChair</name>
         <data>
             <mesh>DeskChair.obj</mesh>
-            <material>DeskChairMaterial</material> 
+            <material>BrownMaterial</material> 
             <translation>3.5 0 -4</translation>
         </data>
     </object>
