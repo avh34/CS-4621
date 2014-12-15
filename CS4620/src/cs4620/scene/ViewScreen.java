@@ -317,14 +317,30 @@ public class ViewScreen extends GameScreen {
 		String shaderkey = shadername;
 		for (SceneObject s:app.scene.objects){
 			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
-				if(shadername.equals("Original")) {
+
+				
+				if (s.mesh.equals("House2.obj") && shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("House.obj");
+				}
+				else if (s.mesh.equals("House.obj") && !shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("House2.obj");
+				}
+					
+				if (s.mesh.equals("Bed2.obj") && shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("Bed.obj");
+				}
+				else if (s.mesh.equals("Bed.obj") && !shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("Bed2.obj");
+				}
+				
+				/*if(shadername.equals("Original")) {
 					shaderkey = s.originalMaterial;
 				}
 				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
 				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
 				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
 					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
-				}
+				}*/
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
