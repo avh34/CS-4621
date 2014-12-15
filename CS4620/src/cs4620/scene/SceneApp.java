@@ -41,7 +41,7 @@ public class SceneApp extends MainGame {
 		scene = new Scene();
 		otherWindow = new ControlWindow(this);
 		otherWindow.setLocationRelativeTo(null);
-		try {
+		/*try {
 			Clip sound = AudioSystem.getClip();
 			File scene_file = new File("data/Audraulic_-_08_-_Distant_Winds.wav");
 			//String file = scene_file.getAbsolutePath();
@@ -57,7 +57,7 @@ public class SceneApp extends MainGame {
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	@Override
