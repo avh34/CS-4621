@@ -398,8 +398,6 @@ public class ViewScreen extends GameScreen {
 			e1.printStackTrace();
 		}
 	}
-
-	
 	
 	//Take an int value. 0 = CookTorrancess, 1 = Discrete, 2 = Gooch, 3 = Hatching
 	public void changeShader(int shader){
