@@ -285,7 +285,6 @@ public class ViewScreen extends GameScreen {
 
 	@Override
 	public void update(GameTime gameTime) {
-		System.out.println(intersected);
 		if (intersected.contains(object) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			shader -= 1;
 			if (shader == 2) {
