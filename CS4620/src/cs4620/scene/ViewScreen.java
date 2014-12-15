@@ -322,6 +322,7 @@ public class ViewScreen extends GameScreen {
 					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
 				}
 				s.setMaterial(shaderkey);
+				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
 		}
 	}
