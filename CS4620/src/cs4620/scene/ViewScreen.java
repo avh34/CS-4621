@@ -333,14 +333,14 @@ public class ViewScreen extends GameScreen {
 					s.setMesh("Bed2.obj");
 				}
 				
-				/*if(shadername.equals("Original")) {
+				if(shadername.equals("Original")) {
 					shaderkey = s.originalMaterial;
 				}
 				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
 				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
 				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
 					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
-				}*/
+				}
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
