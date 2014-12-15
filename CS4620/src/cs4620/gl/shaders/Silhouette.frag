@@ -27,6 +27,7 @@ void main() {
 	vec3 V = normalize(worldCam - worldPos.xyz);
 	vec4 finalColor = vec4(0.0);
 	
+	// Set the silhouette to black
 	gl_FragColor = finalColor;
 }
 
