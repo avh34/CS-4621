@@ -2,9 +2,16 @@
 <scene>
 
     <mesh>
-    <name>Flip.obj</name>
+    <name>House.obj</name>
         <data>
-            <file>data/meshes/testwall.obj</file>
+            <file>data/meshes/house.obj</file>
+        </data>
+    </mesh>
+	
+	<mesh>
+    <name>House2.obj</name>
+        <data>
+            <file>data/meshes/house2.obj</file>
         </data>
     </mesh>
 
@@ -12,6 +19,13 @@
     <name>Bed.obj</name>
         <data>
             <file>data/meshes/bed.obj</file>
+        </data>
+    </mesh>
+	
+	<mesh>
+    <name>Bed2.obj</name>
+        <data>
+            <file>data/meshes/bed2.obj</file>
         </data>
     </mesh>
 
@@ -219,6 +233,13 @@
             <type>Time</type>
         </data>
     </material>
+	
+	<material>
+		<name>XRayMaterial</name>
+		<data>
+			<type>XRay</type>
+		</data>
+	</material>
 
        <!-- _________________ MATERIALS _________________ -->
 
@@ -336,7 +357,7 @@
     <object>
         <name>House</name>
         <data>
-            <mesh>Flip.obj</mesh>
+            <mesh>House2.obj</mesh>
             <material>RoomMaterial</material>
 <!--             <scale>0.5 1 0.7</scale> -->
         </data>
@@ -344,7 +365,7 @@
     <object>
         <name>Bed</name>
         <data>
-            <mesh>Bed.obj</mesh>
+            <mesh>Bed2.obj</mesh>
             <material>BedMaterial</material>
             <scale>1.8 1.8 1.8</scale>
             <rotation> 0 -90 0 </rotation>

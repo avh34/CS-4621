@@ -75,11 +75,13 @@ public class Renderer implements IDisposable {
 				
 				String material = ro.material.sceneMaterial.getID().name;
 				if (material.equals("HatchingMaterial") || material.equals("GoochMaterial") || material.equals("DiscreteMaterial")) {
-					curPass = new RenderPass();
-					curPass.material = env.materials.get("SilhouetteMaterial");
-					curPass.mesh = ro.mesh.silhouette;
-					passes.add(curPass);
-					curPass.objects.add(ro);
+					if (!ro.sceneObject.mesh.equals("Flip.obj") && !ro.sceneObject.mesh.equals("Room2.obj")) {
+						curPass = new RenderPass();
+						curPass.material = env.materials.get("SilhouetteMaterial");
+						curPass.mesh = ro.mesh.silhouette;
+						passes.add(curPass);
+						curPass.objects.add(ro);
+					}
 				}
 			}
 			
