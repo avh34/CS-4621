@@ -112,18 +112,16 @@ public class CameraController {
 			Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
 			//Current Mouse Positions
 			int thisMouseX = (int) (int) java.awt.MouseInfo.getPointerInfo().getLocation().getX() - Display.getX();
-			int thisMouseY = (int) java.awt.MouseInfo.getPointerInfo().getLocation().getY() - Display.getY();
-						
+			int thisMouseY = (int) java.awt.MouseInfo.getPointerInfo().getLocation().getY() - Display.getY();				
 
 			//Center of display
 			float centery = Display.getY()  + Display.getHeight()/ 2;
 			float centerx = Display.getX() + Display.getWidth()/ 2;
-			rotation.add(0, -0.05f * (thisMouseX - mouse_x), 0);
-			rotation.add(0.05f * (mouse_y - thisMouseY), 0, 0);
+			rotation.add(0, -0.03f * (thisMouseX - mouse_x), 0);
+			rotation.add(0.03f * (mouse_y - thisMouseY), 0, 0);
 			
 			//return mouse to center of display
 			 mouseMover.mouseMove((int) centerx, (int) centery);
-
 		
 	} catch (AWTException e) {
 		e.printStackTrace();

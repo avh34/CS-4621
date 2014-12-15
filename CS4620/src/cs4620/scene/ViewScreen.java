@@ -215,40 +215,7 @@ public class ViewScreen extends GameScreen {
 				break;
 				
 			case Keyboard.KEY_F:
-				try {
-					if(Display.isFullscreen()){
-						Display.setDisplayMode(prevDisplay);
-						//sprevDisplay = Display.getDisplayMode();
-						Display.setFullscreen(false);
-					}
-					else{
-
-						Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
-						Display.setFullscreen(true);
-//					for(DisplayMode i: Display.getAvailableDisplayModes()){
-//						if (i.isFullscreenCapable() && i.getHeight() == height){
-//							//prevDisplay = Display.getDisplayMode();
-//							Display.setDisplayMode(i);
-//							Display.setFullscreen(true);
-//							break;
-//							}
-//						}
-					}
-					
-					try{
-						Robot mouseMover = new Robot();
-						float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
-						float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
-						 mouseMover.mouseMove((int) centerx, (int) centery);
-
-						} catch (AWTException e) {
-							e.printStackTrace();
-						}
-					camController.changeWindow();
-					}
-				catch (LWJGLException e1) {
-					e1.printStackTrace();
-				}
+				fullScreen();
 			}
 		}
 	};
@@ -304,7 +271,8 @@ public class ViewScreen extends GameScreen {
 		if(rController.env.cameras.size() > 0) {
 			RenderCamera cam = rController.env.cameras.get(cameraIndex);
 			camController.camera = cam;
-			
+			fullScreen();
+
 		}
 		else {
 			camController.camera = null;
@@ -315,10 +283,12 @@ public class ViewScreen extends GameScreen {
 	public void update(GameTime gameTime) {
 		
 		if (camController.shader && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-
+					System.out.println("shader    " +  shader);
+					System.out.println("intersected    " +  intersected);
 					switch(shader){
 
 						case(0):  if(intersected.equals("data/meshes/teapot.obj")) changeShader(2); shader += 1;
+						if(Display.isFullscreen()) {fullScreen();}
 						VictoryScreen victory2 = new VictoryScreen(app);
 
 						try{
@@ -340,6 +310,7 @@ public class ViewScreen extends GameScreen {
 							camController.changeWindow();
 						return;
 						case(1):if(intersected.equals("data/meshes/mayberoom3.obj")) changeShader(1); shader -= 1;
+						if(Display.isFullscreen()) {fullScreen();}
 						VictoryScreen victory = new VictoryScreen(app);
 						try{
 							Robot mouseMover = new Robot();
@@ -400,6 +371,36 @@ public class ViewScreen extends GameScreen {
 		}
 	}
 	
+	public void fullScreen(){
+		try {
+			if(Display.isFullscreen()){
+				Display.setDisplayMode(prevDisplay);
+				Display.setFullscreen(false);
+			}
+			else{
+
+				Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
+				Display.setFullscreen(true);
+			}
+			
+			try{
+				Robot mouseMover = new Robot();
+				float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+				float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+				 mouseMover.mouseMove((int) centerx, (int) centery);
+
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+			camController.changeWindow();
+			}
+		catch (LWJGLException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	
+	
 	//Take an int value. 0 = CookTorrancess, 1 = Discrete, 2 = Gooch, 3 = Hatching
 	public void changeShader(int shader){
 		String shadername = "";
@@ -442,29 +443,29 @@ public class ViewScreen extends GameScreen {
 		}
 		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){
-			System.out.println(s.mesh);
+			//System.out.println(s.mesh);
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals(notShaded))) {
 				 shaderkey = shadername;
-//				if(shadername.equals("Original")) {
-//					shaderkey = s.originalMaterial; }
-//				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
-//				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
-//				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
-//					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
-//				}
+				if(shadername.equals("Original")) {
+					shaderkey = s.originalMaterial; }
+				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
+				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
+				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
+					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
+				}
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (s.mesh.equals(notShaded))) {
 				 shaderkey = next;
-//				if(next.equals("Original")) {
-//					shaderkey = s.originalMaterial;
-//				}
-//				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
-//				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
-//				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
-//					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
-//				}
+				if(next.equals("Original")) {
+					shaderkey = s.originalMaterial;
+				}
+				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
+				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
+				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
+					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
+				}
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}

@@ -77,6 +77,7 @@ import cs4620.common.SceneLight;
 import cs4620.common.SceneObject;
 import cs4620.common.event.SceneReloadEvent;
 import cs4620.scene.SceneApp;
+import cs4620.scene.ViewScreen;
 import egl.math.Color;
 import ext.java.Parser;
 
