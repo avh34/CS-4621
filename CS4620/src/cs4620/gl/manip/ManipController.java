@@ -403,7 +403,7 @@ public class ManipController implements IDisposable {
 	
 	public void draw(RenderCamera camera) {
 		if(currentObject == null) return;
-		
+		/*
 		DepthState.NONE.set();
 		BlendState.ALPHA_BLEND.set();
 		RasterizerState.CULL_CLOCKWISE.set();
@@ -420,7 +420,7 @@ public class ManipController implements IDisposable {
 		for(Manipulator manip : currentManips) {
 			Matrix4 mTransform = getTransformation(manip, camera, currentObject);
 			manipRenderer.render(mTransform, camera.mViewProjection, manip.type, manip.axis);
-		}
+		}*/
 
 }
 	public void drawPick(RenderCamera camera, RenderObject ro, PickingProgram prog) {
