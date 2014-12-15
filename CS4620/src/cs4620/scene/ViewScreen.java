@@ -287,7 +287,7 @@ public class ViewScreen extends GameScreen {
 		System.out.println(intersected);
 		if (intersected.contains(object) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 						shader -= 1;
-						if (shader == 2) {
+						if (shader == 1) {
 							changeShader(shader);
 							if(Display.isFullscreen()) {fullScreen();}
 						VictoryScreen victory = new VictoryScreen(app);
@@ -390,30 +390,30 @@ public class ViewScreen extends GameScreen {
 				break;
 			case 3: 
 				shadername = "DiscreteMaterial";
-				notShaded = "kitchen.obj";
-				next = "Original";
+				notShaded = "talldresser.obj";
+				next = "XRayMaterial";
 				break;
 			case 4: 
 				shadername = "GoochMaterial";
-				notShaded = "tv.obj";
+				notShaded = "toothbrush.obj";
 				next = "DiscreteMaterial";
 				break;
 			case 5: 
 				shadername = "HatchingMaterial";
-				notShaded = "fridge.obj";
+				notShaded = "book.obj";
 				next = "GoochMaterial";
 				break;
 			case 6:
 				shadername = "TimeMaterial";
-				notShaded = "talldresser.obj";
+				notShaded = "candle.obj";
 				next = "HatchingMaterial";
 				break;
-			case 1:
-				shadername = "XRayMaterial";
-				notShaded = "Closet.obj";
-				next = "GoochMaterial";
-				break;
 			case 2:
+				shadername = "XRayMaterial";
+				notShaded = "sofa.obj";
+				next = "Original";
+				break;
+			case 1:
 				shadername = "Original";
 				notShaded = "Closet.obj";
 				next = "Original";

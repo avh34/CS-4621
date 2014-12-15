@@ -30,7 +30,6 @@ import egl.math.Vector4;
 
 public class CameraController {
 	
-	public boolean shader = false;
 	public boolean ishighlighted = true;
 	protected final Scene scene;
 	public RenderCamera camera;
@@ -212,13 +211,11 @@ public class CameraController {
 		
 				
 		if (getNewPosition(camPos, motion)){
-			shader = false;
 			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
 			Matrix4 mTrans = Matrix4.createTranslation(motion);
 			transformation.mulBefore(mTrans);
 			transformation.m[13] = yNoTrans;
 		}
-		else{shader = true;}
 		// SOLUTION END
 	}
 	
@@ -243,6 +240,9 @@ public class CameraController {
 				Vector3 meshMin = new Vector3(temp.mesh.minCoords);
 				temp.mWorldTransform.mulPos(meshMax);
 				temp.mWorldTransform.mulPos(meshMin);
+				
+				Vector3 meshAvg = (meshMax.clone().add(meshMin.clone()));
+				meshAvg.div(2);
 				
 				Vector3 currMax = new Vector3();
 				Vector3 currMin = new Vector3();
@@ -270,56 +270,38 @@ public class CameraController {
 					
 				}else { collisions.add(false);}
 				
-				if (Math.abs(currMax.y-camPos.y)< ( radius * 3) && in_left && in_right && in_front && in_back){
-					closeTo = true;}
-				
 				//bottom
 				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
 					objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
-				
-				if (Math.abs(currMin.y-camPos.y)< (radius * 3) && in_left && in_right && in_front && in_back){
-					closeTo = true;}
 				
 				//left
 				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
 					objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
-				if (Math.abs(currMin.x-camPos.x)< (radius * 3) && in_top && in_bottom && in_front && in_back ){
-					closeTo = true; }
-				
 				//right
 				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
-				
-				if (Math.abs(currMax.x-camPos.x)< (radius * 3) && in_top && in_bottom && in_front && in_back){
-				    closeTo = true;}
 				
 				//front
 				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
-				if (Math.abs(currMax.z-camPos.z)<(radius * 3) && in_top && in_bottom && in_left && in_right){
-				    closeTo = true; }
-				
 				//back
 				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
-				if (Math.abs(currMin.z-camPos.z)< (radius * 3)  && in_top && in_bottom && in_left && in_right ){
-				    closeTo = true; }
-				
 				if (objIntersect){
 					
 					//possCollisions.add(temp);
 				}
-				//System.out.println(objIntersect);
-				//System.out.println(closeTo);
-				if(closeTo)closeArray.add(temp.mesh.sceneMesh.file);
+				
+				//System.out.println(camPos.clone().dist(meshAvg.clone()));
+				if(camPos.clone().dist(meshAvg.clone()) < 5) closeArray.add(temp.mesh.sceneMesh.file);
 			}
 		}
 		
