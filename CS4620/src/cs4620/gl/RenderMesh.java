@@ -31,7 +31,7 @@ public class RenderMesh implements IDisposable {
 		new ArrayBind(Semantic.TexCoord, GLType.Float, 2, 6 * 4)
 	};
 	
-	public float thickness = 0.15f;
+	public float thickness = 0.05f;
 	public RenderMesh silhouette;
 	
 	public final GLBuffer vBuffer = new GLBuffer(BufferTarget.ArrayBuffer, BufferUsageHint.StaticDraw, false);
