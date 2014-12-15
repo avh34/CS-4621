@@ -85,6 +85,55 @@
         </data>
     </mesh>
 
+    <mesh>
+    <name>Desk.obj</name>
+        <data>
+            <file>data/meshes/desk.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>DeskChair.obj</name>
+        <data>
+            <file>data/meshes/deskchair.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Book.obj</name>
+        <data>
+            <file>data/meshes/book.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Candle.obj</name>
+        <data>
+            <file>data/meshes/candle.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Toothbrush.obj</name>
+        <data>
+            <file>data/meshes/toothbrush.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Can.obj</name>
+        <data>
+            <file>data/meshes/can.obj</file>
+        </data>
+    </mesh>
+
+    <mesh>
+    <name>Teapot.obj</name>
+        <data>
+            <file>data/meshes/teapot.obj</file>
+        </data>
+    </mesh>
+
 
 <!-- _________________ TEXTURES _________________ -->
 
@@ -134,6 +183,13 @@
         <name>FridgeTexture</name>
         <data>
             <file>data/textures/fridgetexture.png</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>DeskChairTexture</name>
+        <data>
+            <file>data/textures/deskchairtex.png</file>
         </data>
     </texture>
 
@@ -245,6 +301,50 @@
     </material>
 
     <material>
+        <name>BrownMaterial</name>
+        <data>
+            <type>CookTorrence</type>
+            <diffuse>
+                <color>101 60 26 255</color>
+            </diffuse>
+            <roughness>0.3</roughness>
+        </data>
+    </material>
+
+    <material>
+        <name>BeigeMaterial</name>
+        <data>
+            <type>CookTorrence</type>
+            <diffuse>
+                <color>242 239 215 255</color>
+            </diffuse>
+            <roughness>0.3</roughness>
+        </data>
+    </material>
+
+    <material>
+        <name>SilverMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <color>62 62 62 255</color>
+            </diffuse>
+            <shininess>0.6</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>BlueMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <color>33 88 138 255</color>
+            </diffuse>
+            <shininess>0.6</shininess>
+        </data>
+    </material>
+
+    <material>
         <name>CookTorranceMaterial</name>
         <data>
             <type>CookTorrance</type>
@@ -327,6 +427,28 @@
                 <texture>FridgeTexture</texture>
             </diffuse>
             <shininess>0.5</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>DeskChairMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>DeskChairTexture</texture>
+            </diffuse>
+            <shininess>0.5</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>BooksMaterial</name>
+        <data>
+            <type>CookTorrance</type>
+            <diffuse>
+                <texture>BookTexture</texture>
+            </diffuse>
+            <roughness>0.2</roughness>
         </data>
     </material>
 
@@ -456,6 +578,75 @@
         </data>
     </object>
 
+    <object>
+        <name>Desk</name>
+        <data>
+            <mesh>Desk.obj</mesh>
+            <material>PhongMaterialGrey</material> 
+            <scale>1.2 1.2 1.2</scale>
+            <rotation>0 90 0</rotation>
+            <translation>4 0 -4.4</translation>
+        </data>
+    </object>
+    <object>
+        <name>DeskChair</name>
+        <data>
+            <mesh>DeskChair.obj</mesh>
+            <material>DeskChairMaterial</material> 
+            <translation>3.5 0 -4</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>Book</name>
+        <data>
+            <mesh>Book.obj</mesh>
+            <material>BrownMaterial</material> 
+            <scale>1 1 1</scale>
+            <translation>4.8 1.55 -3</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>Candle</name>
+        <data>
+            <mesh>Candle.obj</mesh>
+            <material>PhongMaterialGrey</material> 
+            <translation>16.9 1.2 -11.9</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>Can</name>
+        <data>
+            <mesh>Can.obj</mesh>
+            <material>SilverMaterial</material> 
+            <scale>0.7 0.7 0.7</scale>
+            <translation>0.7 1.77 -9</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>Toothbrush</name>
+        <data>
+            <mesh>Toothbrush.obj</mesh>
+            <material>BlueMaterial</material> 
+            <scale>0.7 0.7 0.7</scale>
+            <translation>18 2.1 -15</translation>
+        </data>
+    </object>
+
+    <object>
+        <name>Teapot</name>
+        <data>
+            <mesh>Teapot.obj</mesh>
+            <material>BlueMaterial</material> 
+            <scale>0.1 0.1 0.1</scale>
+            <translation>-6.7 1.8 -15</translation>
+        </data>
+    </object>
+
+
 
 
     <object>
@@ -465,7 +656,7 @@
             <zPlanes>0.02 500.0</zPlanes>
             <perspective>0.01 0.01</perspective>
             <exposure>1</exposure>
-            <translation>6 3 0</translation>
+            <translation>4 3 3</translation>
         </data>
     </object>
 
@@ -509,8 +700,11 @@
     <name>Light0</name>
         <data type="SceneLight">
             <parent>LightObj0</parent>
+            <translation>0 4 -1</translation>
             <intensity>5 5 5</intensity>
         </data>
     </object>
+
+
 
 </scene>
