@@ -93,8 +93,6 @@ public class Renderer implements IDisposable {
 	}
 
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights) {
-		DepthState.DEFAULT.set();
-		BlendState.OPAQUE.set();
 		RasterizerState.CULL_CLOCKWISE.set();
 		
 		// Draw Up To 16 Lights
@@ -108,6 +106,15 @@ public class Renderer implements IDisposable {
 				material.program.use();
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
+				
+				if (material.sceneMaterial.materialType.equals("XRay")) {
+					DepthState.NONE.set();
+					BlendState.ALPHA_BLEND.set();
+				}
+				else {
+					DepthState.DEFAULT.set();
+					BlendState.OPAQUE.set();
+				}
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
@@ -125,10 +132,8 @@ public class Renderer implements IDisposable {
 	}
 	
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, double time) {
-		DepthState.DEFAULT.set();
-		BlendState.OPAQUE.set();
 		RasterizerState.CULL_CLOCKWISE.set();
-		
+
 		// Draw Up To 16 Lights
 		int cc = lights.size() > 16 ? 16 : lights.size();
 
@@ -141,6 +146,15 @@ public class Renderer implements IDisposable {
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
 				material.useTime(time);
+				
+				if (material.sceneMaterial.materialType.equals("XRay")) {
+					DepthState.NONE.set();
+					BlendState.ALPHA_BLEND.set();
+				}
+				else {
+					DepthState.DEFAULT.set();
+					BlendState.OPAQUE.set();
+				}
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
@@ -160,12 +174,6 @@ public class Renderer implements IDisposable {
 	}
 	
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, RasterizerState rs) {
-		DepthState.DEFAULT.set();
-		BlendState.OPAQUE.set();
-		if(rs != null)
-			rs.set();
-		else
-			RasterizerState.CULL_CLOCKWISE.set();
 		
 		// Draw Up To 16 Lights
 		int cc = lights.size() > 16 ? 16 : lights.size();
@@ -178,6 +186,20 @@ public class Renderer implements IDisposable {
 				material.program.use();
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
+				
+				if (material.sceneMaterial.materialType.equals("XRay")) {
+					DepthState.NONE.set();
+					BlendState.ALPHA_BLEND.set();
+				}
+				else {
+					DepthState.DEFAULT.set();
+					BlendState.OPAQUE.set();
+				}
+				
+				if(rs != null)
+					rs.set();
+				else
+					RasterizerState.CULL_CLOCKWISE.set();
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
