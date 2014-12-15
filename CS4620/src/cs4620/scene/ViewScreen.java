@@ -428,7 +428,6 @@ public class ViewScreen extends GameScreen {
 		}
 		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){
-			System.out.println(s.mesh);
 
 			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
 				if (s.mesh.equals("House2.obj") && shaderkey.equals("HatchingMaterial")) {
