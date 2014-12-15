@@ -43,7 +43,7 @@ public class SceneApp extends MainGame {
 		otherWindow.setLocationRelativeTo(null);
 		try {
 			Clip sound = AudioSystem.getClip();
-			File scene_file = new File("data/Audraulic_-_08_-_Distant_Winds.wav");
+			File scene_file = new File("data/distantWinds.wav");
 			//String file = scene_file.getAbsolutePath();
 			AudioInputStream song = (AudioSystem.getAudioInputStream(scene_file));
 			sound.open(song);
