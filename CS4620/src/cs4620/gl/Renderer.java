@@ -43,8 +43,9 @@ public class Renderer implements IDisposable {
 		pickProgram.dispose();
 	}
 	
-	public void buildPasses(RenderObject root) {
+	public void buildPasses(RenderEnvironment env) { //(RenderObject root) {
 		// Create An Array Of Objects To Draw From The Root
+		RenderObject root = env.root;
 		ArrayList<RenderObject> objs = new ArrayList<>();
 		addToDrawList(root, objs);
 
@@ -56,15 +57,34 @@ public class Renderer implements IDisposable {
 		passes = new ArrayList<>();
 		RenderPass curPass = new RenderPass();
 		for(RenderObject ro : objs) {
+			/*if(ro.mesh != curPass.mesh || ro.material != curPass.material) {
+				curPass = new RenderPass();
+				curPass.material = ro.material;
+				curPass.mesh = ro.mesh;
+				passes.add(curPass);
+				
+			}
+			curPass.objects.add(ro); */
+			
+			//MYCODE
 			if(ro.mesh != curPass.mesh || ro.material != curPass.material) {
 				curPass = new RenderPass();
 				curPass.material = ro.material;
 				curPass.mesh = ro.mesh;
 				passes.add(curPass);
+				curPass.objects.add(ro);
+				
+			
+				curPass = new RenderPass();
+				curPass.material = env.materials.get("SilhouetteMaterial");
+				curPass.mesh = ro.mesh.silhouette;
+				passes.add(curPass);
+				curPass.objects.add(ro);
 			}
-			curPass.objects.add(ro);
+			
 		}
 	}
+	
 	private void addToDrawList(RenderObject ro, ArrayList<RenderObject> objs) {
 		if(ro.mesh != null && ro.material != null) objs.add(ro);
 		for(RenderObject c : ro.children) {
@@ -73,8 +93,6 @@ public class Renderer implements IDisposable {
 	}
 
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights) {
-		DepthState.DEFAULT.set();
-		BlendState.OPAQUE.set();
 		RasterizerState.CULL_CLOCKWISE.set();
 		
 		// Draw Up To 16 Lights
@@ -88,6 +106,15 @@ public class Renderer implements IDisposable {
 				material.program.use();
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
+				
+				if (material.sceneMaterial.materialType.equals("XRay")) {
+					DepthState.NONE.set();
+					BlendState.ALPHA_BLEND.set();
+				}
+				else {
+					DepthState.DEFAULT.set();
+					BlendState.OPAQUE.set();
+				}
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
@@ -98,17 +125,15 @@ public class Renderer implements IDisposable {
 			mesh.vBuffer.useAsAttrib(material.shaderInterface);
 			for(RenderObject ro : p.objects) {
 				material.useObject(ro);
-				GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
+				//GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
 				GLError.get("Draw");
 			}
 		}
 	}
 	
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, double time) {
-		DepthState.DEFAULT.set();
-		BlendState.OPAQUE.set();
 		RasterizerState.CULL_CLOCKWISE.set();
-		
+
 		// Draw Up To 16 Lights
 		int cc = lights.size() > 16 ? 16 : lights.size();
 
@@ -121,6 +146,15 @@ public class Renderer implements IDisposable {
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
 				material.useTime(time);
+				
+				if (material.sceneMaterial.materialType.equals("XRay")) {
+					DepthState.NONE.set();
+					BlendState.ALPHA_BLEND.set();
+				}
+				else {
+					DepthState.DEFAULT.set();
+					BlendState.OPAQUE.set();
+				}
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
@@ -131,6 +165,8 @@ public class Renderer implements IDisposable {
 			mesh.vBuffer.useAsAttrib(material.shaderInterface);
 			for(RenderObject ro : p.objects) {
 				material.useObject(ro);
+				//GL11.glLineWidth(3.8f);
+				//GL11.glDrawElements(PrimitiveType.Lines, mesh.indexCount, GLType.UnsignedInt, 0);				
 				GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
 				GLError.get("Draw");
 			}
@@ -138,12 +174,6 @@ public class Renderer implements IDisposable {
 	}
 	
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, RasterizerState rs) {
-		DepthState.DEFAULT.set();
-		BlendState.OPAQUE.set();
-		if(rs != null)
-			rs.set();
-		else
-			RasterizerState.CULL_CLOCKWISE.set();
 		
 		// Draw Up To 16 Lights
 		int cc = lights.size() > 16 ? 16 : lights.size();
@@ -156,6 +186,20 @@ public class Renderer implements IDisposable {
 				material.program.use();
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
+				
+				if (material.sceneMaterial.materialType.equals("XRay")) {
+					DepthState.NONE.set();
+					BlendState.ALPHA_BLEND.set();
+				}
+				else {
+					DepthState.DEFAULT.set();
+					BlendState.OPAQUE.set();
+				}
+				
+				if(rs != null)
+					rs.set();
+				else
+					RasterizerState.CULL_CLOCKWISE.set();
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
@@ -166,7 +210,7 @@ public class Renderer implements IDisposable {
 			mesh.vBuffer.useAsAttrib(material.shaderInterface);
 			for(RenderObject ro : p.objects) {
 				material.useObject(ro);
-				GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
+				//GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
 				GLError.get("Draw");
 			}
 		}

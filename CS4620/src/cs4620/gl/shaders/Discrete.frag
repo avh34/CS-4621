@@ -24,24 +24,26 @@ void main() {
 	// interpolating normals will change the length of the normal, so renormalize the normal.
 	vec3 N = normalize(fN);
 	vec3 V = normalize(worldCam - worldPos.xyz);
-	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
+	vec4 finalColor = getDiffuseColor(fUV);
 	float intensity = 0;
 	
 	for (int i = 0; i < numLights; i++) {
-		intensity = dot(N, lightPosition[i]);
-	
-	if (intensity > 0.95)
-		finalColor += vec4(1.0,0.5,0.5,1.0);
-	else if (intensity > 0.5)
-		finalColor += vec4(0.6,0.3,0.3,1.0);
-	else if (intensity > 0.25)
-		finalColor += vec4(0.4,0.2,0.2,1.0);
-	else
-		finalColor += vec4(0.2,0.1,0.1,1.0);
-	
+		vec3 L = normalize(lightPosition[i] - worldPos.xyz); 
+		vec3 H = normalize(L + V);
+	 	float r = length(lightPosition[i] - worldPos.xyz);
+		intensity = max(dot(N, H)*100/(r*r), intensity);
 	}
 	
-	finalColor = finalColor/numLights;
+	if (intensity > 7.5)
+		finalColor = getDiffuseColor(fUV);
+	else if (intensity > 4.6)
+		finalColor = getDiffuseColor(fUV)*.75;
+	else if (intensity > 1.8)
+		finalColor = getDiffuseColor(fUV)*.5;
+	else
+		finalColor = getDiffuseColor(fUV)*.25;
+	
+	
 	
 	gl_FragColor = (finalColor * exposure);
 }

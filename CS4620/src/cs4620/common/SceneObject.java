@@ -11,6 +11,7 @@ public class SceneObject extends ACUniqueObject implements IXMLDocWriteable {
 	
 	public String parent = null;
 	public String material = null;
+	public String originalMaterial = null;
 	public String mesh = null;
 	
 	public void addRotation(Vector3 rot) {
@@ -34,6 +35,9 @@ public class SceneObject extends ACUniqueObject implements IXMLDocWriteable {
 		parent = s;
 	}
 	public void setMaterial(String s) {
+		if(material == null) {
+			originalMaterial = s;
+		}
 		material = s;
 	}
 	public void setMesh(String s) {

@@ -181,7 +181,7 @@
     <mesh>
         <name>Room.obj</name>
         <data>
-            <file>data/meshes/mayberoom3.obj</file>
+            <file>data/meshes/room.obj</file>
         </data>
     </mesh>
 

@@ -9,6 +9,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 import cs4620.common.Scene;
+import cs4620.common.SceneObject;
 import cs4620.common.event.SceneTransformationEvent;
 import cs4620.scene.ViewScreen;
 import cs4620.scene.form.ScenePanel;
@@ -24,6 +26,7 @@ import cs4620.scene.form.SimpleMeshWindow;
 import egl.math.Matrix4;
 import egl.math.Vector3;
 import egl.math.Vector3i;
+import egl.math.Vector4;
 
 public class CameraController {
 	
@@ -174,9 +177,7 @@ public class CameraController {
 		wouldBe.mulBefore(mRot);
 		wouldBe.mulAfter(parentWorld);
 		Vector3 camPos = new Vector3(wouldBe.getTrans());
-		Boolean intersect = doesIntersect(camPos);
 		
-		if (!intersect){
 			Matrix4 cameraTrans = Matrix4.createTranslation(camera.mWorldTransform.getTrans());
 			Matrix4 cameraTransn = Matrix4.createTranslation(camera.mWorldTransform.getTrans().negate());
 			mRoty.mulBefore(cameraTransn);
@@ -187,10 +188,11 @@ public class CameraController {
 			 float sinAngle = transformation.getRow(2).y;
 			if(Math.atan2(cosAngle, sinAngle) < 0) 
 				{  transformation.mulBefore(Matrix4.createRotationX(rotation.x).invert());}
-		}
-		
+	
+
 		// SOLUTION END
 	}
+
 	
 	/**
 	 * Apply a translation to the camera.
@@ -202,69 +204,100 @@ public class CameraController {
 	 */
 	protected void translate(Matrix4 parentWorld, Matrix4 transformation, Vector3 motion) {
 		// TODO#A3 SOLUTION START
-		float radius = (float)0.5;
 		
-		Matrix4 mTrans = Matrix4.createTranslation(motion);
-		Matrix4 wouldBe = new Matrix4(transformation);
-		wouldBe.mulBefore(mTrans);
-		wouldBe.mulAfter(parentWorld);
-			
-		Vector3 camPos = new Vector3(wouldBe.getTrans());
-		Boolean intersect = doesIntersect(camPos);
+		//Matrix4 wouldBe = new Matrix4(transformation);
+		//wouldBe.mulBefore(mTrans);
+		//wouldBe.mulAfter(parentWorld);
 		
+		parentWorld.mulDir(motion);
+		Vector3 camPos = new Vector3(transformation.clone().mulAfter(parentWorld).getTrans()); //world coords of camera
+		//Vector3 newMotion = getNewPosition(camPos, motion);
 		
-		if (intersect) {shader = true;}
-		
-		if (!intersect){
+				
+		if (getNewPosition(camPos, motion)){
 			shader = false;
 			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
+			Matrix4 mTrans = Matrix4.createTranslation(motion);
 			transformation.mulBefore(mTrans);
 			transformation.m[13] = yNoTrans;
 		}
+		else{shader = true;}
 		// SOLUTION END
 	}
 	
-	private boolean doesIntersect(Vector3 camPos){
-		float radius = (float)0.5;
-		Boolean intersect = false;
+	private ArrayList<RenderObject> findPossColliders(Vector3 camPos, double radius){
+		Iterator<SceneObject> itr = scene.objects.iterator();
 		
-		Iterator<String> itr = rEnv.meshes.keySet().iterator();
+		ArrayList<RenderObject> possCollisions = new ArrayList<RenderObject>();
+		
+		//collisions will contain minCoord, maxCoord, normal for each square with an intersection
+		//ArrayList<ArrayList<Vector3>> collisions = new ArrayList<ArrayList<Vector3>>();
 		
 		while (itr.hasNext()){
-			RenderMesh temp = rEnv.meshes.get(itr.next());
+			SceneObject sceneObj = itr.next();
+			RenderObject temp = rEnv.findObject(sceneObj);
 			Boolean objIntersect = false;
-			if (temp!=null){
-				//TODO: make this less messy?
-				Vector3 currMax = new Vector3(temp.maxCoords);
-				Vector3 currMin = new Vector3(temp.minCoords);
-				Boolean in_left   = (currMin.x-camPos.x)<radius;
-				Boolean in_right  = (currMax.x-camPos.x)>radius;
-				Boolean in_front  = (currMax.z-camPos.z)>radius;
-				Boolean in_back   = (currMin.z-camPos.z)<radius;
-				Boolean in_top    = (currMax.y-camPos.y)>radius;
-				Boolean in_bottom = (currMin.y-camPos.y)<radius;
+
+			
+			if (temp.mesh!=null){
+				//get min/max coords in world space
+				//TODO: Check all 8 bounding coords rather than just two
+				Vector3 meshMax = new Vector3(temp.mesh.maxCoords);
+				Vector3 meshMin = new Vector3(temp.mesh.minCoords);
+				temp.mWorldTransform.mulPos(meshMax);
+				temp.mWorldTransform.mulPos(meshMin);
 				
+				Vector3 currMax = new Vector3();
+				Vector3 currMin = new Vector3();
+				
+				currMax.x = (meshMax.x>meshMin.x)? meshMax.x : meshMin.x;
+				currMin.x = (meshMax.x<meshMin.x)? meshMax.x : meshMin.x;
+				
+				currMax.y = (meshMax.y>meshMin.y)? meshMax.y : meshMin.y;
+				currMin.y = (meshMax.y<meshMin.y)? meshMax.y : meshMin.y;
+				
+				currMax.z = (meshMax.z>meshMin.z)? meshMax.z : meshMin.z;
+				currMin.z = (meshMax.z<meshMin.z)? meshMax.z : meshMin.z;
+
+				Boolean in_left   = currMin.x<camPos.x;
+				Boolean in_right  = currMax.x>camPos.x;
+				Boolean in_front  = currMax.z>camPos.z;
+				Boolean in_back   = currMin.z<camPos.z;
+				Boolean in_top    = currMax.y>camPos.y;
+				Boolean in_bottom = currMin.y<camPos.y;
+
+				ArrayList<Boolean> collisions = new ArrayList<Boolean>();
 				//top
-				if (Math.abs(currMax.y-camPos.y)<radius && in_left && in_right && in_front && in_back)
-					objIntersect = true;
+				if (Math.abs(currMax.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
+					objIntersect = true; collisions.add(true);
+					
+				}else { collisions.add(false);}
+				
 				//bottom
-				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back)
-					objIntersect = true;
+				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
+					objIntersect = true; collisions.add(true);
+				}else{ collisions.add(false);}
+				
 				//left
-				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back)
-					objIntersect = true;
+				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
+					objIntersect = true; collisions.add(true);
+				}else{ collisions.add(false);}
+				
 				//right
-				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back) 
-				    objIntersect = true;
+				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
+				    objIntersect = true; collisions.add(true);
+				}else{ collisions.add(false);}
+				
 				//front
-				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right)
-				    objIntersect = true;
+				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
+				    objIntersect = true; collisions.add(true);
+				}else{ collisions.add(false);}
+				
 				//back
-				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right)
-				    objIntersect = true;
+				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
+				    objIntersect = true; collisions.add(true);
+				}else{ collisions.add(false);}
 				
-				
-				//TODO: intersect with actual object instead of just bounding box
 				if (objIntersect){
 //					for (int i=0; i<temp.indices.size(); i++){
 //						Vector3i curInd = temp.indices.get(i);
@@ -274,16 +307,74 @@ public class CameraController {
 //						
 //						
 //					}
-					ViewScreen.intersected = temp.sceneMesh.file;
+					ViewScreen.intersected = temp.mesh.sceneMesh.file;
 
-					intersect = true;
+					possCollisions.add(temp);
 				}
 			}
 		}
-			
 		
-		// SOLUTION END
-		return intersect;
+		return possCollisions;
+		
 	}
 	
+	private boolean getNewPosition(Vector3 camPos, Vector3 velocity){
+		float EPSILON = (float) 0.005;
+		double radius = 0.5;
+		
+		if (velocity.len()<EPSILON){
+			//velocity vector is smaller than our bound, so don't bother
+			//return new Vector3(0);
+			return true;
+		}
+		Vector3 newCam = new Vector3(camPos);
+		newCam.add(velocity);
+		ArrayList<RenderObject> possCollisions;
+		float nearestDistance;
+		possCollisions = findPossColliders(newCam, radius);
+		
+		if (possCollisions.size() == 0){
+			//no collisions, so we can move the camera as expected
+			//return velocity;
+			return true;
+		}else{
+			return false;
+		}
+		
+//		//move along velocity vector until we hit an object
+//		Vector3 V = new Vector3(velocity);
+//		V.normalize();
+//		V.mul(nearestDistance-EPSILON);
+//		Vector3 distToMove = new Vector3(V);
+//		
+//		//still want to travel velocity.len-nearestDistance, so slide along 
+//		// plane of object we intersected with
+//		V.normalize();
+//		V.mul(velocity.len()-nearestDistance);
+//		Vector3 destPoint = nearestIntersectionPoint.add(V);
+//		
+//		//calculate a point on the sliding plane and it's normal
+//		Vector3 slideOrigin = new Vector3();//nearestIntersectionPoint);
+//		Vector3 slideNormal = new Vector3();//nearestIntersectionPoint);
+//		slideNormal.sub(camPos);
+//		
+//		//project destination point onto sliding plane
+//		float t = (float) intersect(slideOrigin, slideNormal.normalize(), destPoint, slideNormal.normalize());
+//		slideNormal.mul(t);
+//		
+//		Vector3 destinationProj = new Vector3(destPoint);
+//		destinationProj.add(slideNormal);
+//		
+//		Vector3 newVelocity = destinationProj.sub(nearestIntersectionPoint);
+//		Vector3 additionalDist = getNewPosition(camPos, newVelocity);
+//		
+//		return distToMove.add(additionalDist);
+	}
+	//takes in a point on a plane (pO), the plane's normal (pN), a ray origin (rO),
+	// and the ray direction vector (rV). Calculates the t value where the given 
+	// ray intersects the given plane
+	private double intersect(Vector3 pO, Vector3 pN, Vector3 rO, Vector3 rV){
+		Vector3 num = pO.clone().sub(rO);
+		return num.dot(pN)/rV.dot(pN);
+	}
 }
