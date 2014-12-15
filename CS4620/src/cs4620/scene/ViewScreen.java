@@ -183,10 +183,14 @@ public class ViewScreen extends GameScreen {
 			case Keyboard.KEY_5:
 				changeShader(4);
 				break;				
-				
+									
 			case Keyboard.KEY_6:
 				changeShader(5);
+				break;
 				
+			case Keyboard.KEY_7:
+				changeShader(6);
+				break;
 			case Keyboard.KEY_ESCAPE:
 				
 				try{
@@ -430,6 +434,9 @@ public class ViewScreen extends GameScreen {
 				notShaded = "BedsideTable.obj";
 				next = "GoochMaterial";
 				break;
+			case 6:
+				shadername = "Original";
+				break;
 			default:
 				shadername = "Original";
 		}
@@ -438,32 +445,31 @@ public class ViewScreen extends GameScreen {
 			System.out.println(s.mesh);
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals(notShaded))) {
 				 shaderkey = shadername;
-
-				if(shadername.equals("Original")) {
-					shaderkey = s.originalMaterial;
-				}
-				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
-				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
-				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
-					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
-				}
+//				if(shadername.equals("Original")) {
+//					shaderkey = s.originalMaterial; }
+//				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
+//				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
+//				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
+//					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
+//				}
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (s.mesh.equals(notShaded))) {
 				 shaderkey = next;
-				if(next.equals("Original")) {
-					shaderkey = s.originalMaterial;
-				}
-				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
-				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
-				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
-					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
-				}
+//				if(next.equals("Original")) {
+//					shaderkey = s.originalMaterial;
+//				}
+//				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
+//				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
+//				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
+//					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
+//				}
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
-		}
+			}
+			
 	}
 	
 	@Override
