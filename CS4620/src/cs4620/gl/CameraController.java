@@ -59,7 +59,6 @@ public class CameraController {
 		window = false;
 	}	
 	
-	
 	/**
 	 * Update the camera's transformation matrix in response to user input.
 	 * 
@@ -318,7 +317,7 @@ public class CameraController {
 	
 	private boolean getNewPosition(Vector3 camPos, Vector3 velocity){
 		float EPSILON = (float) 0.005;
-		double radius = 0.5;
+		double radius = 1.0;
 		
 		if (velocity.len()<EPSILON){
 			//velocity vector is smaller than our bound, so don't bother
