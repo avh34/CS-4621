@@ -29,12 +29,15 @@ import blister.input.KeyboardKeyEventArgs;
 import cs4620.common.Material;
 import cs4620.common.Scene;
 import cs4620.common.Scene.NameBindMaterial;
+import cs4620.common.Scene.NameBindSceneObject;
 import cs4620.common.SceneObject;
 import cs4620.common.UniqueContainer;
+import cs4620.common.event.SceneCollectionModifiedEvent;
 import cs4620.common.event.SceneDataType;
 import cs4620.common.event.SceneEvent;
 import cs4620.common.event.SceneObjectResourceEvent;
 import cs4620.common.event.SceneReloadEvent;
+import cs4620.common.event.SceneTransformationEvent;
 import cs4620.gl.CameraController;
 import cs4620.gl.GridRenderer;
 import cs4620.gl.RenderCamera;
@@ -46,6 +49,7 @@ import cs4620.scene.form.RPMeshData;
 import cs4620.scene.form.RPTextureData;
 import cs4620.scene.form.ScenePanel;
 import egl.GLError;
+import egl.math.Matrix4;
 import egl.math.Vector2;
 import egl.math.Vector3;
 import ext.csharp.ACEventFunc;
@@ -201,7 +205,7 @@ public class ViewScreen extends GameScreen {
 		
 		cameraIndex = 0;
 		rController = new RenderController(app.scene, new Vector2(app.getWidth(), app.getHeight()));
-		renderer.buildPasses(rController.env.root);
+		renderer.buildPasses(rController.env); //renderer.buildPasses(rController.env.root);
 		camController = new CameraController(app.scene, rController.env, null);
 		createCamController();
 		manipController = new ManipController(rController.env, app.scene, app.otherWindow);
@@ -287,7 +291,7 @@ public class ViewScreen extends GameScreen {
 		switch(shader){
 			case 0:
 				shadername = "CookTorranceMaterial";
-			break;
+				break;
 			case 1: 
 				shadername = "DiscreteMaterial";
 				break;
@@ -308,7 +312,7 @@ public class ViewScreen extends GameScreen {
 		}
 		String shaderkey = shadername;
 		for (SceneObject s:app.scene.objects){
-			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals("Room.obj"))) {
+			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
 				if(shadername.equals("Original")) {
 					shaderkey = s.originalMaterial;
 				}
@@ -318,9 +322,8 @@ public class ViewScreen extends GameScreen {
 					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
 				}
 				s.setMaterial(shaderkey);
-				app.scene.sendEvent(new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material));}
+			}
 		}
-		
 	}
 	
 	@Override

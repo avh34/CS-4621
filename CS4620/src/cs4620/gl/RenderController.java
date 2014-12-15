@@ -119,7 +119,7 @@ public class RenderController implements IDisposable {
 		
 		if(areResourcesModified || isTreeModified) {
 			env.linkObjectResources();
-			r.buildPasses(env.root);
+			r.buildPasses(env); //r.buildPasses(env.root);
 		}
 	}
 }

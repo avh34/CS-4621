@@ -47,12 +47,11 @@ void main() {
 	// Add to final color
 	finalColor += vec4(k_w * k_warm + (1 - k_w) * k_cool, 0.0);
 	
-	// Color edges and creases black
-	if (dot(N,V) < 0.4) {
-		//finalColor = vec4(0.0);
-	}
-	
 	// Add in highlights
+	vec3 H = normalize(L + V);
+	vec4 Ispec = getSpecularColor(fUV) * pow(max(dot(N, H), 0.0), 50);
+	Ispec = clamp(Ispec, 0.0, 1.0);
+	finalColor += Ispec;
 	
 	gl_FragColor = finalColor; 
 }
