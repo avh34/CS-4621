@@ -677,6 +677,14 @@
         </data>
     </object>
 
+	<object>
+        <name>MysteriousLight</name>
+        <data type="SceneLight">
+            <translation>11 4 -11</translation>
+            <intensity>5 5 5</intensity>
+        </data>
+    </object>
+	
     <object>
         <name>LightObj0</name>
         <data>

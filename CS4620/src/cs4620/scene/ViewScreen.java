@@ -167,11 +167,12 @@ public class ViewScreen extends GameScreen {
 				break;
 					
 			case Keyboard.KEY_6:
-				app.otherWindow.dispose();
+				changeShader(5);
+				break;
 				
 			case Keyboard.KEY_7:
-				changeShader(5);
-				
+				changeShader(6);
+				break;
 			case Keyboard.KEY_ESCAPE:
 				
 				try{
@@ -305,6 +306,9 @@ public class ViewScreen extends GameScreen {
 				shadername = "TimeMaterial";
 				break;
 			case 5:
+				shadername = "XRayMaterial";
+				break;
+			case 6:
 				shadername = "Original";
 				break;
 			default:
@@ -313,14 +317,14 @@ public class ViewScreen extends GameScreen {
 		String shaderkey = shadername;
 		for (SceneObject s:app.scene.objects){
 			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
-				if(shadername.equals("Original")) {
+				/*if(shadername.equals("Original")) {
 					shaderkey = s.originalMaterial;
 				}
 				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
 				Material newMaterial = rController.env.materials.get(shaderkey).sceneMaterial;
 				if(!shaderkey.equals("HatchingMaterial") && oldMaterial.inputDiffuse[0] != null && oldMaterial.inputDiffuse[0].type == Material.InputProvider.Type.TEXTURE) {
 					newMaterial.setDiffuse(oldMaterial.inputDiffuse[0]);
-				}
+				}*/
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}

@@ -94,7 +94,6 @@ public class Renderer implements IDisposable {
 	}
 
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights) {
-		RasterizerState.CULL_CLOCKWISE.set();
 		
 		// Draw Up To 16 Lights
 		int cc = lights.size() > 16 ? 16 : lights.size();
@@ -111,10 +110,12 @@ public class Renderer implements IDisposable {
 				if (material.sceneMaterial.materialType.equals("XRay")) {
 					DepthState.NONE.set();
 					BlendState.ALPHA_BLEND.set();
+					RasterizerState.CULL_NONE.set();
 				}
 				else {
 					DepthState.DEFAULT.set();
 					BlendState.OPAQUE.set();
+					RasterizerState.CULL_CLOCKWISE.set();
 				}
 			}
 			if(mesh != p.mesh) {
@@ -151,10 +152,12 @@ public class Renderer implements IDisposable {
 				if (material.sceneMaterial.materialType.equals("XRay")) {
 					DepthState.NONE.set();
 					BlendState.ALPHA_BLEND.set();
+					RasterizerState.CULL_NONE.set();
 				}
 				else {
 					DepthState.DEFAULT.set();
 					BlendState.OPAQUE.set();
+					RasterizerState.CULL_CLOCKWISE.set();
 				}
 			}
 			if(mesh != p.mesh) {
@@ -191,16 +194,20 @@ public class Renderer implements IDisposable {
 				if (material.sceneMaterial.materialType.equals("XRay")) {
 					DepthState.NONE.set();
 					BlendState.ALPHA_BLEND.set();
+					if(rs != null)
+						rs.set();
+					else
+						RasterizerState.CULL_NONE.set();
 				}
 				else {
 					DepthState.DEFAULT.set();
 					BlendState.OPAQUE.set();
+					if(rs != null)
+						rs.set();
+					else
+						RasterizerState.CULL_CLOCKWISE.set();
 				}
 				
-				if(rs != null)
-					rs.set();
-				else
-					RasterizerState.CULL_CLOCKWISE.set();
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
