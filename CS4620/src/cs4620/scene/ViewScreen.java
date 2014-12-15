@@ -57,6 +57,7 @@ import cs4620.scene.form.RPMeshData;
 import cs4620.scene.form.RPTextureData;
 import cs4620.scene.form.ScenePanel;
 import cs4620.scene.form.VictoryScreen;
+import cs4620.splines.form.SplinePanel;
 import egl.GLError;
 import egl.math.Matrix4;
 import egl.math.Vector2;
@@ -66,7 +67,7 @@ import ext.java.Parser;
 
 
 public class ViewScreen extends GameScreen {
-	
+
 	public static ArrayList<String> intersected = new ArrayList<String>(); //Object that the player ran into, null if not close to object
 	public String object = "";
 	private int shader = 6; // shader that the player is on
@@ -76,7 +77,7 @@ public class ViewScreen extends GameScreen {
 	int prevCamScroll = 0;
 	boolean wasPickPressedLast = false;
 	boolean showGrid = false;
-	
+
 	JPanel panel = new JPanel();
 	JFrame frame = new JFrame("");
 	Canvas canvas = new Canvas();
@@ -87,15 +88,15 @@ public class ViewScreen extends GameScreen {
 	RPMeshData dataMesh;
 	RPMaterialData dataMaterial;
 	RPTextureData dataTexture;
-	
+
 	DisplayMode prevDisplay =Display.getDisplayMode();
 
-	
+
 	RenderController rController;
 	CameraController camController;
 	ManipController manipController;
 	GridRenderer gridRenderer;
-	
+
 	@Override
 	public int getNext() {
 		return getIndex();
@@ -114,12 +115,12 @@ public class ViewScreen extends GameScreen {
 
 	@Override
 	public void build() {
-		
-		
+
+
 		app = (SceneApp)game;
 		renderer = new Renderer();	
 	}
-	
+
 	@Override
 	public void destroy(GameTime gameTime) {
 	}
@@ -138,9 +139,9 @@ public class ViewScreen extends GameScreen {
 					dataMaterial.addBasic();
 				}
 				break;
-//			case Keyboard.KEY_G:
-//				showGrid = !showGrid;
-//				break;
+				//			case Keyboard.KEY_G:
+				//				showGrid = !showGrid;
+				//				break;
 			case Keyboard.KEY_F3:
 				FileDialog fd = new FileDialog(app.otherWindow);
 				fd.setVisible(true);
@@ -166,41 +167,41 @@ public class ViewScreen extends GameScreen {
 					e.printStackTrace();
 				}
 				break;
-				
+
 			case Keyboard.KEY_1:
 				changeShader(0);
 				break;
-				
+
 			case Keyboard.KEY_2:
 				changeShader(1);
 				break;
-				
+
 			case Keyboard.KEY_3:
 				changeShader(2);
 				break;
-				
+
 			case Keyboard.KEY_4:
 				changeShader(3);
 				break;
-			
+
 			case Keyboard.KEY_5:
 				changeShader(4);
 				break;				
-									
+
 			case Keyboard.KEY_6:
 				changeShader(5);
 				break;
-				
+
 			case Keyboard.KEY_7:
 				changeShader(6);
 				break;
 			case Keyboard.KEY_ESCAPE:
-				
+
 				try{
-				Robot mouseMover = new Robot();
-				float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
-				float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
-				 mouseMover.mouseMove((int) centerx, (int) centery);
+					Robot mouseMover = new Robot();
+					float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+					float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+					mouseMover.mouseMove((int) centerx, (int) centery);
 
 				} catch (AWTException e) {
 					e.printStackTrace();
@@ -216,30 +217,30 @@ public class ViewScreen extends GameScreen {
 				break;
 			default:
 				break;
-				
+
 			case Keyboard.KEY_F:
 				fullScreen();
 			}
 		}
 	};
-	
+
 	@Override
 	public void onEntry(GameTime gameTime) {	
-		
-//		frame.setSize(700, 500);
-//		frame.add(canvas);
-//		frame.setVisible(true);
-//		canvas.setSize(700, 500);
-//		try {
-//			Display.setParent(canvas);
-//		} catch (LWJGLException e) {
-//			e.printStackTrace();
-//		}
-//			Display.update();
-		
+
+		//		frame.setSize(700, 500);
+		//		frame.add(canvas);
+		//		frame.setVisible(true);
+		//		canvas.setSize(700, 500);
+		//		try {
+		//			Display.setParent(canvas);
+		//		} catch (LWJGLException e) {
+		//			e.printStackTrace();
+		//		}
+		//			Display.update();
+
 		//frame.setVisible(true);
 
-		
+
 		cameraIndex = 0;
 		rController = new RenderController(app.scene, new Vector2(app.getWidth(), app.getHeight()));
 		renderer.buildPasses(rController.env); //renderer.buildPasses(rController.env.root);
@@ -249,7 +250,7 @@ public class ViewScreen extends GameScreen {
 		gridRenderer = new GridRenderer();
 		KeyboardEventDispatcher.OnKeyPressed.add(onKeyPress);
 		manipController.hook();
-		
+
 		Object tab = app.otherWindow.tabs.get("Object");
 		if(tab != null) sceneTree = (ScenePanel)tab;
 		tab = app.otherWindow.tabs.get("Material");
@@ -258,7 +259,7 @@ public class ViewScreen extends GameScreen {
 		if(tab != null) dataMesh = (RPMeshData)tab;
 		tab = app.otherWindow.tabs.get("Texture");
 		if(tab != null) dataTexture = (RPTextureData)tab;
-		
+
 		wasPickPressedLast = false;
 		prevCamScroll = 0;
 		changeShader(6);
@@ -281,40 +282,40 @@ public class ViewScreen extends GameScreen {
 			camController.camera = null;
 		}
 	}
-	
+
 	@Override
 	public void update(GameTime gameTime) {
 		System.out.println(intersected);
 		if (intersected.contains(object) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-						shader -= 1;
-						if (shader == 2) {
-							changeShader(shader);
-							if(Display.isFullscreen()) {fullScreen();}
-						VictoryScreen victory = new VictoryScreen(app);
-						try{
-							Robot mouseMover = new Robot();
-							float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
-							float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
-							 mouseMover.mouseMove((int) centerx, (int) centery);
+			shader -= 1;
+			if (shader == 2) {
+				changeShader(shader);
+				if(Display.isFullscreen()) {fullScreen();}
+				VictoryScreen victory = new VictoryScreen(app);
+				try{
+					Robot mouseMover = new Robot();
+					float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+					float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+					mouseMover.mouseMove((int) centerx, (int) centery);
 
-							} catch (AWTException e) {
-								e.printStackTrace();
-							}
-							try {
-								Mouse.setNativeCursor(null);
-							} catch (LWJGLException e) {
-								e.printStackTrace();
-							}
-							camController.isHighlighted();
-							camController.changeWindow();
-							
-							return;
-						} else{changeShader(shader);}}
-							
-					
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+				try {
+					Mouse.setNativeCursor(null);
+				} catch (LWJGLException e) {
+					e.printStackTrace();
+				}
+				camController.isHighlighted();
+				camController.changeWindow();
+
+				return;
+			} else{changeShader(shader);}}
+
+
 		pick = false;
 		int curCamScroll = 0;
-		
+
 		if(Keyboard.isKeyDown(Keyboard.KEY_EQUALS)) curCamScroll++;
 		if(Keyboard.isKeyDown(Keyboard.KEY_MINUS)) curCamScroll--;
 		if(rController.env.cameras.size() != 0 && curCamScroll != 0 && prevCamScroll != curCamScroll) {
@@ -332,25 +333,25 @@ public class ViewScreen extends GameScreen {
 					e.printStackTrace();
 				}
 			}
-				else{
-			camController.update(gameTime.elapsed);
-			manipController.checkMouse(Mouse.getX(), Mouse.getY(), camController.camera);
+			else{
+				camController.update(gameTime.elapsed);
+				manipController.checkMouse(Mouse.getX(), Mouse.getY(), camController.camera);
 			}
 		}
-		
-		
+
+
 		if(Mouse.isButtonDown(1) || Mouse.isButtonDown(0) && (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))) {
 			if(!wasPickPressedLast) pick = true;
 			wasPickPressedLast = true;
 		}
 		else wasPickPressedLast = false;
-		
+
 		// View A Different Scene
 		if(rController.isNewSceneRequested()) {
 			setState(ScreenState.ChangeNext);
 		}
 	}
-	
+
 	public void fullScreen(){
 		try {
 			if(Display.isFullscreen()){
@@ -358,74 +359,93 @@ public class ViewScreen extends GameScreen {
 				Display.setFullscreen(false);
 			}
 			else{
-
 				Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
 				Display.setFullscreen(true);
+				Display.setResizable(true);
+
+				GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+				//Display.setDisplayMode(arg0);
 			}
-			
+
 			try{
 				Robot mouseMover = new Robot();
 				float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
 				float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
-				 mouseMover.mouseMove((int) centerx, (int) centery);
+				mouseMover.mouseMove((int) centerx, (int) centery);
 
-				} catch (AWTException e) {
-					e.printStackTrace();
-				}
-			camController.changeWindow();
+			} catch (AWTException e) {
+				e.printStackTrace();
 			}
+			camController.changeWindow();
+		}
 		catch (LWJGLException e1) {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	//Take an int value. 0 = CookTorrancess, 1 = Discrete, 2 = Gooch, 3 = Hatching
 	public void changeShader(int shader){
 		String shadername = "";
 		String notShaded = "";
 		String next = "";
 		switch(shader){
-			case 0:
-				shadername = "CookTorranceMaterial";
-				break;
-			case 3: 
-				shadername = "DiscreteMaterial";
-				notShaded = "kitchen.obj";
-				next = "Original";
-				break;
-			case 4: 
-				shadername = "GoochMaterial";
-				notShaded = "tv.obj";
-				next = "DiscreteMaterial";
-				break;
-			case 5: 
-				shadername = "HatchingMaterial";
-				notShaded = "fridge.obj";
-				next = "GoochMaterial";
-				break;
-			case 6:
-				shadername = "TimeMaterial";
-				notShaded = "talldresser.obj";
-				next = "HatchingMaterial";
-				break;
-			case 1:
-				shadername = "XRayMaterial";
-				notShaded = "Closet.obj";
-				next = "GoochMaterial";
-				break;
-			case 2:
-				shadername = "Original";
-				notShaded = "Closet.obj";
-				next = "Original";
-				break;
-			default:
-				shadername = "Original";
+		case 0:
+			shadername = "CookTorranceMaterial";
+			break;
+		case 3: 
+			shadername = "DiscreteMaterial";
+			notShaded = "kitchen.obj";
+			next = "Original";
+			break;
+		case 4: 
+			shadername = "GoochMaterial";
+			notShaded = "tv.obj";
+			next = "DiscreteMaterial";
+			break;
+		case 5: 
+			shadername = "HatchingMaterial";
+			notShaded = "fridge.obj";
+			next = "GoochMaterial";
+			break;
+		case 6:
+			shadername = "TimeMaterial";
+			notShaded = "talldresser.obj";
+			next = "HatchingMaterial";
+			break;
+		case 1:
+			shadername = "XRayMaterial";
+			notShaded = "Closet.obj";
+			next = "GoochMaterial";
+			break;
+		case 2:
+			shadername = "Original";
+			notShaded = "Closet.obj";
+			next = "Original";
+			break;
+		default:
+			shadername = "Original";
 		}
 		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){
 			System.out.println(s.mesh);
+
+			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
+				if (s.mesh.equals("House2.obj") && shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("House.obj");
+				}
+				else if (s.mesh.equals("House.obj") && !shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("House2.obj");
+				}
+
+				if (s.mesh.equals("Bed2.obj") && shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("Bed.obj");
+				}
+				else if (s.mesh.equals("Bed.obj") && !shaderkey.equals("HatchingMaterial")) {
+					s.setMesh("Bed2.obj");
+				}
+			}
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals(notShaded))) {
-				 shaderkey = shadername;
+				shaderkey = shadername;
 				if(shadername.equals("Original")) {
 					shaderkey = s.originalMaterial; }
 				Material oldMaterial = rController.env.materials.get(s.material).sceneMaterial;
@@ -437,7 +457,7 @@ public class ViewScreen extends GameScreen {
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (s.mesh.equals(notShaded))) {
-				 shaderkey = next;
+				shaderkey = next;
 				if(next.equals("Original")) {
 					shaderkey = s.originalMaterial;
 				}
@@ -449,31 +469,31 @@ public class ViewScreen extends GameScreen {
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
-			}
+		}
 		object = "data/meshes/" + notShaded;
-			
+
 	}
-	
+
 	@Override
 	public void draw(GameTime gameTime) {
-		
+
 		rController.update(renderer, camController);
 
 		if(pick && camController.camera != null) {
 			manipController.checkPicking(renderer, camController.camera, Mouse.getX(), Mouse.getY());
 		}
-		
+
 		Vector3 bg = app.scene.background;
 		GL11.glClearColor(bg.x, bg.y, bg.z, 0);
 		GL11.glClearDepth(1.0);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		
+
 		if(camController.camera != null){
 			renderer.draw(camController.camera, rController.env.lights, gameTime.total);
 			manipController.draw(camController.camera);
 			if (showGrid)
 				gridRenderer.draw(camController.camera);
 		}
-        GLError.get("draw");
+		GLError.get("draw");
 	}
 }
