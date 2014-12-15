@@ -92,23 +92,23 @@ public class RenderMaterial implements IDisposable {
 					"vec4 getEnvironmentColor(vec3 v) { " +
 					"	return textureCube(cubeMap, v);" +
 					"} ";
-	
-	
+
+
 	private static String getProvider(String provider, String type) {
 		return String.format(provider, type, type, type);
 	}
 
 	public final GLProgram program = new GLProgram(false);
 	public final ShaderInterface shaderInterface = new ShaderInterface(RenderMesh.VERTEX_DECLARATION);
-	
+
 	private IProvider[] pDiffuse = null;
 	private IProvider pNormal = null;
 	private IProvider pSpecular = null;
 
 	public final Material sceneMaterial;
-	
+
 	public int unWorld, unWorldIT, unV, unP, unVP, unLPos, unLIntensity, unLCount, unCubeMap, unWorldCam, 
-		unShininess, unRoughness, unDispMagnitude, unAmbientLIntensity, unExposure, unTime;
+	unShininess, unRoughness, unDispMagnitude, unAmbientLIntensity, unExposure, unTime;
 	private FloatBuffer fbLight = NativeMem.createFloatBuffer(16 * 3);
 
 	public RenderMaterial(Material m) {
@@ -119,14 +119,14 @@ public class RenderMaterial implements IDisposable {
 	public void dispose() {
 		program.dispose();
 	}
-	
+
 	private String readFullResource(String name) {
 		BufferedReader reader = IOUtils.openReaderResource(name);
 		if(reader == null) return null;
-		
+
 		return IOUtils.readFull(reader);
 	}
-	
+
 	private String addSpecProviders(String code) {
 		code = code.replaceFirst("#version 120", "");
 		// Cram them into one line so we can get the right line number in case of compile error
@@ -138,10 +138,10 @@ public class RenderMaterial implements IDisposable {
 		}
 		code = (true ? PROVIDER_CUBE_MAP : " ") + code;
 		code = "\r\n#version 120\r\n" + code;
-		
+
 		return code;
 	}
-	
+
 	public void loadShaders(RenderEnvironment env) {
 		// Read The Vertex Shader Source
 		String vsSrc = readFullResource(ROOT_DIRECTORY + sceneMaterial.materialType + ".vert");
@@ -160,17 +160,17 @@ public class RenderMaterial implements IDisposable {
 		// Add In The Special Providers
 		vsSrc = this.addSpecProviders(vsSrc);
 		fsSrc = this.addSpecProviders(fsSrc);
-		
+
 		// Unfortunately some drivers behave differently
 		String arrSuffix = "[0]";
 
 		// Create The Program
 		program.quickCreateSource(sceneMaterial.materialType, vsSrc, fsSrc, null);
-		
+
 		// Create Mappings
 		shaderInterface.build(program.semanticLinks);
 		System.out.println("Your shader program's registered uniforms: " + program.getUniforms());
-		
+
 		// Transformation info
 		unWorld = program.getUniform("mWorld");
 		unWorldIT = program.getUniform("mWorldIT"); 
@@ -178,16 +178,18 @@ public class RenderMaterial implements IDisposable {
 		unP = program.getUniform("mProj");
 		unVP = program.getUniform("mViewProjection");
 		unWorldCam = program.getUniform("worldCam");
-		
+
 		// Shading info
 		unShininess = program.getUniform("shininess");
 		unRoughness = program.getUniform("roughness");
+
+		// Add new uniform time
 		unTime = program.getUniform("time");
 		unDispMagnitude = program.getUniform("dispMagnitude");
-		
+
 		// Lighting info
 		unLCount = program.getUniform("numLights");
-		
+
 		// Try with and without suffix...
 		unLPos = program.getUniform("lightPosition");
 		if (unLPos == GL.BadUniformLocation) {
@@ -197,17 +199,17 @@ public class RenderMaterial implements IDisposable {
 		if (unLIntensity == GL.BadUniformLocation) {
 			unLIntensity = program.getUniform("lightIntensity" + arrSuffix);
 		}
-		
+
 		unAmbientLIntensity = program.getUniform("ambientLightIntensity");
-		
+
 		// Camera info
 		unExposure = program.getUniform("exposure");
-				
+
 		// Cube map
 		unCubeMap = program.getUniform("cubeMap");
 		//TexCubeMap.setupCubeMap(unCubeMap, "data/textures/Envir/");
 		env.cubemap.bindCubemap(unCubeMap);
-		
+
 		createInputProviders(env);
 	}
 
@@ -224,26 +226,26 @@ public class RenderMaterial implements IDisposable {
 				pDiffuse[i] = new ColorProvider("Diffuse" + i, sceneMaterial.inputDiffuse[i].color);
 			i++;
 		}
-		
+
 		if(sceneMaterial.inputNormal.type == Type.TEXTURE)
 			pNormal = new TextureProvider("Normal", program, i++, sceneMaterial.inputNormal.texture, env);
 		else
 			pNormal = new ColorProvider("Normal", sceneMaterial.inputNormal.color);
-		
+
 		if(sceneMaterial.inputSpecular.type == Type.TEXTURE)
 			pSpecular = new TextureProvider("Specular", program, i++, sceneMaterial.inputSpecular.texture, env);
 		else
 			pSpecular = new ColorProvider("Specular", sceneMaterial.inputSpecular.color);
-		
+
 	}
-	
+
 	public void useMaterialProperties() {
 		for (int i = 0; i < pDiffuse.length; i++) {
 			pDiffuse[i].set(program);
 		}
 		pNormal.set(program);
 		pSpecular.set(program);
-		
+
 		if (unShininess != GL.BadUniformLocation) {
 			GL20.glUniform1f(unShininess, sceneMaterial.shininess);
 		}
@@ -254,7 +256,7 @@ public class RenderMaterial implements IDisposable {
 			GL20.glUniform1f(unDispMagnitude, sceneMaterial.dispMagnitude);
 		}
 	}
-	
+
 	public void useObject(RenderObject o) {
 		if(unWorld != GL.BadUniformLocation) {
 			GLUniform.setST(unWorld, o.mWorldTransform, false);
@@ -263,7 +265,7 @@ public class RenderMaterial implements IDisposable {
 			GLUniform.setST(unWorldIT, o.mWorldTransformIT, false);
 		}
 	}
-	
+
 	public void useCameraAndLights(RenderCamera c, ArrayList<RenderLight> lights, int s, int lightCount) {
 		// Use camera
 		if(unV != GL.BadUniformLocation) {
@@ -278,22 +280,22 @@ public class RenderMaterial implements IDisposable {
 		if(unExposure != GL.BadUniformLocation) {
 			GL20.glUniform1f(unExposure, c.sceneCamera.exposure);
 		}
-		
+
 		// Use lights
 		int nonAmbientLightCount = 0;
 		// Default color is black
 		Vector3d ambientLightColor = new Vector3d(0.0);
-		
+
 		if(unLPos != GL.BadUniformLocation) {
 			fbLight.clear();
 			Vector3 pos = new Vector3();
 			for(int i = 0;i < lightCount;i++) {
 				RenderLight rl = lights.get(s + i);
-				
+
 				// We skip ambient lights here
 				if (!rl.sceneLight.isAmbient) {
 					nonAmbientLightCount++;
-					
+
 					rl.mWorldTransform.getTrans(pos);
 					fbLight.put(pos.x);
 					fbLight.put(pos.y);
@@ -306,18 +308,18 @@ public class RenderMaterial implements IDisposable {
 			fbLight.rewind();
 			GL20.glUniform3(unLPos, fbLight);
 		}
-		
+
 		if(unWorldCam != GL.BadUniformLocation) {
 			Vector3 camTrans = new Vector3();
 			c.mWorldTransform.getTrans(camTrans);
 			GLUniform.set(unWorldCam, camTrans);
 		}
-		
+
 		if(unLIntensity != GL.BadUniformLocation) {
 			fbLight.clear();
 			for(int i = 0;i < lightCount;i++) {
 				RenderLight rl = lights.get(s + i);
-				
+
 				// We skip ambient lights here
 				if (!rl.sceneLight.isAmbient) {
 					fbLight.put((float)rl.sceneLight.intensity.x);
@@ -335,7 +337,8 @@ public class RenderMaterial implements IDisposable {
 			GL20.glUniform3f(unAmbientLIntensity, (float)ambientLightColor.x, (float)ambientLightColor.y, (float)ambientLightColor.z);
 		}
 	}
-	
+
+	// Set the uniform time to the game time
 	public void useTime(double time) {
 		if (unTime != GL.BadUniformLocation) {
 			GL20.glUniform1f(unTime, (float) time);

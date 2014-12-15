@@ -30,19 +30,19 @@ public class Renderer implements IDisposable {
 	};
 
 	public final PickingProgram pickProgram = new PickingProgram();
-	
+
 	private static class RenderPass {
 		public RenderMaterial material;
 		public RenderMesh mesh;
 		public final ArrayList<RenderObject> objects = new ArrayList<>();
 	}
 	private ArrayList<RenderPass> passes = null;
-	
+
 	@Override
 	public void dispose() {
 		pickProgram.dispose();
 	}
-	
+
 	public void buildPasses(RenderEnvironment env) { //(RenderObject root) {
 		// Create An Array Of Objects To Draw From The Root
 		RenderObject root = env.root;
@@ -57,22 +57,13 @@ public class Renderer implements IDisposable {
 		passes = new ArrayList<>();
 		RenderPass curPass = new RenderPass();
 		for(RenderObject ro : objs) {
-			/*if(ro.mesh != curPass.mesh || ro.material != curPass.material) {
-				curPass = new RenderPass();
-				curPass.material = ro.material;
-				curPass.mesh = ro.mesh;
-				passes.add(curPass);
-				
-			}
-			curPass.objects.add(ro); */
-			
 			if(ro.mesh != curPass.mesh || ro.material != curPass.material) {
 				curPass = new RenderPass();
 				curPass.material = ro.material;
 				curPass.mesh = ro.mesh;
 				passes.add(curPass);
 				curPass.objects.add(ro);
-				
+
 				String material = ro.material.sceneMaterial.getID().name;
 				if (material.equals("HatchingMaterial") || material.equals("GoochMaterial") || material.equals("DiscreteMaterial")) {
 					if (!ro.sceneObject.mesh.equals("House.obj") && !ro.sceneObject.mesh.equals("House2.obj")) {
@@ -84,10 +75,10 @@ public class Renderer implements IDisposable {
 					}
 				}
 			}
-			
+
 		}
 	}
-	
+
 	private void addToDrawList(RenderObject ro, ArrayList<RenderObject> objs) {
 		if(ro.mesh != null && ro.material != null) objs.add(ro);
 		for(RenderObject c : ro.children) {
@@ -96,7 +87,7 @@ public class Renderer implements IDisposable {
 	}
 
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights) {
-		
+
 		// Draw Up To 16 Lights
 		int cc = lights.size() > 16 ? 16 : lights.size();
 
@@ -108,7 +99,9 @@ public class Renderer implements IDisposable {
 				material.program.use();
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
-				
+
+				// Need to turn on alpha blending as well as turning off the depth state and cull
+				// so that we draw both faces and don't mask objects.
 				if (material.sceneMaterial.materialType.equals("XRay")) {
 					DepthState.NONE.set();
 					BlendState.ALPHA_BLEND.set();
@@ -129,12 +122,12 @@ public class Renderer implements IDisposable {
 			mesh.vBuffer.useAsAttrib(material.shaderInterface);
 			for(RenderObject ro : p.objects) {
 				material.useObject(ro);
-				//GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
 				GLError.get("Draw");
 			}
 		}
 	}
-	
+
+	// New overloaded function that takes in time
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, double time) {
 		RasterizerState.CULL_CLOCKWISE.set();
 
@@ -150,7 +143,9 @@ public class Renderer implements IDisposable {
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
 				material.useTime(time);
-				
+
+				// Need to turn on alpha blending as well as turning off the depth state and cull
+				// so that we draw both faces and don't mask objects.
 				if (material.sceneMaterial.materialType.equals("XRay")) {
 					DepthState.NONE.set();
 					BlendState.ALPHA_BLEND.set();
@@ -170,17 +165,15 @@ public class Renderer implements IDisposable {
 
 			mesh.vBuffer.useAsAttrib(material.shaderInterface);
 			for(RenderObject ro : p.objects) {
-				material.useObject(ro);
-				//GL11.glLineWidth(3.8f);
-				//GL11.glDrawElements(PrimitiveType.Lines, mesh.indexCount, GLType.UnsignedInt, 0);				
+				material.useObject(ro);		
 				GL11.glDrawElements(PrimitiveType.Triangles, mesh.indexCount, GLType.UnsignedInt, 0);
 				GLError.get("Draw");
 			}
 		}
 	}
-	
+
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, RasterizerState rs) {
-		
+
 		// Draw Up To 16 Lights
 		int cc = lights.size() > 16 ? 16 : lights.size();
 
@@ -192,7 +185,9 @@ public class Renderer implements IDisposable {
 				material.program.use();
 				material.useMaterialProperties();
 				material.useCameraAndLights(camera, lights, 0, cc);
-				
+
+				// Need to turn on alpha blending as well as turning off the depth state and cull
+				// so that we draw both faces and don't mask objects.
 				if (material.sceneMaterial.materialType.equals("XRay")) {
 					DepthState.NONE.set();
 					BlendState.ALPHA_BLEND.set();
@@ -209,7 +204,7 @@ public class Renderer implements IDisposable {
 					else
 						RasterizerState.CULL_CLOCKWISE.set();
 				}
-				
+
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
@@ -231,11 +226,11 @@ public class Renderer implements IDisposable {
 		GL11.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		GL11.glClearDepth(1.0);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		
+
 		DepthState.DEFAULT.set();
 		BlendState.OPAQUE.set();
 		RasterizerState.CULL_CLOCKWISE.set();
-		
+
 		pickProgram.use(camera.mViewProjection);		
 	}
 	public void drawPassesPick() {
