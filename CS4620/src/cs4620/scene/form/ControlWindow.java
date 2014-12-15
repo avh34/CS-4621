@@ -27,26 +27,28 @@ public class ControlWindow extends JFrame {
 	public final SceneApp app;
 	
 	public ControlWindow(SceneApp a) {
-		super("Data Control");
+		super("");
 		app = a;
 		scene = app.scene;
 		
-		setSize(400, 600);
+		setSize(700, 500);
 		setResizable(false);
-		ArrayList<String> orderedTabs = new ArrayList<String>();
-		orderedTabs.add("Object"); orderedTabs.add("Mesh"); orderedTabs.add("Material"); orderedTabs.add("Texture");
-		
-		tabs.put("Object", new ScenePanel(app));
-		tabs.put("Mesh", new RPMeshData(this));
-		tabs.put("Material", new RPMaterialData(this));
-		tabs.put("Texture", new RPTextureData(this));
-	
-		tabsPanel = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
-		add(tabsPanel);
-		for(String s : orderedTabs) {
-			System.out.println(s);
-			tabsPanel.add(s, (Component)tabs.get(s));
-		}
+		add(new TitleScreen(app));
+		setUndecorated(true);
+//		ArrayList<String> orderedTabs = new ArrayList<String>();
+//		orderedTabs.add("Object"); orderedTabs.add("Mesh"); orderedTabs.add("Material"); orderedTabs.add("Texture");
+//		
+//		tabs.put("Object", new ScenePanel(app));
+//		tabs.put("Mesh", new RPMeshData(this));
+//		tabs.put("Material", new RPMaterialData(this));
+//		tabs.put("Texture", new RPTextureData(this));
+//	
+//		tabsPanel = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
+//		add(tabsPanel);
+//		for(String s : orderedTabs) {
+//			System.out.println(s);
+//			tabsPanel.add(s, (Component)tabs.get(s));
+//		}
 	}
 	public void run() {
 		sceneUpdater = new ControlWindowUpdater(app, this);

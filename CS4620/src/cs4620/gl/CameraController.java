@@ -20,6 +20,7 @@ import org.lwjgl.opengl.Display;
 import cs4620.common.Scene;
 import cs4620.common.SceneObject;
 import cs4620.common.event.SceneTransformationEvent;
+import cs4620.scene.ViewScreen;
 import cs4620.scene.form.ScenePanel;
 import cs4620.scene.form.SimpleMeshWindow;
 import egl.math.Matrix4;
@@ -29,11 +30,11 @@ import egl.math.Vector4;
 
 public class CameraController {
 	
+	public boolean shader = false;
 	public boolean ishighlighted = true;
 	protected final Scene scene;
 	public RenderCamera camera;
 	protected final RenderEnvironment rEnv;
-
 	protected boolean prevFrameButtonDown = false;
 	protected int prevMouseX, prevMouseY;
 	
@@ -57,7 +58,6 @@ public class CameraController {
 	public void changeWindow(){
 		window = false;
 	}	
-	
 	
 	/**
 	 * Update the camera's transformation matrix in response to user input.
@@ -88,7 +88,7 @@ public class CameraController {
 		if(Keyboard.isKeyDown(Keyboard.KEY_A)) { motion.add(-1, 0, 0); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_D)) { motion.add(1, 0, 0); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) { motion.add(0, -1, 0); }
-		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { motion.add(0, 1, 0); }
+		//if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) { motion.add(0, 1, 0); }
 		
 		//check if correct window is brought to front- otherwise mouse position is being calculated from 
 		//relation to options window- want center of screen in relation to screen.
@@ -111,18 +111,16 @@ public class CameraController {
 			Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
 			//Current Mouse Positions
 			int thisMouseX = (int) (int) java.awt.MouseInfo.getPointerInfo().getLocation().getX() - Display.getX();
-			int thisMouseY = (int) java.awt.MouseInfo.getPointerInfo().getLocation().getY() - Display.getY();
-						
+			int thisMouseY = (int) java.awt.MouseInfo.getPointerInfo().getLocation().getY() - Display.getY();				
 
 			//Center of display
 			float centery = Display.getY()  + Display.getHeight()/ 2;
 			float centerx = Display.getX() + Display.getWidth()/ 2;
-			rotation.add(0, -0.05f * (thisMouseX - mouse_x), 0);
-			rotation.add(0.05f * (mouse_y - thisMouseY), 0, 0);
+			rotation.add(0, -0.03f * (thisMouseX - mouse_x), 0);
+			rotation.add(0.03f * (mouse_y - thisMouseY), 0, 0);
 			
 			//return mouse to center of display
 			 mouseMover.mouseMove((int) centerx, (int) centery);
-
 		
 	} catch (AWTException e) {
 		e.printStackTrace();
@@ -158,20 +156,37 @@ public class CameraController {
 		// TODO#A3 SOLUTION START
 		
 		rotation = rotation.clone().mul((float)(Math.PI / 180.0));
-		Matrix4 mRot = Matrix4.createRotationX(rotation.x);
-		mRot.mulAfter(Matrix4.createRotationY(rotation.y));
-		mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
+		Matrix4 mRotx = Matrix4.createRotationX(rotation.x);
+				
+		Matrix4 mRoty = (Matrix4.createRotationY(rotation.y));
+		Matrix4 mRot = mRotx.clone().mulAfter(mRoty);
+		//mRot.mulAfter(Matrix4.createRotationZ(rotation.z));
+		
+//		if (orbitMode) {
+//			Vector3 rotCenter = new Vector3(0,0,0);
+//			transformation.clone().invert().mulPos(rotCenter);
+//			parentWorld.clone().invert().mulPos(rotCenter);
+//			mRot.mulBefore(Matrix4.createTranslation(rotCenter.clone().negate()));
+//			mRot.mulAfter(Matrix4.createTranslation(rotCenter));
+//		}
+		
+		Matrix4 wouldBe = new Matrix4(transformation);
+		wouldBe.mulBefore(mRot);
+		wouldBe.mulAfter(parentWorld);
+		Vector3 camPos = new Vector3(wouldBe.getTrans());
+		
+			Matrix4 cameraTrans = Matrix4.createTranslation(camera.mWorldTransform.getTrans());
+			Matrix4 cameraTransn = Matrix4.createTranslation(camera.mWorldTransform.getTrans().negate());
+			mRoty.mulBefore(cameraTransn);
+			mRoty.mulAfter((cameraTrans));
+			transformation.mulAfter(mRoty);
+			transformation.mulBefore(mRotx);
+			float cosAngle = transformation.getRow(1).y;
+			 float sinAngle = transformation.getRow(2).y;
+			if(Math.atan2(cosAngle, sinAngle) < 0) 
+				{  transformation.mulBefore(Matrix4.createRotationX(rotation.x).invert());}
+	
 
-		if (orbitMode) {
-			Vector3 rotCenter = new Vector3(0,0,0);
-			transformation.clone().invert().mulPos(rotCenter);
-			parentWorld.clone().invert().mulPos(rotCenter);
-			mRot.mulBefore(Matrix4.createTranslation(rotCenter.clone().negate()));
-			mRot.mulAfter(Matrix4.createTranslation(rotCenter));
-		}
-		
-		transformation.mulBefore(mRot);
-		
 		// SOLUTION END
 	}
 
@@ -195,13 +210,15 @@ public class CameraController {
 		Vector3 camPos = new Vector3(transformation.clone().mulAfter(parentWorld).getTrans()); //world coords of camera
 		//Vector3 newMotion = getNewPosition(camPos, motion);
 		
-		
+				
 		if (getNewPosition(camPos, motion)){
+			shader = false;
 			float yNoTrans = transformation.clone().mulAfter(parentWorld).m[13];
 			Matrix4 mTrans = Matrix4.createTranslation(motion);
 			transformation.mulBefore(mTrans);
 			transformation.m[13] = yNoTrans;
 		}
+		else{shader = true;}
 		// SOLUTION END
 	}
 	
@@ -209,7 +226,7 @@ public class CameraController {
 		Iterator<SceneObject> itr = scene.objects.iterator();
 		
 		ArrayList<RenderObject> possCollisions = new ArrayList<RenderObject>();
-		
+		ArrayList<String> closeArray = new ArrayList<String>();
 		//collisions will contain minCoord, maxCoord, normal for each square with an intersection
 		//ArrayList<ArrayList<Vector3>> collisions = new ArrayList<ArrayList<Vector3>>();
 		
@@ -217,7 +234,8 @@ public class CameraController {
 			SceneObject sceneObj = itr.next();
 			RenderObject temp = rEnv.findObject(sceneObj);
 			Boolean objIntersect = false;
-			
+			Boolean closeTo = false;
+
 			if (temp.mesh!=null){
 				//get min/max coords in world space
 				//TODO: Check all 8 bounding coords rather than just two
@@ -252,44 +270,67 @@ public class CameraController {
 					
 				}else { collisions.add(false);}
 				
+				if (Math.abs(currMax.y-camPos.y)< ( radius * 3) && in_left && in_right && in_front && in_back){
+					closeTo = true;}
+				
 				//bottom
 				if (Math.abs(currMin.y-camPos.y)<radius && in_left && in_right && in_front && in_back){
 					objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
+				
+				if (Math.abs(currMin.y-camPos.y)< (radius * 3) && in_left && in_right && in_front && in_back){
+					closeTo = true;}
 				
 				//left
 				if (Math.abs(currMin.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
 					objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
+				if (Math.abs(currMin.x-camPos.x)< (radius * 3) && in_top && in_bottom && in_front && in_back ){
+					closeTo = true; }
+				
 				//right
 				if (Math.abs(currMax.x-camPos.x)<radius && in_top && in_bottom && in_front && in_back){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
+				
+				if (Math.abs(currMax.x-camPos.x)< (radius * 3) && in_top && in_bottom && in_front && in_back){
+				    closeTo = true;}
 				
 				//front
 				if (Math.abs(currMax.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
+				if (Math.abs(currMax.z-camPos.z)<(radius * 3) && in_top && in_bottom && in_left && in_right){
+				    closeTo = true; }
+				
 				//back
 				if (Math.abs(currMin.z-camPos.z)<radius && in_top && in_bottom && in_left && in_right){
 				    objIntersect = true; collisions.add(true);
 				}else{ collisions.add(false);}
 				
+				if (Math.abs(currMin.z-camPos.z)< (radius * 3)  && in_top && in_bottom && in_left && in_right ){
+				    closeTo = true; }
+				
 				if (objIntersect){
-					possCollisions.add(temp);
+					
+					//possCollisions.add(temp);
 				}
+				//System.out.println(objIntersect);
+				//System.out.println(closeTo);
+				if(closeTo)closeArray.add(temp.mesh.sceneMesh.file);
 			}
 		}
 		
+		ViewScreen.intersected = closeArray;
 		return possCollisions;
-		
+				
 	}
 	
 	private boolean getNewPosition(Vector3 camPos, Vector3 velocity){
 		float EPSILON = (float) 0.005;
-		double radius = 0.5;
+		double radius = 1.5;
 		
 		if (velocity.len()<EPSILON){
 			//velocity vector is smaller than our bound, so don't bother

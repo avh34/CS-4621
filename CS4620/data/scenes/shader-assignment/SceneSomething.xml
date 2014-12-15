@@ -37,7 +37,7 @@
     </mesh>
 
     <mesh>
-    <name>Closet.obj</name>
+    <name>talldresser.obj</name>
         <data>
             <file>data/meshes/talldresser.obj</file>
         </data>
@@ -58,7 +58,7 @@
     </mesh>
 
     <mesh>
-    <name>KitchenBase.obj</name>
+    <name>kitchen.obj</name>
         <data>
             <file>data/meshes/kitchen.obj</file>
         </data>
@@ -79,7 +79,7 @@
     </mesh>
 
     <mesh>
-    <name>TV.obj</name>
+    <name>tv.obj</name>
         <data>
             <file>data/meshes/tv.obj</file>
         </data>
@@ -93,7 +93,7 @@
     </mesh>
 
     <mesh>
-    <name>Fridge.obj</name>
+    <name>fridge.obj</name>
         <data>
             <file>data/meshes/fridge.obj</file>
         </data>
@@ -501,7 +501,7 @@
     <object>
         <name>Closet</name>
         <data>
-            <mesh>Closet.obj</mesh>
+            <mesh>talldresser.obj</mesh>
             <material>ClosetMaterial</material>
             <scale>1.5 1.5 1.5</scale>
             <rotation> 0 180 0 </rotation>
@@ -532,7 +532,7 @@
     <object>
         <name>KitchenBase</name>
         <data>
-            <mesh>KitchenBase.obj</mesh>
+            <mesh>kitchen.obj</mesh>
             <material>PhongMaterialGrey</material>
             <scale>1.5 1.15 1.5</scale>
             <rotation> 0 -90 0 </rotation>
@@ -563,7 +563,7 @@
         <name>TV</name>
         <data>
             <parent>TVTable</parent>
-            <mesh>TV.obj</mesh>
+            <mesh>tv.obj</mesh>
             <material>TVMaterial</material>
             <scale>0.75 0.75 0.75</scale>
             <rotation>0 90 0</rotation>
@@ -584,7 +584,7 @@
     <object>
         <name>Fridge</name>
         <data>
-            <mesh>Fridge.obj</mesh>
+            <mesh>fridge.obj</mesh>
             <material>FridgeMaterial</material> 
             <scale>1.5 1.5 1.5</scale>
             <translation>-5 0 -18</translation>
