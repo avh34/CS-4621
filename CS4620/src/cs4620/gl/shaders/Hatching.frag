@@ -70,8 +70,6 @@ void main() {
 	  Idiff = clamp(Idiff, 0.0, 1.0);
 
 	  // calculate specular term
-	  //vec4 Ispec = getSpecularColor(fUV) * pow(max(dot(N, H), 0.0), shininess);
-	  //Ispec = clamp(Ispec, 0.0, 1.0);
 	  vec4 Ispec = vec4(0.0);
 	  
 	  // calculate ambient term

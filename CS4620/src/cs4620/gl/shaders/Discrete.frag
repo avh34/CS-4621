@@ -17,16 +17,18 @@ uniform vec3 worldCam;
 uniform float exposure;
 
 varying vec2 fUV;
-varying vec3 fN; // normal at the vertex
-varying vec4 worldPos; // vertex position in world coordinates
+varying vec3 fN;       // Normal at the vertex
+varying vec4 worldPos; // Vertex position in world coordinates
 
 void main() {
-	// interpolating normals will change the length of the normal, so renormalize the normal.
+
+	// Interpolating normals will change the length of the normal, so renormalize the normal.
 	vec3 N = normalize(fN);
 	vec3 V = normalize(worldCam - worldPos.xyz);
 	vec4 finalColor = getDiffuseColor(fUV);
 	float intensity = 0;
 	
+	// Calculate intensity
 	for (int i = 0; i < numLights; i++) {
 		vec3 L = normalize(lightPosition[i] - worldPos.xyz); 
 		vec3 H = normalize(L + V);
@@ -34,6 +36,7 @@ void main() {
 		intensity = max(dot(N, H)*100/(r*r), intensity);
 	}
 	
+	// Discretize based on intensity, use the diffuse color of the object.
 	if (intensity > 7.5)
 		finalColor = getDiffuseColor(fUV);
 	else if (intensity > 4.6)
@@ -42,8 +45,6 @@ void main() {
 		finalColor = getDiffuseColor(fUV)*.5;
 	else
 		finalColor = getDiffuseColor(fUV)*.25;
-	
-	
 	
 	gl_FragColor = (finalColor * exposure);
 }
