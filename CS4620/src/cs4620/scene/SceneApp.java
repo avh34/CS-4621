@@ -42,21 +42,21 @@ public class SceneApp extends MainGame {
 		otherWindow = new ControlWindow(this);
 		otherWindow.setLocationRelativeTo(null);
 		
-//		// Play music with our game
-//		try {
-//			Clip sound = AudioSystem.getClip();
-//			File scene_file = new File("data/distantWinds.wav");
-//			AudioInputStream song = (AudioSystem.getAudioInputStream(scene_file));
-//			sound.open(song);
-//			sound.loop(Clip.LOOP_CONTINUOUSLY);
-//
-//		} catch (LineUnavailableException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (UnsupportedAudioFileException e) {
-//			e.printStackTrace();
-//		}
+		// Play music with our game
+		try {
+			Clip sound = AudioSystem.getClip();
+			File scene_file = new File("data/distantWinds.wav");
+			AudioInputStream song = (AudioSystem.getAudioInputStream(scene_file));
+			sound.open(song);
+			sound.loop(Clip.LOOP_CONTINUOUSLY);
+
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
