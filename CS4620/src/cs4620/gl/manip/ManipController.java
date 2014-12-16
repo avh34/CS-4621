@@ -37,28 +37,28 @@ public class ManipController implements IDisposable {
 	public final ManipRenderer renderer = new ManipRenderer();
 	public final HashMap<Manipulator, UUIDGenerator.ID> manipIDs = new HashMap<>();
 	public final HashMap<Integer, Manipulator> manips = new HashMap<>();
-	
+
 	private final Scene scene;
 	private final ControlWindow propWindow;
 	private final ScenePanel scenePanel;
 	private final RenderEnvironment rEnv;
 	private ManipRenderer manipRenderer = new ManipRenderer();
-	
+
 	private final Manipulator[] currentManips = new Manipulator[3];
 	private RenderObject currentObject = null;
-	
+
 	private Manipulator selectedManipulator = null;
-	
+
 	/**
 	 * Is parent mode on?  That is, should manipulation happen in parent rather than object coordinates?
 	 */
 	private boolean parentSpace = false;
-	
+
 	/**
 	 * Last seen mouse position in normalized coordinates
 	 */
 	private final Vector2 lastMousePos = new Vector2();
-	
+
 	public ACEventFunc<KeyboardKeyEventArgs> onKeyPress = new ACEventFunc<KeyboardKeyEventArgs>() {
 		@Override
 		public void receive(Object sender, KeyboardKeyEventArgs args) {
@@ -87,14 +87,14 @@ public class ManipController implements IDisposable {
 			}
 		}
 	};
-	
+
 	public ManipController(RenderEnvironment re, Scene s, ControlWindow cw) {
 		scene = s;
 		propWindow = cw;
 		Component o = cw.tabs.get("Object");
 		scenePanel = o == null ? null : (ScenePanel)o;
 		rEnv = re;
-		
+
 		// Give Manipulators Unique IDs
 		manipIDs.put(Manipulator.ScaleX, scene.objects.getID("ScaleX"));
 		manipIDs.put(Manipulator.ScaleY, scene.objects.getID("ScaleY"));
@@ -108,7 +108,7 @@ public class ManipController implements IDisposable {
 		for(Entry<Manipulator, UUIDGenerator.ID> e : manipIDs.entrySet()) {
 			manips.put(e.getValue().id, e.getKey());
 		}
-		
+
 		setCurrentManipType(Manipulator.Type.TRANSLATE);
 	}
 	@Override
@@ -116,7 +116,7 @@ public class ManipController implements IDisposable {
 		manipRenderer.dispose();
 		unhook();
 	}
-	
+
 	private void setCurrentManipType(int type) {
 		switch (type) {
 		case Manipulator.Type.TRANSLATE:
@@ -136,7 +136,7 @@ public class ManipController implements IDisposable {
 			break;
 		}
 	}
-	
+
 	public void hook() {
 		KeyboardEventDispatcher.OnKeyPressed.add(onKeyPress);
 		MouseEventDispatcher.OnMouseRelease.add(onMouseRelease);
@@ -145,7 +145,7 @@ public class ManipController implements IDisposable {
 		KeyboardEventDispatcher.OnKeyPressed.remove(onKeyPress);		
 		MouseEventDispatcher.OnMouseRelease.remove(onMouseRelease);
 	}
-	
+
 	/**
 	 * Get the transformation that should be used to draw <manip> when it is being used to manipulate <object>.
 	 * 
@@ -160,7 +160,7 @@ public class ManipController implements IDisposable {
 	 */
 	public Matrix4 getTransformation(Manipulator manip, RenderCamera camera, RenderObject object) {
 		Matrix4 mManip = new Matrix4();
-		
+
 		switch (manip.axis) {
 		case Manipulator.Axis.X:
 			Matrix4.createRotationY((float)(Math.PI / 2.0), mManip);
@@ -180,12 +180,12 @@ public class ManipController implements IDisposable {
 
 		return mManip;
 	}
-	
+
 	/**
 	 * Apply a transformation to <b>object</b> in response to an interaction with <b>manip</b> in which the user moved the mouse from
- 	 * <b>lastMousePos</b> to <b>curMousePos</b> while viewing the scene through <b>camera</b>.  The manipulation happens differently depending
- 	 * on the value of ManipController.parentMode; if it is true, the manipulator is aligned with the parent's coordinate system, 
- 	 * or if it is false, with the object's local coordinate system.  
+	 * <b>lastMousePos</b> to <b>curMousePos</b> while viewing the scene through <b>camera</b>.  The manipulation happens differently depending
+	 * on the value of ManipController.parentMode; if it is true, the manipulator is aligned with the parent's coordinate system, 
+	 * or if it is false, with the object's local coordinate system.  
 	 * @param manip The manipulator that is active (one axis of the complete widget)
 	 * @param camera The camera (needed to map mouse motions into the scene)
 	 * @param object The selected object (contains the transformation to be edited)
@@ -207,9 +207,9 @@ public class ManipController implements IDisposable {
 
 		// There are many ways to compute a viewing ray, but perhaps the simplest is to take a pair of points that are on the ray,
 		// whose coordinates are simple in the canonical view space, and map them into world space using the appropriate matrix operations.
-		
+
 		// You may find it helpful to structure your code into a few helper functions; ours is about 150 lines.
-		
+
 		// TODO#A3 SOLUTION START
 		switch (manip.type) {
 		case Manipulator.Type.SCALE:
@@ -223,7 +223,7 @@ public class ManipController implements IDisposable {
 			break;
 		}
 	}
-	
+
 	public void applyRotation(int axis, Matrix4 mViewProjection, RenderObject object, Vector2 lastMousePos, Vector2 curMousePos) {
 		float amount = -(curMousePos.y - lastMousePos.y);
 		Matrix4 M = new Matrix4();
@@ -329,7 +329,7 @@ public class ManipController implements IDisposable {
 		else
 			object.sceneObject.transformation.mulBefore(M);
 	}
-	
+
 	static float getAxisT(Vector3 axisOrigin, Vector3 axisDirection, Matrix4 mVP, Vector2 mousePos) {
 		Vector3 p1 = new Vector3(mousePos.x, mousePos.y, -1);
 		Vector3 p2 = new Vector3(mousePos.x, mousePos.y, 1);
@@ -349,7 +349,7 @@ public class ManipController implements IDisposable {
 		return rayOrigin.clone().sub(axisOrigin).dot(b) / axisDirection.dot(b);
 	}
 	// SOLUTION END
-	
+
 	public void checkMouse(int mx, int my, RenderCamera camera) {
 		Vector2 curMousePos = new Vector2(mx, my).add(0.5f).mul(2).div(camera.viewportSize.x, camera.viewportSize.y).sub(1);
 		if(curMousePos.x != lastMousePos.x || curMousePos.y != lastMousePos.y) {
@@ -363,7 +363,7 @@ public class ManipController implements IDisposable {
 
 	public void checkPicking(Renderer renderer, RenderCamera camera, int mx, int my) {
 		if(camera == null) return;
-		
+
 		// Pick An Object
 		renderer.beginPickingPass(camera);
 		renderer.drawPassesPick();
@@ -371,22 +371,22 @@ public class ManipController implements IDisposable {
 			// Draw Object Manipulators
 			GL11.glClearDepth(1.0);
 			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-			
+
 			DepthState.DEFAULT.set();
 			BlendState.OPAQUE.set();
 			RasterizerState.CULL_NONE.set();
-			
+
 			drawPick(camera, currentObject, renderer.pickProgram);
 		}
 		int id = renderer.getPickID(Mouse.getX(), Mouse.getY());
-		
+
 		selectedManipulator = manips.get(id);
 		if(selectedManipulator != null) {
 			// Begin Manipulator Operations
 			System.out.println("Selected Manip: " + selectedManipulator.type + " " + selectedManipulator.axis);
 			return;
 		}
-		
+
 		SceneObject o = scene.objects.get(id);
 		if(o != null) {
 			System.out.println("Picked An Object: " + o.getID().name);
@@ -400,29 +400,13 @@ public class ManipController implements IDisposable {
 			currentObject = null;
 		}
 	}
-	
+
 	public void draw(RenderCamera camera) {
 		if(currentObject == null) return;
-		/*
-		DepthState.NONE.set();
-		BlendState.ALPHA_BLEND.set();
-		RasterizerState.CULL_CLOCKWISE.set();
-		
-		for(Manipulator manip : currentManips) {
-			Matrix4 mTransform = getTransformation(manip, camera, currentObject);
-			manipRenderer.render(mTransform, camera.mViewProjection, manip.type, manip.axis);
-		}
-		
-		DepthState.DEFAULT.set();
-		BlendState.OPAQUE.set();
-		RasterizerState.CULL_CLOCKWISE.set();
-		
-		for(Manipulator manip : currentManips) {
-			Matrix4 mTransform = getTransformation(manip, camera, currentObject);
-			manipRenderer.render(mTransform, camera.mViewProjection, manip.type, manip.axis);
-		}*/
 
-}
+		// No longer want to draw manipulators
+
+	}
 	public void drawPick(RenderCamera camera, RenderObject ro, PickingProgram prog) {
 		for(Manipulator manip : currentManips) {
 			Matrix4 mTransform = getTransformation(manip, camera, ro);
@@ -430,5 +414,5 @@ public class ManipController implements IDisposable {
 			manipRenderer.drawCall(manip.type, prog.getPositionAttributeLocation());
 		}
 	}
-	
+
 }

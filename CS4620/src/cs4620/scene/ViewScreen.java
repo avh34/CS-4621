@@ -139,62 +139,7 @@ public class ViewScreen extends GameScreen {
 					dataMaterial.addBasic();
 				}
 				break;
-				//			case Keyboard.KEY_G:
-				//				showGrid = !showGrid;
-				//				break;
-//			case Keyboard.KEY_F3:
-//				FileDialog fd = new FileDialog(app.otherWindow);
-//				fd.setVisible(true);
-//				for(File f : fd.getFiles()) {
-//					String file = f.getAbsolutePath();
-//					if(file != null) {
-//						Parser p = new Parser();
-//						Object o = p.parse(file, Scene.class);
-//						if(o != null) {
-//							app.otherWindow.dispose();
-//							Scene old = app.scene;
-//							app.scene = (Scene)o;
-//							if(old != null) old.sendEvent(new SceneReloadEvent(file));
-//							return;
-//						}
-//					}
-//				}
-//				break;
-//			case Keyboard.KEY_F4:
-//				try {
-//					app.scene.saveData("data/scenes/Saved.xml");
-//				} catch (ParserConfigurationException | TransformerException e) {
-//					e.printStackTrace();
-//				}
-//				break;
-
-//			case Keyboard.KEY_1:
-//				changeShader(0);
-//				break;
-//
-//			case Keyboard.KEY_2:
-//				changeShader(1);
-//				break;
-//
-//			case Keyboard.KEY_3:
-//				changeShader(2);
-//				break;
-//
-//			case Keyboard.KEY_4:
-//				changeShader(3);
-//				break;
-//
-//			case Keyboard.KEY_5:
-//				changeShader(4);
-//				break;				
-//
-//			case Keyboard.KEY_6:
-//				changeShader(5);
-//				break;
-//
-//			case Keyboard.KEY_7:
-//				changeShader(6);
-//				break;
+				// Release/capture the mouse
 			case Keyboard.KEY_ESCAPE:
 
 				try{
@@ -217,7 +162,7 @@ public class ViewScreen extends GameScreen {
 				break;
 			default:
 				break;
-
+				// Enable/disable full screen
 			case Keyboard.KEY_F:
 				fullScreen();
 			}
@@ -226,20 +171,6 @@ public class ViewScreen extends GameScreen {
 
 	@Override
 	public void onEntry(GameTime gameTime) {	
-
-		//		frame.setSize(700, 500);
-		//		frame.add(canvas);
-		//		frame.setVisible(true);
-		//		canvas.setSize(700, 500);
-		//		try {
-		//			Display.setParent(canvas);
-		//		} catch (LWJGLException e) {
-		//			e.printStackTrace();
-		//		}
-		//			Display.update();
-
-		//frame.setVisible(true);
-
 
 		cameraIndex = 0;
 		rController = new RenderController(app.scene, new Vector2(app.getWidth(), app.getHeight()));
@@ -286,33 +217,33 @@ public class ViewScreen extends GameScreen {
 	@Override
 	public void update(GameTime gameTime) {
 		if (intersected.contains(object) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-						shader -= 1;
-						if (shader == 1) {
-							changeShader(shader);
-							shader = 6;
-							if(Display.isFullscreen()) {fullScreen();}
-						VictoryScreen victory = new VictoryScreen(app);
-						try{
-							Robot mouseMover = new Robot();
-							float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
-							float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
-							 mouseMover.mouseMove((int) centerx, (int) centery);
+			shader -= 1;
+			if (shader == 1) {
+				changeShader(shader);
+				shader = 6;
+				if(Display.isFullscreen()) {fullScreen();}
+				VictoryScreen victory = new VictoryScreen(app);
+				try{
+					Robot mouseMover = new Robot();
+					float centery = Display.getY() + Display.getDisplayMode().getHeight()/ 2;
+					float centerx = Display.getX() + Display.getDisplayMode().getWidth()/ 2;
+					mouseMover.mouseMove((int) centerx, (int) centery);
 
-							} catch (AWTException e) {
-								e.printStackTrace();
-							}
-							try {
-								Mouse.setNativeCursor(null);
-							} catch (LWJGLException e) {
-								e.printStackTrace();
-							}
-							camController.isHighlighted();
-							camController.changeWindow();
-							
-							return;
-						} else{changeShader(shader);}}
-							
-					
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+				try {
+					Mouse.setNativeCursor(null);
+				} catch (LWJGLException e) {
+					e.printStackTrace();
+				}
+				camController.isHighlighted();
+				camController.changeWindow();
+
+				return;
+			} else{changeShader(shader);}}
+
+
 
 		pick = false;
 		int curCamScroll = 0;
@@ -358,6 +289,8 @@ public class ViewScreen extends GameScreen {
 			if(Display.isFullscreen()){
 				Display.setDisplayMode(prevDisplay);
 				Display.setFullscreen(false);
+				
+				GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 			}
 			else{
 				Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
@@ -365,7 +298,6 @@ public class ViewScreen extends GameScreen {
 				Display.setResizable(true);
 
 				GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
-				//Display.setDisplayMode(arg0);
 			}
 
 			try{
@@ -390,47 +322,49 @@ public class ViewScreen extends GameScreen {
 		String notShaded = "";
 		String next = "";
 		switch(shader){
-			case 0:
-				shadername = "CookTorranceMaterial";
-				break;
-			case 3: 
-				shadername = "DiscreteMaterial";
-				notShaded = "talldresser.obj";
-				next = "XRayMaterial";
-				break;
-			case 4: 
-				shadername = "GoochMaterial";
-				notShaded = "toothbrush.obj";
-				next = "DiscreteMaterial";
-				break;
-			case 5: 
-				shadername = "HatchingMaterial";
-				notShaded = "book.obj";
-				next = "GoochMaterial";
-				break;
-			case 6:
-				shadername = "TimeMaterial";
-				notShaded = "candle.obj";
-				next = "HatchingMaterial";
-				break;
-			case 2:
-				shadername = "XRayMaterial";
-				notShaded = "sofa.obj";
-				next = "Original";
-				break;
-			case 1:
-				shadername = "Original";
-				notShaded = "Closet.obj";
-				next = "Original";
-				break;
-			default:
-				shadername = "Original";
+		case 0:
+			shadername = "CookTorranceMaterial";
+			break;
+		case 3: 
+			shadername = "DiscreteMaterial";
+			notShaded = "talldresser.obj";
+			next = "XRayMaterial";
+			break;
+		case 4: 
+			shadername = "GoochMaterial";
+			notShaded = "toothbrush.obj";
+			next = "DiscreteMaterial";
+			break;
+		case 5: 
+			shadername = "HatchingMaterial";
+			notShaded = "book.obj";
+			next = "GoochMaterial";
+			break;
+		case 6:
+			shadername = "TimeMaterial";
+			notShaded = "candle.obj";
+			next = "HatchingMaterial";
+			break;
+		case 2:
+			shadername = "XRayMaterial";
+			notShaded = "sofa.obj";
+			next = "Original";
+			break;
+		case 1:
+			shadername = "Original";
+			notShaded = "Closet.obj";
+			next = "Original";
+			break;
+		default:
+			shadername = "Original";
 
 		}
 		String shaderkey = "";
 		for (SceneObject s:app.scene.objects){
 
-			if ((s.material != null) && (!s.material.equals("Ambient"))) {// && (!s.mesh.equals("Room.obj"))) {
+			if ((s.material != null) && (!s.material.equals("Ambient"))) {
+				
+				// Change certain meshes so that the UV coordinates are correct for hatching
 				if (s.mesh.equals("House2.obj") && shaderkey.equals("HatchingMaterial")) {
 					s.setMesh("House.obj");
 				}
@@ -445,6 +379,8 @@ public class ViewScreen extends GameScreen {
 					s.setMesh("Bed2.obj");
 				}
 			}
+			
+			// Store original shader in case we want to put it back.
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (!s.mesh.equals(notShaded))) {
 				shaderkey = shadername;
 				if(shadername.equals("Original")) {
@@ -457,6 +393,8 @@ public class ViewScreen extends GameScreen {
 				s.setMaterial(shaderkey);
 				app.scene.sendEvent((new SceneObjectResourceEvent(s, SceneObjectResourceEvent.Type.Material)));
 			}
+			
+			
 			if ((s.material != null) && (!s.material.equals("Ambient")) && (s.mesh.equals(notShaded))) {
 				shaderkey = next;
 				if(next.equals("Original")) {

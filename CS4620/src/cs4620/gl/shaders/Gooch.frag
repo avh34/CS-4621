@@ -40,7 +40,7 @@ void main() {
 	vec3 k_cool = vec3(0, 0, b) + alpha * k_d; 
 	vec3 k_warm = vec3(y, y, 0) + beta * k_d;
 	
-	//Calculate the warmth constant k_w
+	// Calculate the warmth constant k_w
 	vec3 L = normalize(lightPosition[i] - worldPos.xyz); 
 	float k_w = (1 + dot(N,L)) / 2;
 	

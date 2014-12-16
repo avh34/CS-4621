@@ -21,7 +21,7 @@ public class RenderController implements IDisposable {
 	public final Scene scene;
 	public RenderEnvironment env;
 	private boolean requestNewScene = false;
-	
+
 	public RenderController(Scene s, Vector2 viewSize) {
 		scene = s;
 		queue = new SceneEventQueue(scene);
@@ -36,16 +36,16 @@ public class RenderController implements IDisposable {
 	public boolean isNewSceneRequested() {
 		return requestNewScene;
 	}
-	
+
 	public void update(Renderer r, CameraController camController) {
 		ArrayList<SceneEvent> le = new ArrayList<>();
 		queue.getEvents(le);
 		if(le.size() == 0) return;
-		
+
 		boolean isTreeModified = false;
 		boolean areTransformsModified = false;
 		boolean areResourcesModified = false;
-		
+
 		for(SceneEvent e : le) {
 			if(e instanceof SceneCollectionModifiedEvent) {
 				SceneCollectionModifiedEvent cme = (SceneCollectionModifiedEvent)e;
@@ -97,7 +97,7 @@ public class RenderController implements IDisposable {
 				requestNewScene = true;
 			}
 		}
-		
+
 		if(isTreeModified) {
 			RenderTreeBuilder.buildTree(scene, env);
 			if(camController.camera != null) {
@@ -116,7 +116,7 @@ public class RenderController implements IDisposable {
 		else if(areTransformsModified) {
 			RenderTreeBuilder.rippleTransformations(env);
 		}
-		
+
 		if(areResourcesModified || isTreeModified) {
 			env.linkObjectResources();
 			r.buildPasses(env); //r.buildPasses(env.root);

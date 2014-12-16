@@ -69,7 +69,8 @@ public class ControlWindowUpdater implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			objects.updateValues();
+			if (objects != null)
+				objects.updateValues();
 			ArrayList<SceneEvent> a = new ArrayList<>();
 			queue.getEvents(a);
 			boolean newSceneFound = false;

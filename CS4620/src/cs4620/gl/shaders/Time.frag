@@ -22,11 +22,6 @@ varying vec4 worldPos; // vertex position in world coordinates
 
 uniform float time;
 
-#define WAVE_SPEED 5.
-#define ROTA_SPEED 0.*10.*cos(time)
-#define N_BRANCHES 10.
-#define K_DIST time
-
 void main( void ) {
 	float shininess = 50;
 
@@ -42,12 +37,14 @@ void main( void ) {
 	
 	altuv.x *= -sin(dist*time);
 	
-	float r = cos(atan(altuv.y, altuv.x)*N_BRANCHES+ROTA_SPEED + dist*K_DIST + 1.);
-	float g = cos(atan(altuv.y, altuv.x)*N_BRANCHES+ROTA_SPEED + dist*K_DIST + 0.);
-	float b = cos(atan(altuv.y, altuv.x)*N_BRANCHES+ROTA_SPEED + dist*K_DIST - 1.);
+	// Equation for bizzare colors.
+	float r = cos(atan(altuv.y, altuv.x)*10 + dist*time + 1.);
+	float g = cos(atan(altuv.y, altuv.x)*10 + dist*time + 0.);
+	float b = cos(atan(altuv.y, altuv.x)*10 + dist*time - 1.);
 	
 	color = vec4(r, g, b, 1.0);
 	
+	// Add in some Phong shading cuz why nah
 	for (int i = 0; i < numLights; i++) {
 	  float r = length(lightPosition[i] - worldPos.xyz);
 	  vec3 L = normalize(lightPosition[i] - worldPos.xyz); 
