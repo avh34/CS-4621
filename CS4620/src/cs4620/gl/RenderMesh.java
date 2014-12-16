@@ -31,6 +31,7 @@ public class RenderMesh implements IDisposable {
 		new ArrayBind(Semantic.TexCoord, GLType.Float, 2, 6 * 4)
 	};
 
+	// thickness of silhouette
 	public float thickness = 0.05f;
 	public RenderMesh silhouette;
 
