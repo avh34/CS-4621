@@ -83,8 +83,8 @@ public class RenderMesh implements IDisposable {
 		IntBuffer ib = BufferUtils.createIntBuffer(silData.indexCount);
 		FloatBuffer uvb = BufferUtils.createFloatBuffer(silData.vertexCount * 2);
 
+		// Use a hashmap because vertices on seams need to be displaced in more than one direction
 		HashMap<Vector3,Vector3> map = new HashMap<Vector3,Vector3>();
-
 		int currentIndex = 0;
 		while(data.normals.hasRemaining()) {
 			float normalX = data.normals.get();
